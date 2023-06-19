@@ -1,17 +1,18 @@
 {
-  "name": "nextra-docs-template",
+  "name": "quak-com-pl-website",
   "version": "0.0.1",
-  "description": "Nextra docs template",
+  "description": "QUAK Website with libraries documentation",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next export",
     "start": "next start"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shuding/nextra-docs-template.git"
   },
-  "author": "Shu Ding <g@shud.in>",
+  "author": "QUAK Kacper Walczak <k.walczak@quak.com.pl>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/shuding/nextra-docs-template/issues"

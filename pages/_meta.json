@@ -1,7 +1,19 @@
 {
-  "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
+  "index": {
+    "title": "Home",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "libraries": {
+    "title": "Libraries",
+    "type": "page"
+  },
+  "learn": {
+    "title": "Learn",
+    "type": "page"
+  },
   "about": {
     "title": "About",
     "type": "page"

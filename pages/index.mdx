@@ -1,11 +1,75 @@
-# Introduction
+---
+title: QUAK
+---
+
+import { useEffect, useRef } from "react";
+
+<style jsx global>{`
+body {
+  background: linear-gradient(
+      180deg,
+      hsla(0, 0%, 100%, 0) 0,
+      #fff min(110vw, 800px)
+    ),
+    fixed
+      repeating-radial-gradient(
+        circle at 50% min(calc(50vw + 3.5rem), calc(300px + 5rem)),
+        #f5f5f5 0,
+        #fff 40px
+      );
+}
+.dark body {
+  background: linear-gradient(
+    0deg,
+    hsla(0, 0%, 100%, 0.2) 0,
+    #000 min(110vw, 800px)
+  ),
+  fixed
+    repeating-radial-gradient(
+      circle at 50% min(calc(50vw + 3.5rem), calc(300px + 5rem)),
+      #050505 0,
+      #000 40px
+    );
+}
+.w-100 {width: 100%;}
+.w-50 {width: 50%;}
+.flex {display: flex;}
+.flex-row {flex-direction: row;}
+.align-center {align-items: center;}
+.justify-center {justify-content: center;}
+.container {
+    width: 100%;
+    max-width: 1200px;
+}
+.text-muted {color: #999;}
+main {
+    text-align: center;
+}
+`}</style>
+
+
+# Company that makes things
+
+<em>QUAK - quickly understand another key (where key is the answer)</em>
+
+## Programming don't have to be hard
+<span class="text-muted">Click</span> [LEARN](/learn) <span class="text-muted"> in the navbar and start improving yourself</span>
+
+```mermaid
+flowchart TD
+    C{QUAK}
+    C -->|Frontend| D[Vanilla, Angular, React]
+    C -->|Backend| E[Node.js, Python]
+    C -->|Philosophy| F[DDD, events...]
+    C -->|AI| G[Computer power]
+```
+
+## QUAK Libraries
+
+import { Callout } from 'nextra/components'
  
-Welcome to Nextra! This is a basic docs template. You can use it as a starting point for your own project :)
+<Callout emoji="👾">
+  **QUAK** is providing libraries with framework agnostic aproach.
+</Callout>
 
-## What is Nextra?
-
-A **simple**, **powerful** and **flexible** site generation framework with everything you love from Next.js.
-
-## Documentation
-
-The documentation is available at [https://nextra.site](https://nextra.site).
+Visit NPM and search for `@quak.lib/` to find js libraries or click [@quak.lib account](https://www.npmjs.com/~quak.lib) to see list of all.
