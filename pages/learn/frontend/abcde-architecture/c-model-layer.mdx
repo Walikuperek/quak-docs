@@ -1,0 +1,38 @@
+# Third layer - model layer
+
+import { Callout } from 'nextra/components'
+ 
+<Callout emoji="ℹ️" type="info">
+    Models are our business logic layer. They are the core of our application. Take a look at that models methods are moslty POST calls.
+</Callout>
+
+
+```typescript
+class UserProfile {
+    userName: string
+
+    constructor(dto: UserProfileDTO) {
+        this.userName = dto.userName
+    }
+}
+```
+
+```typescript
+class User {
+    id: UserID
+    profile: UserProfile
+
+    constructor(dto: UserDTO) {
+        this.id = dto.id
+        this.profile = new UserProfile(dto.profile)
+    }
+    
+    // In newer versions of angular you can use inject(UserRepository) instead
+    updateProfile(repo: UserRepositoryInterface, profile: UserProfile) {
+        return repo.update(profile).pipe(map(res => {
+            this.profile = profile
+            return this
+        }))
+    }
+}
+```

@@ -1,0 +1,62 @@
+# First layer - translations layer
+
+import { Callout } from 'nextra/components'
+ 
+<Callout emoji="ℹ️" type="info">
+    Translations layer is responsible for managing incoming data shape and encapsulating changes.
+</Callout>
+
+
+Encapsulates future changes - one change if occurs.
+```typescript
+type UserID = number
+```
+
+Encapsulates API response shape.
+```typescript
+type FindUserResponse = {id: UserID, user_name: string}
+```
+
+If change requested, DTO's constructors and response intefaces will change only.
+```typescript
+class FindUsersDTO {
+    users: UserDTO[]
+
+    constructor(response: FindUserResponse[]) {
+        this.users = response.map(user => new UserDTO(user))
+    }
+
+    // For Repository usage
+    static fromResponse(response: FindUserResponse[]): FindUserDTO {
+        return new FindUserDTO(response)
+    }
+}
+```
+
+```typescript
+class UserDTO {
+    id: UserID
+    profile: UserProfileDTO
+
+    constructor(response: FindUserResponse) {
+        this.id = response.id
+        this.profile = new UserProfileDTO({user_name: response.user_name})
+    }
+    
+    static toUser(): User {
+        return new User(this) // get User from DTO
+    }
+}
+```
+
+```typescript
+class UserProfileDTO {
+    userName: string
+
+    constructor(from: {user_name: string}) {
+        this.userName = from.user_name
+    }
+}
+```
+
+Trust me this way of coding will make it easier in the next layers and data inputs will be encapsulated + easier to maintain.

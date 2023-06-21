@@ -1,0 +1,38 @@
+# Second layer - repository layer
+
+Declare repository interface for easy data provider swap.
+```typescript
+interface UserRepositoryInterface {
+    find(where: FindUsersFilter): Observable<FindUserDTO>
+    create(user: CreateUserDTO): Observable<CreateUserDTO>
+    update(user: UpdateUserDTO): Observable<UpdateUserDTO>
+    delete(id: UserID): Observable<void>
+}
+```
+
+Implement repository interface with http client. Here default angular http client is used. Consider using [http client interceptor](https://angular.io/guide/http#intercepting-requests-and-responses) for auth, common headers, etc.
+```typescript
+@Injectable({providedIn: 'root'})
+class UserRepository implements UserRepositoryInterface {
+    constructor(private readonly http: HttpClient) {}
+
+    find(where: FindUsersFilter): Observable<FindUserDTO> {
+        return this.http
+            .get<FindUserResponse[]>(`${environment.api}/users`, {params: where})
+            .pipe(map(FindUserDTO.fromResponse))
+    }
+    create(user: CreateUserDTO): Observable<CreateUserDTO> {...}
+    update(user: UpdateUserDTO): Observable<UpdateUserDTO> {...}
+    delete(id: UserID): Observable<void> {...}
+}
+```
+
+You can use factory function if you don't want to use static method.
+
+```typescript
+function findUserDTOFactory(response: FindUserResponse[]): FindUserDTO {
+    return new FindUserDTO(response)
+}
+
+// Then ...pipe(map(findUserDTOFactory)) in find method
+```
