@@ -1,0 +1,128 @@
+# First layer - DTO / translations layer
+
+import { Callout } from 'nextra/components'
+ 
+<Callout emoji="ℹ️" type="info">
+    Translations layer is responsible for managing incoming data shape and encapsulating changes.
+</Callout>
+
+```
+/src/app/features - Features - business layer engine
+    /users // our example feature
+        /dto - Data Transfer Object - translations layer // we are here
+            /types - types used in this layer
+            user.dto.ts - DTO for User model
+            user-profile.dto.ts - DTO for UserProfile model
+            find-users.dto.ts - DTO for FindUsersResponse
+            index.ts - exports all DTO's and types
+```
+
+## Incoming from backend
+
+Begin with encapsulating API response shape.
+```typescript
+type UserID = number
+type FindUserResponse = {id: UserID, user_name: string}
+```
+
+## What is translation?
+
+Simply, DTO's. DTO's should mimic the shape of the model to which they are translated. Single DTO can return more than one model or model shape.
+
+They are made for simple 'user_name' -> 'username' translation, but also for more complex ones like 'flight_attendant_pk' -> 'flightAttendantID'. Simple, but better for maintainance.
+
+```typescript
+class DTO {
+    constructor(response: YourResponseShapeInterface) {
+        // translate:
+        this.yourProperty = response.your_property
+    }
+
+    toModel(): Model {
+        return new Model(this) // get Model from DTO
+    }
+
+    toAnotherModel(): AnotherModel {
+        return new AnotherModel({type: 'another', name: this.name}) // get AnotherModel from DTO
+    }
+}
+```
+
+<Callout emoji="👾" type="info">
+  DTO - Data Transfer Object - is a class that encapsulates data shape and provides methods to convert data to other shapes.
+</Callout>
+
+If response changes, DTO's constructors and response intefaces will change only. 
+
+```typescript
+class FindUsersDTO {
+    users: UserDTO[]
+
+    constructor(response: FindUserResponse[]) {
+        this.users = response.map(user => new UserDTO(user))
+    }
+
+    // For Repository usage
+    static fromResponse(response: FindUserResponse[]): FindUserDTO {
+        return new FindUserDTO(response)
+    }
+}
+```
+
+### Actual translation
+
+Here is an example of translation from backend response to User's shape.
+
+```typescript
+class UserDTO {
+    id: UserID
+    profile: UserProfileDTO
+
+    constructor(response: FindUserResponse) {
+        this.id = response.id
+        this.profile = new UserProfileDTO(response)
+    }
+    
+    toUser(): User {
+        return new User(this) // get User from DTO
+    }
+}
+```
+
+To actually split this layer you should use factory function instead of toUser() method and keep it in domain layer.
+
+```typescript
+function toUser(dto: UserDTO): User {
+    return new User(dto)
+}
+```
+
+### Smaller pieces - Value Objects
+
+Use Value Objects to put some smaller pieces of data in one place. Remember about mimicing the shape of the model to which they are translated.
+
+```typescript
+// Model
+class UserProfile {
+    userName: string
+
+    constructor(dto: UserProfileDTO) {
+        Object.assign(this, dto)
+    }
+
+    // ...
+}
+```
+
+```typescript
+// DTO for UserProfile model
+class UserProfileDTO {
+    userName: string
+
+    constructor(from: FindUserResponse) {
+        this.userName = from.user_name
+    }
+}
+```
+
+Trust me this way of coding will make it easier in the next layers and data inputs will be encapsulated + easier to maintain.

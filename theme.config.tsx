@@ -21,7 +21,7 @@ const config: DocsThemeConfig = {
   project: {
     link: 'https://github.com/Walikuperek/quak-docs',
   },
-  docsRepositoryBase: 'https://github.com/Walikuperek/quak-docs',
+  docsRepositoryBase: 'https://github.com/Walikuperek/quak-docs/',
   // TODO: Add chat link
   // chat: {
   //   link: 'https://discord.com',

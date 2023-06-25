@@ -1,0 +1,164 @@
+# Second layer - repository layer
+
+<Callout emoji="ℹ️" type="info">
+    Repository layer is responsible for making API calls and translating responses to DTO's.
+</Callout>
+
+```
+/src/app/features - Features - business layer engine
+    /users // our example feature
+        /repo - Repository layer // we are here
+            /types - Types used in repository layer
+            user-repository.ts - UserRepositoryInterface implementation
+            index.ts - exports all repository layer files
+```
+
+## Repository interface
+
+Declare repository interface for easy data provider swap.
+
+```typescript
+// /features/users/repository/user-repository.interface.ts
+interface UserRepositoryInterface {
+    find(where: FindUsersFilter): Observable<FindUserDTO>
+    create(user: CreateUserBody): Observable<CreateUserResponseDTO>
+    update(user: UpdateUserBody): Observable<UpdateUserDTO>
+    delete(id: UserID): Observable<void> // UserID from translations layer
+}
+```
+
+### Types used in repository interface
+Put types in separate files. It will be easier to see all of them once you open a folder with them.
+
+```typescript
+// /features/users/repository/types/create-user-body.ts
+export type CreateUserBody = {user_name: string, email: string, password: string}
+
+// /features/users/repository/types/find-users-filter.ts
+export class FindUsersFilter {
+    user_name: string | null = null
+    email: string | null = null
+
+    constructor(filters: Partial<FindUsersFilter>) {
+        Object.assign(this, filters)
+    }
+}
+
+// /features/users/repository/types/index.ts
+export * from './create-user-body'
+export * from './find-users-filter'
+```
+
+## Repository implementation
+
+Implement repository interface with http client. Here default angular http client is used. Consider using [http client interceptor](https://angular.io/guide/http#intercepting-requests-and-responses) for auth, common headers, etc.
+```typescript
+// /features/users/repository/user-repository.ts
+class UserRepository implements UserRepositoryInterface {
+    constructor(private readonly http: HttpClient) {}
+
+    find(where: FindUsersFilter): Observable<FindUserDTO> {
+        return this.http
+            .get<FindUserResponse[]>(`${environment.api}/users`, {params: where})
+            .pipe(map(FindUserDTO.fromResponse))
+    }
+    create(user: CreateUserBody): Observable<CreateUserResponseDTO> {...}
+    update(user: UpdateUserBody): Observable<UpdateUserDTO> {...}
+    delete(id: UserID): Observable<void> {...}
+}
+```
+
+You can use factory function if you don't want to use static method.
+
+```typescript
+function findUserDTOFactory(response: FindUserResponse[]): FindUserDTO {
+    return new FindUserDTO(response)
+}
+
+// Then ...pipe(map(findUserDTOFactory)) in find method
+```
+
+## Hmmm... it's only CRUD operations?
+No, it's not. You can use repository layer for any data operations. For example, you can use it for downloading files, sending emails, etc.
+
+Like this:
+```typescript
+// /features/files/repository/file-storage-repo.ts
+class FileStorageRepo {
+    constructor(private readonly http: HttpClient) {}
+
+    downloadFile(id: FileID): Observable<File> {
+        return this.http.get(`${environment.api}/files/${id}`, {responseType: 'blob'})
+    }
+}
+```
+
+Or this:
+```typescript
+// /features/emails/repository/email-repo.ts
+class EmailRepo {
+    constructor(private readonly http: HttpClient) {}
+
+    sendEmail(email: Email): Observable<SendEmailDTO> {
+        return this.http.post(`${environment.api}/emails`, email)
+    }
+}
+```
+
+### Repository layer is not only about http client
+You can use any data provider you want. For example, you can use firebase, graphql, etc. You can even use local storage or session storage. It's up to you.
+
+### Repository layer is not only about data
+You can use repository layer for any operations. For example, you can use it for analytics, error handling, etc.
+
+Like this:
+```typescript
+// /features/users/repository/analytics-repo.ts
+class AnalyticsRepo {
+    constructor(private readonly analytics: Analytics) {}
+
+    trackUserCreated(user: User): void {
+        this.analytics.track('user_created', {user})
+    }
+}
+```
+
+### Any but simple
+
+Keep repository layer **as simple as possible**. It should be only data provider. No business logic here.
+
+import { Callout } from 'nextra/components'
+ 
+<Callout emoji="ℹ️" type="info">
+    Remember that - repository layer - is the place where you will declare HTTP calls and repository methods should return DTO's which can translate to models:
+
+    ```typescript
+    class UserRepository {
+        find(id: UserID): Observable<FindUserDTO> {
+            return this.http
+                .get<FindUserResponse>(`${environment.api}/users/${id}`)
+                .pipe(map(FindUserDTO.fromResponse))
+        }
+    }
+
+    // DTO
+    class FindUserDTO {
+        constructor(private readonly response: FindUserResponse) {
+            this.id = response.id
+            this.username = response.user_name
+            this.email = response.email
+        }
+
+        toUser(): User {
+            return new User(this) // User constructor accepts FindUserDTO
+        }
+
+        static fromResponse(response: FindUserResponse): FindUserDTO {
+            return new FindUserDTO(response)
+        }
+    }
+
+    // DTO usage in higher layers
+    user: User = dto.toUser()
+    ```
+</Callout>

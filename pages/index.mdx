@@ -2,6 +2,7 @@
 title: QUAK
 ---
 
+import { Callout } from 'nextra/components'
 import { useEffect, useRef } from "react";
 
 <style jsx global>{`
@@ -33,8 +34,10 @@ body {
 }
 .w-100 {width: 100%;}
 .w-50 {width: 50%;}
+.gap-5 {gap: 1.5rem;}
 .flex {display: flex;}
 .flex-row {flex-direction: row;}
+.flex-column {flex-direction: column;}
 .align-center {align-items: center;}
 .justify-center {justify-content: center;}
 .container {
@@ -45,6 +48,21 @@ body {
 main {
     text-align: center;
 }
+.mx-auto {margin: 0 auto; width: 100%;}
+.border-red {border: 1px solid red;}
+.bg-muted {
+    padding: 1rem;
+}
+.bg-muted a:hover img {
+    opacity: 1;
+}
+.text-center {text-align: center;}
+.m-5 {margin: 1.5rem;}
+.mt-5 {margin-top: 1.5rem;}
+.border-muted-dotted {
+    border: 1px dotted #999;
+    border-radius: 5px;
+}
 `}</style>
 
 
@@ -52,24 +70,85 @@ main {
 
 <em>QUAK - quickly understand another key (where key is the answer)</em>
 
-## Programming don't have to be hard
-<span class="text-muted">Click</span> [LEARN](/learn) <span class="text-muted"> in the navbar and start improving yourself</span>
+### Programming don't have to be hard
+<span className="text-muted">Click</span> [LEARN](/learn) <span className="text-muted"> in the navbar and start improving yourself with QUAK</span>
+
+## Products
+
+### Architecture
+
+QUAK developed DRD architecture (DTO's Repository Domain) for frontend.
 
 ```mermaid
 flowchart TD
-    C{QUAK}
-    C -->|Frontend| D[Vanilla, Angular, React]
-    C -->|Backend| E[Node.js, Python]
-    C -->|Philosophy| F[DDD, events...]
-    C -->|AI| G[Computer power]
+    C{DRD}
+    C -->|Data Transfer Object| D(DTO)
+    C --> E(Repository)
+    C --> F(Domain)
+
+    F --> G(Model)
+    F --> H(Store)
 ```
 
-## QUAK Libraries
+<Callout emoji="ℹ️" type="info">
+    DRD is framework agnostic architecture that can be used in any programming language.
+    
+    DRD split business logic from presentation layer/use case.
+</Callout>
 
-import { Callout } from 'nextra/components'
+#### DRD Architecture Docs
+
+You can check out docs at [DRD Architecture](/learn/architecture/drd)
+
+#### DRD Github Repositories
+
+- [DRD Architecture - Angular example](https://github.com/Walikuperek/DRD-frontend-architecture/tree/master)
+
+<hr className="m-5 border-muted-dotted" />
+
+### Libraries
+
+<fieldset className="border-muted-dotted mt-5">
+  <span>&nbsp;</span>
+  <div className="flex flex-column mx-auto">
+    <div className="text-center">
+      <h2 className="fs-24 text-muted">QUAK Libraries</h2>
+    </div>
+    <div className="flex align-center justify-center gap-5 container mx-auto bg-muted">
+      <a href="/libraries/qstore"><img src="/docs/qstore_logo.png" alt="QUAK learn" /></a>
+      
+      <a href="/libraries/qtheme"><img src="/docs/qtheme_logo.png" alt="QUAK learn" /></a>
+    </div>
+  </div>
+  <span>&nbsp;</span>
+</fieldset>
+
  
 <Callout emoji="👾">
   **QUAK** is providing libraries with framework agnostic aproach.
 </Callout>
 
 Visit NPM and search for `@quak.lib/` to find js libraries or click [@quak.lib account](https://www.npmjs.com/~quak.lib) to see list of all.
+
+
+<hr className="m-5 border-muted-dotted" />
+
+### Learn
+
+QUAK learn is a place where you can find articles about programming.
+
+<Callout emoji="ℹ️" type="info">
+    Visit [QUAK learn](/learn) to start learning.
+</Callout>
+
+<div className="text-center mt-5">
+  <h2 className="fs-24 text-muted">Topics</h2>
+</div>
+
+```mermaid
+flowchart TD
+  A(Backend)
+  B(Frontend)
+  C(Architecture)
+  D(AI)
+```
