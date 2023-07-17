@@ -1,128 +1,162 @@
-# First layer - DTO / translations layer
-
 import { Callout } from 'nextra/components'
+import { FileTree } from 'nextra/components'
+import { Tabs, Tab } from 'nextra/components'
+import { Cards, Card } from 'nextra/components'
+
+# First layer - translations layer
+
+```mermaid
+flowchart TD
+    C{DTO}
+    C --> E(DTO)
+    C --> F(Types)
+```
+
+<Cards>
+  <Card title="👤 DTO" href="/learn/architecture/drd-frontend/dto/#dto" />
+  <Card title="📝 Types" href="/learn/architecture/drd-frontend/dto/#types" />
+</Cards>
+
+## What for?
+
+DTO (Data Transfer Object) layer is used for e.g.:
+- currently logged in user
+
+```FetchUserResponse -> new UserDto(response) -> UserFactory.fromUserDto(dto)```
+
+<em>* factory from domain layer</em>
+
+- list of users
+
+```FetchUserListResponse -> new UserListDto(response) -> dto.users.map(user => new UserListItem(user))```
+
+<em>* UserListItem from domain layer</em>
  
+<Callout emoji="👾">
+  **REMBER** don't use same model for 2 things. User isn't UserListItem.
+</Callout>
+
+## DTO
+
+DTO - Data Transfer Object - it is a class that is resposible for tranlsating incoming responses to our models.
+
+Example DTOs: `find-users.dto.ts`, `user-profile.dto.ts`, `user.dto.ts`.
+
 <Callout emoji="ℹ️" type="info">
-    Translations layer is responsible for managing incoming data shape and encapsulating changes.
+    DTO/Translations layer is responsible for managing incoming data shape and encapsulating changes.
 </Callout>
 
-```
-/src/app/features - Features - business layer engine
-    /users // our example feature
-        /dto - Data Transfer Object - translations layer // we are here
-            /types - types used in this layer
-            user.dto.ts - DTO for User model
-            user-profile.dto.ts - DTO for UserProfile model
-            find-users.dto.ts - DTO for FindUsersResponse
-            index.ts - exports all DTO's and types
-```
-
-## Incoming from backend
-
-Begin with encapsulating API response shape.
 ```typescript
-type UserID = number
-type FindUserResponse = {id: UserID, user_name: string}
-```
-
-## What is translation?
-
-Simply, DTO's. DTO's should mimic the shape of the model to which they are translated. Single DTO can return more than one model or model shape.
-
-They are made for simple 'user_name' -> 'username' translation, but also for more complex ones like 'flight_attendant_pk' -> 'flightAttendantID'. Simple, but better for maintainance.
-
-```typescript
-class DTO {
-    constructor(response: YourResponseShapeInterface) {
-        // translate:
-        this.yourProperty = response.your_property
-    }
-
-    toModel(): Model {
-        return new Model(this) // get Model from DTO
-    }
-
-    toAnotherModel(): AnotherModel {
-        return new AnotherModel({type: 'another', name: this.name}) // get AnotherModel from DTO
-    }
-}
-```
-
-<Callout emoji="👾" type="info">
-  DTO - Data Transfer Object - is a class that encapsulates data shape and provides methods to convert data to other shapes.
-</Callout>
-
-If response changes, DTO's constructors and response intefaces will change only. 
-
-```typescript
-class FindUsersDTO {
-    users: UserDTO[]
-
-    constructor(response: FindUserResponse[]) {
-        this.users = response.map(user => new UserDTO(user))
-    }
-
-    // For Repository usage
-    static fromResponse(response: FindUserResponse[]): FindUserDTO {
-        return new FindUserDTO(response)
-    }
-}
-```
-
-### Actual translation
-
-Here is an example of translation from backend response to User's shape.
-
-```typescript
-class UserDTO {
+class UserDto {
     id: UserID
-    profile: UserProfileDTO
+    username: string
+    address: AddressDto
 
-    constructor(response: FindUserResponse) {
-        this.id = response.id
-        this.profile = new UserProfileDTO(response)
+    constructor(response: FetchUserResponse) {
+      this.id = response.id
+      this.username = response.user_name
+      this.address = AddressDto.fromFetchUserResponse(response)
     }
-    
-    toUser(): User {
-        return new User(this) // get User from DTO
+
+    static fromResponse(res: FetchUserResponse): UserDto {
+      return new UserDto(res)
     }
 }
 ```
 
-To actually split this layer you should use factory function instead of toUser() method and keep it in domain layer.
+## Types
+
+Types in translation layer are: 
+- responses
+- inner types, like `UserID`
 
 ```typescript
-function toUser(dto: UserDTO): User {
-    return new User(dto)
+type UserID = string
+
+type FetchUserResponse = {
+  id: UserID
+  username: string
+  address: AddressResponseObject
+}
+
+type AddressResponseObject = {
+  street: string;
+  city: string;
 }
 ```
 
-### Smaller pieces - Value Objects
+## Example
 
-Use Value Objects to put some smaller pieces of data in one place. Remember about mimicing the shape of the model to which they are translated.
+*Example common feature: `users`*
 
-```typescript
-// Model
-class UserProfile {
-    userName: string
+<FileTree>
+  <FileTree.Folder name="dto" defaultOpen>
+    <FileTree.Folder name="types" defaultOpen>
+      <FileTree.File name="user-id.ts" />
+      <FileTree.File name="fetch-user-response.ts" />
+    </FileTree.Folder>
+    <FileTree.File name="user.dto.ts" />
+    <FileTree.File name="address.dto.ts" />
+  </FileTree.Folder>
+</FileTree>
 
-    constructor(dto: UserProfileDTO) {
-        Object.assign(this, dto)
+<Tabs items={['user.dto.ts', 'adress.dto.ts', 'fetch-user-response.ts', 'user-id.ts']}>
+  <Tab>
+  ```typescript
+  class UserDto {
+    id: UserID;
+    username: string;
+    address: AddressDto;
+
+    constructor(response: FetchUserResponse) {
+      this.id = response.id;
+      this.username = response.user_name;
+      this.address = AddressDto.fromFetchUserResponse(response);
     }
 
-    // ...
-}
-```
-
-```typescript
-// DTO for UserProfile model
-class UserProfileDTO {
-    userName: string
-
-    constructor(from: FindUserResponse) {
-        this.userName = from.user_name
+    static fromResponse(res: FetchUserResponse): UserDto {
+      return new UserDto(res);
     }
-}
-```
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  class AdressDto {
+    street: string;
+    city: string;
 
-Trust me this way of coding will make it easier in the next layers and data inputs will be encapsulated + easier to maintain.
+    constructor(from: AdressDto) {
+      this.street = from.street;
+      this.city = from.city;
+    }
+
+    static fromFetchUserResponse(res: FetchUserResponse): AdressDto {
+      return new AdressDto({
+        street: res.address.street,
+        city: res.address.city
+      });
+    }
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  type FetchUserResponse = {
+    id: UserID;
+    username: string;
+    address: AddressResponseObject;
+  }
+
+  type AddressResponseObject = {
+    street: string;
+    city: string;
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  type UserID = string;
+  ```
+  </Tab>
+</Tabs>

@@ -1,7 +1,20 @@
+import { Callout } from 'nextra/components'
+import { Cards, Card } from 'nextra/components'
+
+<style jsx global>{`
+    .text-muted {color: #999;}
+    .text-center {text-align: center;}
+    .mt-5 {margin-top: 1.5rem;}
+`}</style>
+
 # Architecture
 
-QUAK collection of tools when used together can be used to build a complete architectures.
+Available architectures developed or explained by QUAK.
 
-Check already available architectures:
+<div className="text-center mt-5">
+  <h2 className="fs-24 text-muted">Frontend</h2>
+</div>
 
-- [DRD Frontend](/learn/architecture/drd-frontend) - Frontend architecture
+<Cards>
+  <Card title="🏛 DRD - SPA or frontend client" href="/learn/architecture/drd-frontend" />
+</Cards>
