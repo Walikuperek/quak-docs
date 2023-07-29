@@ -1,0 +1,105 @@
+import { Steps } from 'nextra/components'
+
+# Running a basic test server
+
+## Before you begin
+
+Make sure that billing is enabled for your Google Cloud project.
+
+Enable the `Compute Engine` API.
+
+## Create Linux VM instance
+
+<Steps>
+
+### Create a VM instance
+
+In the Google Cloud console, go to the `Create an instance` page.
+
+### Select operating system
+
+In the `Boot disk` section, click `Change` to begin configuring your boot disk.
+
+On the Public images tab, choose `Ubuntu` from the Operating system list.
+
+Choose `Ubuntu 20.04 LTS` from the Version list.
+
+Click `Select`.
+
+### Firewall
+
+In the Firewall section, select `Allow HTTP` traffic.
+
+### Create
+
+To create the VM, click `Create`.
+</Steps>
+
+Allow a short period of time for the instance to start. After the instance is ready, it's listed on the VM instances page with a green status icon.
+
+## Connect to the VM instance
+<Steps>
+### Choose VM instance
+
+In the  VM instances page choose your instance.
+
+### Connect via SSH
+
+In the list of virtual machine instances, click `SSH` in the row of the instance that you want to connect to.
+</Steps>
+
+## Install Apache
+<Steps>
+### Install packages
+
+To update the available packages and install the apache2 package, use the system package manager for that operating system. To update an Ubuntu VM, run the following command:
+
+```bash
+sudo apt update && sudo apt -y install apache2
+```
+
+### Start server
+
+After installing Apache, the operating system automatically starts the Apache server.
+
+### Verify that Apache is running
+
+To verify that Apache is running run the following command:
+
+```bash
+sudo systemctl status apache2
+```
+
+### Prepare for browser testing
+
+Overwrite the Apache web server default web page:
+
+```bash
+echo '<!doctype html><html><body><h1>QUAK Hello!</h1></body></html>' | sudo tee /var/www/html/index.html
+```
+
+</Steps>
+
+## Test your server
+
+Test that your VM is serving traffic on its external IP address.
+
+<Steps>
+### Choose VM instance
+
+In the Google Cloud console, go to the VM Instances page.
+
+Copy the `external IP` for your VM under the External IP column.
+
+### Open browser
+
+In a browser, navigate to `http://[EXTERNAL-IP]`. Don't connect using https because this causes the server to return a `Connection Refused` error.
+
+### Result
+
+You should now see the page with the following text:
+```
+QUAK Hello!
+```
+
+</Steps>

@@ -11,34 +11,15 @@ import QstoreLogo from 'components/qstore-logo'
 
 <style jsx global>{`
 body {
-  background: linear-gradient(
-      180deg,
-      hsla(0, 0%, 100%, 0) 0,
-      #fff min(110vw, 800px)
-    ),
-    fixed
-      repeating-radial-gradient(
-        circle at 50% min(calc(50vw + 3.5rem), calc(300px + 5rem)),
-        #f5f5f5 0,
-        #fff 40px
-      );
+    background: transparent;
 }
 .dark body {
-  background: linear-gradient(
-    0deg,
-    hsla(0, 0%, 100%, 0.2) 0,
-    #000 min(110vw, 800px)
-  ),
-  fixed
-    repeating-radial-gradient(
-      circle at 50% min(calc(50vw + 3.5rem), calc(300px + 5rem)),
-      #050505 0,
-      #000 40px
-    );
+    background: transparent;
 }
 .w-100 {width: 100%;}
 .w-50 {width: 50%;}
 .gap-5 {gap: 1.5rem;}
+.gap-1 {gap: 0.25rem;}
 .flex {display: flex;}
 .flex-row {flex-direction: row;}
 .flex-column {flex-direction: column;}
@@ -67,62 +48,139 @@ main {
     border: 1px dotted #999;
     border-radius: 5px;
 }
+.img-top-below-header {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+    opacity: 0.8;
+}
+.img-top-below-header__quak-logo {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+    opacity: 0.1;
+}
+.top-spacer {
+    height: 4rem;
+}
+.bottom-spacer {
+    height: 5rem;
+}
+@media (min-width: 374px) {
+    .top-spacer {
+        height: 6rem;
+    }
+}
+@media (min-width: 424px) {
+    .top-spacer {
+        height: 8rem;
+    }
+}
+@media (min-width: 544px) {
+    .top-spacer {
+        height: 11rem;
+    }
+}
+@media (min-width: 767px) {
+    .top-spacer {
+        height: 14rem;
+    }
+}
+@media (min-width: 867px) {
+    .top-spacer {
+        height: 17rem;
+    }
+}
+@media (min-width: 1023px) {
+    .top-spacer {
+        height: 20rem;
+    }
+}
+@media (min-width: 1143px) {
+    .top-spacer {
+        height: 23.5rem;
+    }
+}
+@media (min-width: 1440px) {
+    .top-spacer {
+        height: 27rem;
+    }
+}
+@media (min-width: 1549px) {
+    .top-spacer {
+        height: 30rem;
+    }
+}
+@media (min-width: 1667px) {
+    .top-spacer {
+        height: 32rem;
+    }
+}
+@media (min-width: 1919px) {
+    .top-spacer {
+        height: 37rem;
+    }
+}
 `}</style>
 
+<img src="/home/transparent-top-layer.svg" className="img-top-below-header" alt="" />
+<img src="/home/quak-logo.png" className="img-top-below-header__quak-logo" alt="" />
+
+<div className="top-spacer">&nbsp;</div>
 
 # Company that makes things
 
-<em>QUAK - quickly understand another key (where key is the answer)</em>
+<em>QUAK is providing IT solutions for the WEB.</em>
 
-## Products
+## How-to's
 
-### Learn
+<span className="text-muted">Click</span> [LEARN](/learn) <span className="text-muted"> in the navbar and start learning with QUAK</span>
 
-<span className="text-muted">Click</span> [LEARN](/learn) <span className="text-muted"> in the navbar and start improving yourself with QUAK</span>
-
-<div className="text-center mt-5">
-  <h2 className="fs-24 text-muted">Topics</h2>
-</div>
+### Categories
 
 <Cards>
   <Card title="🤖 AI" href="/learn/ai" />
   <Card title="🏛 Architecture" href="/learn/architecture" />
   <Card title="👨‍💻 Backend" href="/learn/backend" />
+  <Card title="☁️ Cloud" href="/learn/cloud" />
   <Card title="📱 Frontend" href="/learn/frontend" />
-  <Card title="🎮 Games" href="/learn/games" />
   <Card title="🔢 QUAK Codes" href="/learn/quak-codes" />
 </Cards>
 
-#### Architecture
-
-QUAK developed [🏛 DRD architecture](/learn/architecture/drd-frontend/) (DTO's Repository Domain) for frontend. Try out [GitHub Angular repository](https://github.com/Walikuperek/DRD-frontend-architecture/tree/master) example.
-
-<Callout emoji="ℹ️" type="info">
-    DRD is framework agnostic architecture that can be used in any programming language.
-    
-    DRD split business logic from presentation layer/use case.
-
-</Callout>
-
-```mermaid
-flowchart TD
-    C{DRD}
-    C -->|Data Transfer Object| D(DTO)
-    C --> E(Repository)
-    C --> F(Domain)
-```
-
-### Libraries
-
-### Javascript/Typescript
-
-<Callout emoji="👾">
-  **QUAK** is providing libraries with framework agnostic aproach.
-</Callout>
+### Cloud development guides
 
 <Cards>
-  <Card title="👾 Qtheme (theming)" href="/libraries/qtheme" />
-  <Card title="👾 Qstore (state management)" href="/libraries/qstore" />
+  <Card title={
+      <div className={'text-center w-100'}>
+        <img src="/logos/gcp.png" width={200} style={{margin: '0 auto'}} />
+        <p style={{margin: '0 auto'}}>Google Cloud Platform</p>
+      </div>
+  } href="/learn/cloud/google-cloud-platform" />
 </Cards>
 
-Visit NPM and search for `@quak.lib/` to find js libraries or click [@quak.lib account](https://www.npmjs.com/~quak.lib) to see list of all.
+## Libraries
+
+<span className="text-muted">Visit NPM and search for</span> `@quak.lib/` <span className="text-muted">to find js libraries or click</span> [@quak.lib account](https://www.npmjs.com/~quak.lib) <span className="text-muted">to see list of all.</span>
+
+<Cards>
+  <Card title={
+      <div className={'flex align-center'}>
+        <QthemeLogo />&nbsp;
+        Qtheme (theming)
+      </div>
+  } href="/libraries/qtheme" />
+  <Card title={
+      <div className={'flex align-center'}>
+        <QstoreLogo />&nbsp;
+        Qstore (state management)
+      </div>
+  } href="/libraries/qstore" />
+</Cards>
+
+<img src="/home/blob-alone.svg" style={{margin: '0 auto', transform: 'scale(0.5) rotate(90deg)'}} />
+
+<div className="bottom-spacer">&nbsp;</div>

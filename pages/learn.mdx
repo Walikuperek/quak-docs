@@ -3,10 +3,37 @@ import { Cards, Card } from 'nextra/components'
 import { Tabs, Tab } from 'nextra/components'
 
 <style jsx global>{`
+    .d-flex {display: flex;}
+    .align-center {align-items: center;}
+    .gap-1 {gap: 0.25rem;}
     .text-muted {color: #999;}
     .text-center {text-align: center;}
     .mt-5 {margin-top: 1.5rem;}
+    .img-top-below-header {
+        position: absolute;
+        top: 48px;
+        left: 0;
+        width: 90%;
+        z-index: -1;
+    }
+    .top-spacer {
+        height: 4rem;
+    }
+    @media (min-width: 374px) {
+        .top-spacer {
+            height: 6rem;
+        }
+    }
+    @media (min-width: 424px) {
+        .top-spacer {
+            height: 8rem;
+        }
+    }
 `}</style>
+
+<img src="/home/blob-haikei-ltop.svg" className="img-top-below-header" alt="" />
+
+[//]: # (<div className="top-spacer">&nbsp;</div>)
 
 # Learn
 
@@ -20,14 +47,14 @@ Check out the `topics` to learn more about the different aspects of the programm
   <Card title="🤖 AI" href="/learn/ai" />
   <Card title="🏛 Architecture" href="/learn/architecture" />
   <Card title="👨‍💻 Backend" href="/learn/backend" />
+  <Card title="☁️ Cloud" href="/learn/cloud" />
   <Card title="📱 Frontend" href="/learn/frontend" />
-  <Card title="🎮 Games" href="/learn/games" />
   <Card title="🔢 QUAK Codes" href="/learn/quak-codes" />
 </Cards>
 
 ### Table of Content
 
-<Tabs defaultIndex="1" items={['AI', 'Architecture', 'Backend', 'Frontend', 'Games', 'QUAK Codes']}>
+<Tabs defaultIndex="3" items={['AI', 'Architecture(1)', 'Backend', 'Cloud(1)', 'Frontend(2)']}>
   <Tab>
     <Callout emoji="🏗️">
       **QUAK** is working on AI path.
@@ -35,7 +62,7 @@ Check out the `topics` to learn more about the different aspects of the programm
   </Tab>
   <Tab>
     <Cards>
-      <Card title="🏛 DRD - SPA or frontend client" href="/learn/architecture/drd-frontend" />
+      <Card title="🏛 DRD - SPA frontend" href="/learn/architecture/drd-frontend" />
     </Cards>
   </Tab>
   <Tab>
@@ -45,20 +72,27 @@ Check out the `topics` to learn more about the different aspects of the programm
   </Tab>
   <Tab>
     <Cards>
-      <Card title="🎨 Theming your app" href="/learn/frontend/theming/" />
-      <Card title="Angular" href="/learn/frontend/angular" />
+      <Card title={
+            <div>
+                <img src="/logos/gcp.png" />
+                <span>Google Cloud Platform</span>
+            </div>
+        }
+        href="/learn/cloud/google-cloud-platform"
+      />
     </Cards>
   </Tab>
   <Tab>
     <Cards>
-      <Card title="Quakky (Flappy Bird style)" href="/learn/games/quakky" />
-      <Card title="Adventurer (2D platformer)" href="/learn/games/adventurer" />
-      <Card title="Snake (2D snake)" href="/learn/games/adventurer" />
-    </Cards>
-  </Tab>
-  <Tab>
-    <Cards>
-      <Card title="🌱 Easy algorithms" href="/learn/quak-codes/easy" />
+      <Card title="🎨 Theming" href="/learn/frontend/theming/" />
+      <Card title={
+          <div className={'d-flex align-center gap-1'}>
+            <img width={30} src="/logos/angular.png" />
+            <span>Angular</span>
+          </div>
+        }
+        href="/learn/frontend/angular"
+      />
     </Cards>
   </Tab>
 </Tabs>

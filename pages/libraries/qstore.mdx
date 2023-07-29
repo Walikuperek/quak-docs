@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { Tab, Tabs } from 'nextra-theme-docs'
- 
 
 # Qstore
 
@@ -8,161 +7,110 @@ import { Tab, Tabs } from 'nextra-theme-docs'
     <Image src="/docs/qstore_logo.png" alt="Hello" width={100} height={100} />
 </p>
 
-* [Qstore GitHub repository](https://github.com/Walikuperek/Qstore)
-* [Qstore NPM package](https://www.npmjs.com/package/@quak.lib/qstore)
-
-~3kb.js library for state management based on RxJS. It's a simple and lightweight alternative to Redux, MobX, Vuex, etc. Use it if it fits your needs.
+JS library for state management based on RxJS. It's a simple and lightweight alternative to Redux, MobX, Vuex, etc. Use it if it fits your needs.
 
 ## Install
+
+I closed NPM package - it's so small that you should just copy-paste it to your project.
+
 <Tabs items={['npm']}>
   <Tab>
     ```bash
-    npm install @quak.lib/qstore
+    # Closed NPM package
     ```
   </Tab>
 </Tabs>
 <br />
 
-## What is Qstore?
-It's library for state management. Builded mainly for Angular but it can be used in any other framework or even without any framework.
+### For RxJS Version
 
-### Interfaces
+<Tabs items={['7']}>
+  <Tab>
+    ```typescript
+    import {BehaviorSubject, Subject, Observable} from 'rxjs';
+    import {distinctUntilChanged, map} from 'rxjs/operators';
 
-```mermaid
-classDiagram
-    class Store {
-        values: T
-        set(values: T)
-        select(selectFn): gets observable slice
+    // Store
+    export abstract class Store<T> {
+        private state$: BehaviorSubject<T>;
+
+        protected constructor(initialState: T) {
+            this.state$ = new BehaviorSubject(initialState);
+        }
+
+        select<K>(mapFn: (state: T) => K): Observable<K> {
+            return this.state$.asObservable().pipe(
+                map((state: T) => mapFn(state)),
+                distinctUntilChanged()
+            );
+        }
+
+        set(state: Partial<T>): void {
+            this.state$.next({...this.values, ...state});
+        }
+
+        get values(): T {
+            return this.state$.getValue();
+        }
     }
 
-    class Action {
-        listen()
-        execute()
+    // Actions
+    export interface StoreEvent {
+        execute: () => void;
+        listen: () => Observable<void>;
     }
 
-    class ActionWith {
-        listen(payload: T)
-        execute(payload: T)
+    export interface StoreEventWithPayload<P> {
+        execute: (payload: P) => void;
+        listen: () => Observable<P>;
     }
-```
 
-## Create store
-
-```typescript
-import {Store} from '@quak.lib/qstore';
-
-@Injectable({providedIn: 'root'}) // Angular way of providing global services
-class ProductStore extends Store<{products: Product[]}> {
-    products$ = this.select(state => state.products);
-    actions = {
-        addProduct: ActionWith<Product>(),
-        removeProduct: ActionWith<Product>(),
-        resetProducts: Action()
+    export const Action = (): StoreEvent => {
+        const action$ = new Subject<void>();
+        return {
+            listen: (): Observable<void> => action$,
+            execute: () => action$.next()
+        }
     };
-    
-    constructor() {
-        super({products: []});
-        
-        this.actions.addProduct.listen()
-            .subscribe(product => {
-                this.set({products: [...this.values.products, product]});
-            });
-            
-        this.actions.removeProduct.listen()
-            .subscribe(product => {
-                this.set({products: this.values.products.filter(p => p.id !== product.id)});
-            });
 
-        this.actions.resetProducts.listen()
-            .subscribe(() => {
-                this.set({products: []});
-            });
-    }
-}
-```
-
-## Use store
-
-```typescript
-@Component({
-    selector: 'app-product-list',
-    template: `
-        <div *ngFor="let product of products$ | async">
-            <app-product [product]="product"></app-product>
-        </div>
-    `
-})
-class ProductListComponent {
-    products$ = this.productStore.products$;
-    
-    constructor(private productStore: ProductStore) {}
-}
-```
-
-```typescript
-@Component({
-    selector: 'app-product',
-    template: `
-        <div>
-            <h3>{{product.name}}</h3>
-            <button (click)="removeProduct()">Remove</button>
-        </div>
-    `
-})
-class ProductComponent {
-    @Input() product: Product;
-    
-    constructor(private productStore: ProductStore) {}
-    
-    removeProduct() {
-        this.productStore.actions.removeProduct.execute(this.product);
-    }
-}
-```
-
-```typescript
-@Component({
-    selector: 'app-product-add',
-    template: `
-        <div>
-            <input [(ngModel)]="name">
-            <button (click)="addProduct()">Add</button>
-        </div>
-    `
-})
-class ProductAddComponent {
-    name: string;
-    
-    constructor(private productStore: ProductStore) {}
-    
-    addProduct() {
-        this.productStore.actions.addProduct.execute({name: this.name});
-    }
-}
-```
-
-```typescript
-@Component({
-    selector: 'app-product-reset',
-    template: `
-        <div>
-            <button (click)="resetProducts()">Reset</button>
-        </div>
-    `
-})
-class ProductResetComponent {
-    constructor(private productStore: ProductStore) {}
-    
-    resetProducts() {
-        this.productStore.actions.resetProducts.execute();
-    }
-}
-```
-
+    export const ActionWith = <Payload>(): StoreEventWithPayload<Payload> => {
+        const payload$ = new Subject<Payload>();
+        return {
+            listen: (): Observable<Payload> => payload$,
+            execute: (payload: Payload) => payload$.next(payload)
+        }
+    };
+    ```
+  </Tab>
+</Tabs>
+<br />
 
 ## License
 
-[MIT LICENSE](https://github.com/Walikuperek/Qstore/blob/master/LICENSE)
+To the code in this page below license applies.
+
+```text
+MIT License
+
+Copyright (c) 2023 QUAK Kacper Walczak
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 Made & maintained with ❤️ by [QUAK](https://quak.com.pl)
