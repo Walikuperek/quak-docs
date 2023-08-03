@@ -1,0 +1,68 @@
+<style jsx global>{`
+  video {
+    max-width: 400px;
+    border: 10px solid #333;
+    border-radius: 20px;
+  }
+  .border-img {
+    border: 10px solid #333;
+    border-radius: 20px;
+  }
+  @media (max-width: 500px) {
+    video {
+      max-width: 100%;
+    }
+  }
+`}</style>
+
+# TechApp
+
+<div className="flex items-center justify-center">
+    <img src="/logos/tech-app.png" className="rounded-lg" />
+</div>
+
+## Description
+
+TechApp is an app for managing tickets and generating documents after a repair (customers approve that job was done by sign in app). Mainly it is used by technicians in the field. TechApp allows to open navigation straight to the customer's address.
+
+### Desktop and mobile
+
+Data is inserted with the same app but in office (installable desktop version as well).
+
+It is a PWA application (can be installed on any Desktop and any iOS/Android).
+
+### Technologies
+
+Frontend is built with Angular. The backend is built with Node and Nest.js framework.
+
+### Languages
+
+Language: only Polish.
+
+## Screenshots and videos
+
+<h2 className=" mt-10 text-center">Mobile usage</h2>
+
+<video src="/portfolio/techapp/techapp_movie_mobile.mp4" className="mx-auto shadow-lg" autoPlay={true} loop={true} controls={true} />
+
+<h2 className=" mt-10 text-center">Desktop usage</h2>
+
+<img src="/portfolio/techapp/techapp_office_add.png" className="border-img mt-5 mx-auto shadow-lg" />
+
+<img src="/portfolio/techapp/techapp_office_list.png" className="border-img mt-5 mx-auto shadow-lg" />
+
+<img src="/portfolio/techapp/techapp_office_details.png" className="border-img mt-5 mx-auto shadow-lg" />
+
+<div className="mt-5 flex flex-col items-end">
+    <p className="text-sm leading-6 text-gray-500">Active</p>
+    <div className="mt-1 flex items-center gap-x-1.5">
+        <div className="flex-none rounded-full bg-emerald-500/20 p-1">
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+        </div>
+        <p className="text-xs leading-5 text-gray-500">Online since 2022</p>
+    </div>
+</div>
+
+## What's next?
+
+[Contact with me](/about) to get access to the demo version - if your company is interested in using something similar to it.

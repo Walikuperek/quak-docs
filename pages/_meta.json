@@ -14,6 +14,10 @@
     "title": "Learn",
     "type": "page"
   },
+  "portfolio": {
+    "title": "Portfolio",
+    "type": "page"
+  },
   "about": {
     "title": "About",
     "type": "page"

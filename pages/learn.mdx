@@ -16,24 +16,45 @@ import { Tabs, Tab } from 'nextra/components'
         width: 90%;
         z-index: -1;
     }
-    .top-spacer {
-        height: 4rem;
+    .learn-top-spacer {
+        height: 0;
     }
-    @media (min-width: 374px) {
-        .top-spacer {
-            height: 6rem;
+    @media (max-width: 374px) {
+        .learn-top-spacer {
+            height: 5rem;
         }
     }
-    @media (min-width: 424px) {
-        .top-spacer {
-            height: 8rem;
+    @media (max-width: 424px) {
+        .learn-top-spacer {
+            height: 4rem;
         }
+    }
+    @media (max-width: 767px) {
+        .learn-top-spacer {
+            height: 3rem;
+        }
+    }
+    @media (max-width: 1023px) {
+        .learn-top-spacer {
+            height: 5rem;
+        }
+    }
+    @keyframes scale {
+      0% {
+        transform: translateX(-10px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+    .anim--scale {
+      animation: scale .5s ease-in-out forwards;
     }
 `}</style>
 
-<img src="/home/blob-haikei-ltop.svg" className="img-top-below-header" alt="" />
+<img src="/home/blob-haikei-ltop.svg" className="anim--scale img-top-below-header" alt="" />
 
-[//]: # (<div className="top-spacer">&nbsp;</div>)
+<div className="learn-top-spacer">&nbsp;</div>
 
 # Learn
 
