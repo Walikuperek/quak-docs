@@ -9,3 +9,37 @@ body {
 .nextra-body {
   width: 100%;
 }
+
+:root {
+  --primary: rgb(147,99,219);
+  --primary-inner: rgb(39 21 77);
+  --primary-focus: rgb(69,47,103);
+  --primary-content: rgb(255,255,255);
+  --accent: #ff9801;
+  --accent-content: rgb(255,255,255);
+
+  --home-header-height: 600px;
+  --header-height: 500px;
+}
+
+.header__height {
+  height: var(--header-height);
+}
+
+.bg-lines {
+  background: repeating-linear-gradient(45deg,var(--primary-inner),var(--primary-inner) 30px, #04040500 30px, #04040500 50px);
+  color: var(--primary-content);
+}
+.bg-lines-accent {
+  background: repeating-linear-gradient(45deg,var(--accent),var(--accent) 30px, #04040500 30px, #04040500 50px);
+  color: var(--accent-content);
+}
+.bg-lines-gray {
+  background: repeating-linear-gradient(45deg, gray, gray 30px, #04040500 30px, #04040500 50px);
+  color: var(--accent-content);
+}
+
+.link::after {
+  content: '\2693';
+  cursor: pointer;
+}

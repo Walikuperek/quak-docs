@@ -12,20 +12,17 @@
   },
   "learn": {
     "title": "Learn",
-    "type": "page"
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
   },
   "portfolio": {
     "title": "Portfolio",
     "type": "page"
   },
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
   "contact": {
-    "title": "Contact ↗",
-    "type": "page",
-    "href": "https://www.facebook.com/profile.php?id=100014391284754",
-    "newWindow": true
+    "title": "Contact",
+    "type": "page"
   }
 }

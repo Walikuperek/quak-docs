@@ -2,381 +2,203 @@
 title: Home
 ---
 
-import Image from 'next/image'
-import { Callout } from 'nextra/components'
-import { useEffect, useRef } from 'react'
-import { Cards, Card } from 'nextra/components'
-import QthemeLogo from 'components/qtheme-logo'
-import QstoreLogo from 'components/qstore-logo'
-import { Bleed } from 'nextra-theme-docs'
+import { Bleed } from "nextra-theme-docs";
+import { Cards, Card } from "nextra/components";
+import VantaHero from "components/vanta-hero";
 
-<style jsx global>{`
-body {
-    background: transparent;
-}
-.dark body {
-    background: transparent;
-}
-.w-100 {width: 100%;}
-.w-50 {width: 50%;}
-.gap-5 {gap: 1.5rem;}
-.gap-1 {gap: 0.25rem;}
-.flex {display: flex;}
-.flex-row {flex-direction: row;}
-.flex-column {flex-direction: column;}
-.align-center {align-items: center;}
-.justify-center {justify-content: center;}
-.container {
-    width: 100%;
-    max-width: 1200px;
-}
-.text-muted {color: #999;}
-main {
-    text-align: center;
-}
-.mx-auto {margin: 0 auto; width: 100%;}
-.border-red {border: 1px solid red;}
-.bg-muted {
-    padding: 1rem;
-}
-.bg-muted a:hover img {
-    opacity: 1;
-}
-.text-center {text-align: center;}
-.m-5 {margin: 1.5rem;}
-.mt-5 {margin-top: 1.5rem;}
-.border-muted-dotted {
-    border: 1px dotted #999;
-    border-radius: 5px;
-}
-.img-top-below-header {
-    position: absolute;
-    top: 48px;
-    left: 0;
-    width: 100%;
-    z-index: -1;
-    opacity: 0.8;
-}
-.img-top-below-header__quak-logo {
-    position: absolute;
-    top: 48px;
-    left: 0;
-    width: 100%;
-    z-index: -1;
-    opacity: 0.1;
-}
-.top-spacer {
-    height: 4rem;
-}
-.bottom-spacer {
-    height: 5rem;
-}
-@media (min-width: 374px) {
-    .top-spacer {
-        height: 6rem;
-    }
-}
-@media (min-width: 424px) {
-    .top-spacer {
-        height: 8rem;
-    }
-}
-@media (min-width: 544px) {
-    .top-spacer {
-        height: 11rem;
-    }
-}
-@media (min-width: 767px) {
-    .top-spacer {
-        height: 14rem;
-    }
-}
-@media (min-width: 867px) {
-    .top-spacer {
-        height: 17rem;
-    }
-}
-@media (min-width: 1023px) {
-    .top-spacer {
-        height: 20rem;
-    }
-}
-@media (min-width: 1143px) {
-    .top-spacer {
-        height: 23.5rem;
-    }
-}
-@media (min-width: 1440px) {
-    .top-spacer {
-        height: 27rem;
-    }
-}
-@media (min-width: 1549px) {
-    .top-spacer {
-        height: 30rem;
-    }
-}
-@media (min-width: 1667px) {
-    .top-spacer {
-        height: 32rem;
-    }
-}
-@media (min-width: 1919px) {
-    .top-spacer {
-        height: 37rem;
-    }
-}
-`}</style>
 
-<img src="/home/transparent-top-layer.svg" className="img-top-below-header" alt="" />
-<img src="/home/quak-logo.png" className="img-top-below-header__quak-logo" alt="" />
+<VantaHero />
 
-[//]: # (<div className="top-spacer">&nbsp;</div>)
+<h3 class="text-lg mb-2 text-gray-500 font-bold">LEARN</h3>
+<h2 class="text-4xl mb-3 font-bold">
+  Learn with <span class="text-yellow-500">Q</span>
+  <span class="text-fuchsia-500">U</span>
+  <span class="text-violet-500">A</span>
+  <span class="text-red-500">K</span>
+</h2>
+<p class="text-gray-500">Go for knowledge about programming aspects. QUAK</p>
+<p class="text-gray-500">created multiple apps, games and websites, take this knowlege</p>
+<p class="mb-10 text-gray-500">from QUAK. Click Categories to learn more.</p>
 
-<Bleed>
-    <div className="py-24 sm:py-32">
-        <div
-            className="relative isolate overflow-hidden bg-gray-900 px-6 pt-16 shadow-2xl rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
-            <svg viewBox="0 0 1024 1024"
-                 className="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-y-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-full sm:-ml-80 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0"
-                 aria-hidden="true">
-                <circle cx="512" cy="512" r="512" fill="url(#759c1415-0410-454c-8f7c-9a820de03641)" fillOpacity="0.7"/>
-                <defs>
-                    <radialGradient id="759c1415-0410-454c-8f7c-9a820de03641">
-                        <stop stopColor="#7775D6"/>
-                        <stop offset="1" stopColor="#E935C1"/>
-                    </radialGradient>
-                </defs>
-            </svg>
-            <div className="max-w-md text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
-                <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Company that makes things.</h1>
-                <p className="mt-6 text-lg leading-8 text-gray-300">QUAK is providing IT solutions for the WEB.</p>
-                <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
-                    <a href="/libraries/qstore/"
-                       className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                    >See Libraries</a>
-                    <a href="/portfolio/" className="text-sm font-semibold leading-6 text-white">Portfolio <span
-                        aria-hidden="true">→</span></a>
-                </div>
-            </div>
-            <div className="relative mt-16 h-80 lg:mt-8">
-                <img className="brightness-90 absolute left-0 top-0 w-[57rem] max-w-none rounded-md bg-white/5 ring-1 ring-white/10"
-                     src="/history/quak-collage-purple.png" alt="App screenshot"
-                     />
-            </div>
-        </div>
-    </div>
-</Bleed>
-
-<Bleed>
-<div className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:overflow-visible lg:px-0">
-  <div className="absolute inset-0 -z-10 overflow-hidden">
-    <svg className="absolute left-[max(50%,25rem)] top-0 h-[64rem] w-[128rem] -translate-x-1/2 stroke-gray-200 [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]" aria-hidden="true">
-      <defs>
-        <pattern id="e813992c-7d03-4cc4-a2bd-151760b470a0" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
-          <path d="M100 200V.5M.5 .5H200" fill="none" />
-        </pattern>
-      </defs>
-      <svg x="50%" y="-1" className="overflow-visible fill-gray-50">
-        <path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" strokeWidth="0" />
-      </svg>
-      <rect width="100%" height="100%" strokeWidth="0" fill="url(#e813992c-7d03-4cc4-a2bd-151760b470a0)" />
-    </svg>
+<section class="flex align-center justify-evenly gap-1 w-full">
+  <div class="h-12 border-solid border-2 p-2 border-violet-500 hover:border-violet-900 hover:cursor-pointer rouded-2xl w-full flex flex-col align-center justify-center gap-3">
+    <span class="mx-auto font-bold text-lg">Backend</span>
   </div>
-  <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start lg:gap-y-10">
-    <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
-      <div className="lg:pr-4">
-        <div className="lg:max-w-lg">
-          <p className="text-base font-semibold leading-7 text-indigo-600">Theme faster</p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">An easier theming</h2>
-          <p className="mt-6 text-xl leading-8 text-gray-700">Qtheme is a library for theming your app + simple and intuitive usage.</p>
-        </div>
+  <div class="h-12 border-solid border-2 border-fuchsia-500 hover:border-fuchsia-900 hover:cursor-pointer rouded-2xl w-full flex flex-col align-center justify-center gap-3">
+    <span class="mx-auto font-bold text-lg">Frontend</span>
+  </div>
+  <div class="h-12 border-solid border-2 border-sky-500 hover:border-sky-900 hover:cursor-pointer rouded-2xl w-full flex flex-col align-center justify-center gap-3">
+    <span class="mx-auto font-bold text-lg">Cloud</span>
+  </div>
+</section>
+
+<section class="bg-lines flex mt-10 mb-20 h-12 w-full"></section>
+
+<h3 class="text-lg mb-2 text-gray-500 font-bold">READ</h3>
+<h2 class="text-4xl mb-3 font-bold">Latest readings</h2>
+<p class="text-gray-500">Readings are sites with detailed informations</p>
+<p class="text-gray-500">about given topic. Read latest ones from Learn</p>
+<p class="mb-10 text-gray-500">or go to [Categories](/learn) list.</p>
+
+<section class="mb-20 flex align-center justify-evenly gap-1 w-full">
+  <div class="p-2 border-solid border-2 border-violet-900 hover:border-violet-500 hover:bg-violet-300 hover:text-black hover:cursor-pointer w-full flex flex-col align-center gap-3">
+    <span class="bg-orange-50 border border-2 border-orange-300 w-fit px-5 text-black rounded-lg">
+      Bun
+    </span>
+    <span class="font-bold text-lg">Bun http library</span>
+    <p class="text-gray-500 mt-0">Build with me Express like library but with Bun.</p>
+  </div>
+  <div class="p-2 border-solid border-2 border-fuchsia-900 hover:border-fuchsia-500 hover:bg-fuchsia-300 hover:text-black hover:cursor-pointer w-full flex flex-col align-center gap-3">
+    <span class="bg-yellow-200 border border-2 border-yellow-500 w-fit px-5 text-black rounded-lg">
+      JavaScript
+    </span>
+    <span class="font-bold text-lg">Light/dark</span>
+    <p class="text-gray-500 mt-0">Check out how to light/dark your app and more.</p>
+  </div>
+  <div class="p-2 border-solid border-2 border-sky-900 hover:border-sky-500 hover:bg-sky-300 hover:text-black hover:cursor-pointer w-full flex flex-col align-center gap-3">
+    <span class="bg-blue-200 border border-2 border-blue-500 w-fit px-5 text-black rounded-lg">
+      GCP
+    </span>
+    <span class="font-bold text-lg">Running a basic server</span>
+    <p class="text-gray-500 mt-0">Compute Engine on Google Cloud Platform is easy to start with.</p>
+  </div>
+</section>
+
+<section class="bg-lines-accent flex mt-10 mb-20 h-40 w-full"></section>
+
+<h3 class="text-lg mb-2 text-gray-500 font-bold">LIBRARIES</h3>
+<h2 class="text-4xl mb-3 font-bold">
+  Libraries builded by <span class="text-yellow-500">Q</span>
+  <span class="text-fuchsia-500">U</span>
+  <span class="text-violet-500">A</span>
+  <span class="text-red-500">K</span>
+</h2>
+<p class="text-gray-500">QUAK during the process of library creation is</p>
+<p class="text-gray-500">focused mostly on end user experience. We devs,</p>
+<p class="mb-10 text-gray-500">deserved it. Click Library to learn more.</p>
+
+<section class="lg:w-9/12 mx-auto flex flex-col align-center justify-evenly gap-5 w-full">
+  <div id="bun_http_card" class="h-100 border-solid border-2 p-3 bg-zinc-900 border-orange-500 rouded-2xl w-full flex flex-col align-center overflow-hidden max-h-96 gap-3">
+    <section class="flex flex-col align-center justify-evenly gap-1 px-3 mx-auto">
+      <div class="h-12 border-solid border-2 p-2 border-orange-600 rounded-2xl w-full flex flex-col align-center justify-center gap-3">
+        <span class="mx-auto font-bold text-lg">Bun-http</span>
       </div>
+    </section>
+    
+    <span class="text-lg text-white">Very fast HTTP server for Bun. 0 dependencies.</span>
+
+    <div class="flex align-center">
+      <a href="/portfolio/" className="px-2 text-center rounded-md whitespace-nowrap bg-orange-500 px-0.75 py-0.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        See blog post
+      </a>
+      <a href="/portfolio/" className="px-2 text-center rounded-md whitespace-nowrap px-0.75 py-0.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        GitHub repo <span aria-hidden="true">→</span>
+      </a>
     </div>
-    <div className="-ml-12 -mt-12 p-12 lg:sticky lg:top-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:overflow-hidden">
-      <img className="w-[48rem] max-w-none rounded-xl bg-gray-900 shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem]" src="/docs/qtheme_webpage_tin.png" alt="" />
-    </div>
-    <div className="lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
-      <div className="lg:pr-4">
-        <div className="max-w-xl text-base leading-7 text-gray-700 lg:max-w-lg">
-          <p>To use Qtheme you need to declare the theme - create an object with Theme type and init this theme.</p>
-          <p>To set your theme you can use <b>Qtheme.setTheme(yourTheme)</b>.</p>
-          <ul role="list" className="mt-8 space-y-8 text-gray-600">
-            <li className="flex gap-x-3">
-              <svg className="mt-1 h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fillRule="evenodd" d="M5.5 17a4.5 4.5 0 01-1.44-8.765 4.5 4.5 0 018.302-3.046 3.5 3.5 0 014.504 4.272A4 4 0 0115 17H5.5zm3.75-2.75a.75.75 0 001.5 0V9.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z" clipRule="evenodd" />
-              </svg>
-              <span><strong className="font-semibold text-gray-900">Easy to integrate.</strong> Adding Qtheme is simple as adding in HTML fields like: <b>class="text-primary"</b>. You can simply iterate whole process file-by-file.</span>
-            </li>
-            <li className="flex gap-x-3">
-              <svg className="mt-1 h-5 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path d="M4.632 3.533A2 2 0 016.577 2h6.846a2 2 0 011.945 1.533l1.976 8.234A3.489 3.489 0 0016 11.5H4c-.476 0-.93.095-1.344.267l1.976-8.234z" />
-                <path fillRule="evenodd" d="M4 13a2 2 0 100 4h12a2 2 0 100-4H4zm11.24 2a.75.75 0 01.75-.75H16a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75h-.01a.75.75 0 01-.75-.75V15zm-2.25-.75a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75H13a.75.75 0 00.75-.75V15a.75.75 0 00-.75-.75h-.01z" clipRule="evenodd" />
-              </svg>
-              <span><strong className="font-semibold text-gray-900">Fast-multiple-theme testing.</strong> You can easily create infinite number of themes. Go with your imagination and easily test ideas.</span>
-            </li>
-          </ul>
-          <p className="mt-8">Adding Qtheme to your project is simple as running one command in the terminal and creating then initializing theme object. You can create infinite number of themes and easily use them in your app.</p>
-          <h2 className="mt-16 text-2xl font-bold tracking-tight text-gray-900">Not with my framework? No problem.</h2>
-          <p className="mt-6">Qtheme works with Vanilla/Angular/React/Svelte/any. Try out example Qtheme repositories for Angular, React, Svelte, JS and TS.</p>
-          <div className="mt-10 flex items-start">
-              <a href="https://quak.com.pl/lib/qtheme/" className="flex flex-row align-center rounded-md nx-bg-primary-700/5 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-                  Qtheme Website&nbsp;&rarr;
-              </a>
-          </div>
-        </div>
+
+    ```tsx
+    import { http, Res } from "path/to/lib/http"; // http from bun-http repo
+    http.get("/", (req) => {
+      return new Res(`Hello from home`);
+    });
+    http.get("/product/:productId", (req) => {
+      return new Res(`Product id: ${req.params.productId}`);
+    });
+    http.post("/blog/create", (req) => {
+      return new Res(`${req.params}, ${req.query}, ${req.body}`);
+    });
+
+    const server = http.serve({ port: 3000 });
+    console.log(`Listening on port ${server.port}...`);
+
+    /* Example output
+    $ bun main.ts
+        [0.90ms] ".env"
+        Listening on port 3000...
+        8:27:48 PM: 200 GET /
+        8:27:52 PM: 405 GET /blog/123
+        8:27:56 PM: 200 POST /blog/123
+        8:27:58 PM: 200 GET /__endpoints // [DEV] view with list of all endpoints
+    */
+    ```
+  </div>
+  
+  <div id="qtheme_card" class="h-100 border-solid border-2 p-3 bg-slate-900 border-rose-500 rouded-2xl w-full flex flex-col align-center overflow-hidden max-h-96 gap-3">
+    <section class="flex align-center justify-between gap-1 px-3 w-full mx-auto">
+      <img src="/logos/qtheme.png" alt="Qtheme" class="w-14" />
+      <div class="h-12 border-solid border-2 p-2 border-rose-600 rounded-2xl flex flex-col align-center justify-center gap-3">
+        <span class="mx-auto font-bold text-lg">Qtheme</span>
       </div>
-    </div>
-  </div>
-</div>
-</Bleed>
+    </section>
+    
+    <span class="text-lg text-white">Light/dark/any your app/website. Works with any framework/vanilla.</span>
 
-<Bleed>
-<div className="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
-  <div className="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
-    <div className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style={{clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'}}></div>
-  </div>
-  <div className="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
-    <div className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style={{clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)'}}></div>
-  </div>
-  <div className="max-w-7xl px-6 lg:px-8">
-    <div className="max-w-2xl lg:mx-0">
-      <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">Learn with QUAK</h2>
-      <p className="mt-6 text-lg leading-8 text-gray-300">Check out structured how-to guides about programming aspects. Looking for Cloud, Frontend, Backend? Here we are!</p>
+    <div class="flex align-center">
+      <a href="/portfolio/" className="px-2 text-center rounded-md whitespace-nowrap bg-rose-500 px-0.75 py-0.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        See website
+      </a>
+      <a href="/portfolio/" className="px-2 text-center rounded-md whitespace-nowrap px-0.75 py-0.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        NPM package <span aria-hidden="true">→</span>
+      </a>
     </div>
 
-    <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
-      <dl className="mt-16 grid grid-cols-1 gap-8 sm:mt-20 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col-reverse">
-          <dt className="text-base leading-7 text-gray-300">Categories</dt>
-          <dd className="text-2xl font-bold leading-9 tracking-tight text-white">6</dd>
-        </div>
-        <div className="flex flex-col-reverse">
-          <dt className="text-base leading-7 text-gray-300">Teaches what?</dt>
-          <dd className="text-2xl font-bold leading-9 tracking-tight text-white">WEB and more</dd>
-        </div>
-        <div className="flex flex-col-reverse">
-          <dt className="text-base leading-7 text-gray-300">How?</dt>
-          <dd className="text-2xl font-bold leading-9 tracking-tight text-white">Step-by-step guides</dd>
-        </div>
-        <div className="flex flex-col-reverse">
-          <dt className="text-base leading-7 text-gray-300">QUAK is free</dt>
-          <dd className="text-2xl font-bold leading-9 tracking-tight text-white">Unlimited</dd>
-        </div>
-      </dl>
-    </div>
+    ```tsx
+    import { Qtheme } from '@quak.lib/qtheme'
+    import { darkTheme } from 'path/to/your/themes'
+    Qtheme.setTheme(darkTheme)
+
+    <body class="bg-color text-color">
+      <h1 class="text-primary">Hello world!</h1>
+      <p>This is regular text color</p>
+      <button class="btn">Action</button>
+    </body>
+    ```
   </div>
-</div>
-</Bleed>
 
-## How-to's
-
-<span className="text-muted">Click</span> [LEARN](/learn) <span className="text-muted"> in the navbar and start learning with QUAK</span>
-
-### Categories
-
-<Cards>
-  <Card title="🤖 AI" href="/learn/ai" />
-  <Card title="🏛 Architecture" href="/learn/architecture" />
-  <Card title="👨‍💻 Backend" href="/learn/backend" />
-  <Card title="☁️ Cloud" href="/learn/cloud" />
-  <Card title="📱 Frontend" href="/learn/frontend" />
-  <Card title="🔢 QUAK Codes" href="/learn/quak-codes" />
-</Cards>
-
-### Cloud development guides
-
-<Cards>
-  <Card title={
-      <div className={'text-center w-100'}>
-        <img src="/logos/gcp.png" width={200} style={{margin: '0 auto'}} />
-        <p style={{margin: '0 auto'}}>Google Cloud Platform</p>
+  <div id="qstore_card" class="h-100 border-solid border-2 p-3 bg-zinc-900 border-green-500 rouded-2xl w-full flex flex-col align-center overflow-hidden max-h-96 gap-3">
+    <section class="flex align-center justify-between gap-1 px-3 w-full mx-auto">
+      <img src="/logos/qstore.png" alt="Qstore" class="w-14" />
+      <div class="h-12 border-solid border-2 p-2 border-green-600 rounded-2xl flex flex-col align-center justify-center gap-3">
+        <span class="mx-auto font-bold text-lg">Qstore</span>
       </div>
-  } href="/learn/cloud/google-cloud-platform" />
-</Cards>
+    </section>
+    
+    <span class="text-lg mb-0 text-white">Store for any SPA app. Depends on RxJS.<br />Use it as your reactive source of data.</span>
+    <span class="text-lg mt-0 text-white"></span>
 
-<div style={{position: 'relative', height: '900px', display: 'flex', alignItems: 'center'}}>
-    <img src="/home/blob-alone.svg" style={{transform: 'rotate(90deg)', width: '100%'}} />
-    <img src="/anim/duck-walk/duck_1.png" width={134} height={134} style={{margin: '0 auto', transform: 'translate(-50%, -50%)', position: 'absolute', top: '50%', left: '50%'}} />
-</div>
-
-<Bleed>
-<div className="bg-white py-24 sm:py-32">
-  <div className="mx-auto max-w-7xl px-6 lg:px-8">
-    <div className="max-w-2xl lg:mx-0">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">From the Learn</h2>
-      <p className="mt-2 text-lg leading-8 text-gray-600">Learn how to develop your project with QUAK expert advice.</p>
+    <div class="flex align-center">
+      <a href="/portfolio/" className="px-2 text-center rounded-md whitespace-nowrap bg-green-500 px-0.75 py-0.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        See docs page
+      </a>
+      <a href="/portfolio/" className="px-2 text-center rounded-md whitespace-nowrap px-0.75 py-0.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        GitHub repo <span aria-hidden="true">→</span>
+      </a>
     </div>
-    <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-      <article className="flex max-w-xl flex-col items-start justify-between">
-        <div className="flex items-center gap-x-4 text-xs">
-          <time dateTime="2020-03-16" className="text-gray-500">Sun 30, 2023</time>
-          <a href="/learn/cloud/google-cloud-platform/compute-engine/" className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">GCP - Compute Engine</a>
-        </div>
-        <a href="/learn/cloud/google-cloud-platform/compute-engine/running-a-basic-server/">
-            <div className="group relative">
-                <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">Running a basic server</h3>
-                <span className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Create VM on Compute Engine, connect with SSH, install Apache and check if your VM is serving traffic on its external IP address.</span>
-            </div>
-        </a>
-        <div className="relative mt-8 flex items-center gap-x-4">
-          <img src="/logos/quak_walikuperek.png" alt="" className="h-10 w-10 rounded-full bg-gray-50 translate-y--3" />
-          <div className="text-sm leading-6">
-            <p className="font-semibold mt-0 text-gray-900">Kacper Walczak</p>
-            <p className="text-gray-600">Founder</p>
-          </div>
-        </div>
-      </article>
 
-      <article className="flex max-w-xl flex-col items-start justify-between">
-        <div className="flex items-center gap-x-4 text-xs">
-          <time dateTime="2020-03-16" className="text-gray-500">Sun 29, 2023</time>
-          <a href="/learn/architecture/" className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">Architecture</a>
+    ```tsx
+    class CounterStore extends Store<{count: number}> {
+      count$ = this.select(state => state.count)
+
+      constructor() { super({count: 0}) }
+
+      add(value: number) {
+        this.set({count: this.values.count + value})
+      }
+    }
+
+    @Component({
+      selector: 'app-counter',
+      template: `
+        <div>
+          <span>Count: {{counterStore.count$ | async}}</span>
+          <button (click)="counterStore.add(1)">Increment</button>
+          <button (click)="counterStore.add(5)">Add 5</button>
         </div>
-        <a href="/learn/architecture/drd-frontend/">
-            <div className="group relative">
-                <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">DRD Architecture</h3>
-                <span className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">Check out frontend architecture. Elevation of the DDD vision to the frontend. Easy understandable layers. Angular example repository.</span>
-            </div>
-        </a>
-        <div className="relative mt-8 flex items-center gap-x-4">
-          <img src="/logos/quak_walikuperek.png" alt="" className="h-10 w-10 rounded-full bg-gray-50 translate-y--3" />
-          <div className="text-sm leading-6">
-            <p className="font-semibold mt-0 text-gray-900">Kacper Walczak</p>
-            <p className="text-gray-600">Founder</p>
-          </div>
-        </div>
-      </article>
-    </div>
+      `
+    })
+    class CounterComponent implements OnInit {
+      constructor(public counterStore: CounterStore) {}
+    }
+    ```
   </div>
-</div>
-</Bleed>
-
-<Bleed>
-<div className="bg-amber-200 py-24 sm:py-32">
-  <div className="mx-auto grid max-w-7xl gap-x-8 gap-y-20 px-6 lg:px-8 xl:grid-cols-3">
-    <div className="max-w-2xl">
-      <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Meet QUAK</h2>
-      <p className="mt-6 text-lg leading-8 text-gray-600">QUAK is small IT company located in Poland. Main goal - {'"'}work with professionals, provide well thought out solutions{'"'}.</p>
-      <div className="mt-10 flex items-start">
-          <a href="/about/" className="rounded-md nx-bg-primary-700/5 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
-              📙 About
-          </a>
-      </div>
-    </div>
-    <ul role="list" className="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
-      <li>
-        <div className="flex items-center gap-x-6">
-          <img className="h-16 w-16 rounded-full" src="/home/ja.png" alt="Mine Avatar" />
-          <div>
-            <h3 className="text-base font-semibold leading-7 tracking-tight text-gray-900">Kacper Walczak</h3>
-            <p className="text-sm font-semibold leading-6 text-amber-800">Founder</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div>
-</Bleed>
-
-<div className="bottom-spacer">&nbsp;</div>
+</section>
