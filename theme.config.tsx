@@ -114,9 +114,7 @@ const config: DocsThemeConfig = {
         <div className="flex flex-col">
           <b className="text-gray-500 font-bold">USEFUL</b>
           <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="https://quak.com.pl/valentines/" className="tooltip text-green-500 hover:underline">Valentine's Day Card
-              <span className="tooltiptext">Add ?name=your-name to URL display another name :)</span>
-            </a>
+            <a href="/useful/valentines" className="text-green-500 hover:underline">Valentine's Day Card</a>
           </div>
         </div>
       </div>

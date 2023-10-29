@@ -27,5 +27,10 @@
   "contact": {
     "title": "Contact",
     "type": "page"
+  },
+  "useful": {
+    "title": "Useful",
+    "display": "hidden",
+    "type": "page"
   }
 }
