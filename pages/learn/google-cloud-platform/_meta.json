@@ -1,0 +1,10 @@
+{
+  "running-a-basic-server": {
+    "title": "Running a basic server",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  }
+}

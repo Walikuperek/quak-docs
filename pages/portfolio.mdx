@@ -1,119 +1,119 @@
-<style jsx global>{`
-.img-top-below-header {
-    position: absolute;
-    top: 48px;
-    left: 0;
-    width: 100%;
-    z-index: -1;
-    opacity: 0.8;
-}
-`}</style>
+# Portfolio /
 
-<img src="/home/norway_heim.jpeg" className={'w-100'} alt="Norway" />
+<section class="rounded-2xl header__height w-full bg-emerald-900 bg-opacity-10 border-2 border-emerald-500">
+    <img src="/home/norway_heim.jpeg" className="mx-auto h-full object-contain" alt="Norway" />
+    <p className={'text-center font-xs text-gray-600'}>Norway, I shot it, colors are maxed.</p>
+</section>
 
-<p className={'text-center text-gray-400'}>Norway, the photo taken by me, colors are maxed</p>
+<p className={'mt-10 mb-0 text-gray-400'}>Projects, apps, games, websites; made by QUAK.</p>
+<p className={'mb-3 text-gray-400'}>All of them were <span className="font-bold text-green-400 letter-spacing-2">successfully ✅</span> delivered and deployed.</p>
 
-# Portfolio
+### Projects
 
-## Projects
-
-Projects made for clients from scratch. Click `title` or `icon` to visit details page. Read descriptions to understand the context and look at the videos and screenshots to fully grasp the idea of the every single project.
-
-<ul role="list" className="divide-y divide-gray-100 bg-white p-3 mt-5">
-  <li className="flex justify-between gap-x-6 py-5">
-    <div className="flex gap-x-4">
-        <a href="/portfolio/projects/tech-app"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/tech-app.png" alt="" /></a>
-      <div className="min-w-0 flex-auto">
-        <a href="/portfolio/projects/tech-app"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">TechApp</p></a>
-        <p className="mt-1 truncate text-xs leading-5 text-gray-500">RTV/AGD Service ticket management and easy maps</p>
-      </div>
-    </div>
-    <div className="hidden sm:flex sm:flex-col sm:items-end">
-      <p className="text-sm leading-6 text-gray-900">Active</p>
-      <div className="mt-1 flex items-center gap-x-1.5">
-        <div className="flex-none rounded-full bg-emerald-500/20 p-1">
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+<section className="my-5 flex flex-col gap-3">
+    <a href="/portfolio/tech-app" className="rounded-2xl flex flex-row align-center gap-3 bg-violet-500 bg-opacity-10 border-2 border-violet-600 px-2 py-3 justify-between gap-x-6">
+        <div className="flex gap-x-4">
+            <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/tech-app.png" alt=""/>
+            <div className="min-w-0 flex-auto">
+                <p className="hover:underline text-sm font-semibold leading-6">TechApp</p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">RTV/AGD Service ticket management and easy maps</p>
+            </div>
         </div>
-        <p className="text-xs leading-5 text-gray-500">Online since 2022</p>
-      </div>
-    </div>
-  </li>
+        <div className="hidden sm:flex sm:flex-col sm:items-end">
+            <p className="text-sm leading-6">Active</p>
+            <div className="mt-1 flex items-center gap-x-1.5">
+                <div className="flex-none rounded-full bg-emerald-500/20 p-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
+                </div>
+                <p className="text-xs leading-5 text-gray-500">Online since 2022</p>
+            </div>
+        </div>
+    </a>
+    <a href="/portfolio/roch-shop" className="rounded-2xl flex flex-row align-center gap-3 bg-purple-500 bg-opacity-10 border-2 border-purple-600 px-2 py-3 justify-between gap-x-6">
+        <div className="flex gap-x-4">
+            <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/roch-shop.png" alt=""/>
+            <div className="min-w-0 flex-auto">
+                <p className="hover:underline text-sm font-semibold leading-6">ShopApp</p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">Photographer shop and portfolio platform</p>
+            </div>
+        </div>
+        <div className="hidden sm:flex sm:flex-col sm:items-end">
+            <p className="text-sm leading-6">Off</p>
+            <div className="mt-1 flex items-center gap-x-1.5">
+                <div className="flex-none rounded-full bg-orange-500/20 p-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                </div>
+                <p className="text-xs leading-5 text-gray-500">Active 2021 - 2022</p>
+            </div>
+        </div>
+    </a>
+    <a href="/portfolio/creativo-app" className="rounded-2xl flex flex-row align-center gap-3 bg-yellow-500 bg-opacity-10 border-2 border-yellow-600 px-2 py-3 justify-between gap-x-6">
+        <div className="flex gap-x-4">
+            <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/creativo.png" alt=""/>
+            <div className="min-w-0 flex-auto">
+                <p className="hover:underline text-sm font-semibold leading-6">CreativoApp</p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">Managing orders and invoices</p>
+            </div>
+        </div>
+        <div className="hidden sm:flex sm:flex-col sm:items-end">
+            <p className="text-sm leading-6">Off</p>
+            <div className="mt-1 flex items-center gap-x-1.5">
+                <div className="flex-none rounded-full bg-orange-500/20 p-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                </div>
+                <p className="text-xs leading-5 text-gray-500">Active 2021 - 2022</p>
+            </div>
+        </div>
+    </a>
+    <a href="/portfolio/psy-app" className="rounded-2xl flex flex-row align-center gap-3 bg-teal-500 bg-opacity-10 border-2 border-teal-600 px-2 py-3 justify-between gap-x-6">
+        <div className="flex gap-x-4">
+            <div className="h-12 w-12 flex-none p-1 rounded-full bg-gray-50 font-bold text-4xl text-gray-500 flex align-center justify-center">?</div>
+            <div className="min-w-0 flex-auto">
+                <p className="hover:underline text-sm font-semibold leading-6">PsyApp</p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">Psychologist interactive psycho-test</p>
+            </div>
+        </div>
+        <div className="hidden sm:flex sm:flex-col sm:items-end">
+            <p className="text-sm leading-6">Off</p>
+            <div className="mt-1 flex items-center gap-x-1.5">
+                <div className="flex-none rounded-full bg-orange-500/20 p-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                </div>
+                <p className="text-xs leading-5 text-gray-500">Active 2021 - 2022</p>
+            </div>
+        </div>
+    </a>
+    <a href="/portfolio/creativo-app" className="rounded-2xl flex flex-row align-center gap-3 bg-zinc-500 bg-opacity-10 border-2 border-zinc-600 px-2 py-3 justify-between gap-x-6">
+        <div className="flex gap-x-4">
+            <img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/wrh.png" alt=""/>
+            <div className="min-w-0 flex-auto">
+                <p className="hover:underline text-sm font-semibold leading-6">Wielkopolski Rajd Historyczny</p>
+                <p className="mt-1 truncate text-xs leading-5 text-gray-500">Automobilklub Wielkopolski Official website for oldtimer's event</p>
+            </div>
+        </div>
+        <div className="hidden sm:flex sm:flex-col sm:items-end">
+            <p className="text-sm leading-6">Off</p>
+            <div className="mt-1 flex items-center gap-x-1.5">
+                <div className="flex-none rounded-full bg-orange-500/20 p-1">
+                    <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                </div>
+                <p className="text-xs leading-5 text-gray-500">Active 2019 - 2021</p>
+            </div>
+        </div>
+    </a>
+</section>
 
-  <li className="flex justify-between gap-x-6 py-5">
-    <div className="flex gap-x-4">
-        <a href="/portfolio/projects/shop-app"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/roch-shop.png" alt="" /></a>
-      <div className="min-w-0 flex-auto">
-          <a href="/portfolio/projects/shop-app"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">ShopApp</p></a>
-        <p className="mt-1 truncate text-xs leading-5 text-gray-500">Photographer shop and portfolio</p>
-      </div>
-    </div>
-    <div className="hidden sm:flex sm:flex-col sm:items-end">
-      <p className="text-sm leading-6 text-gray-900">Status</p>
-      <p className="mt-1 text-xs leading-5 text-gray-500">Active 2021-2022</p>
-    </div>
-  </li>
+### QUAK Platform
 
-  <li className="flex justify-between gap-x-6 py-5">
-    <div className="flex gap-x-4">
-        <a href="/portfolio/projects/creativo-app"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/creativo.png" alt="" /></a>
-      <div className="min-w-0 flex-auto">
-          <a href="/portfolio/projects/creativo-app"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">CreativoApp</p></a>
-        <p className="mt-1 truncate text-xs leading-5 text-gray-500">Plumber Managing orders and invoices</p>
-      </div>
-    </div>
-    <div className="hidden sm:flex sm:flex-col sm:items-end">
-      <p className="text-sm leading-6 text-gray-900">Status</p>
-      <p className="mt-1 text-xs leading-5 text-gray-500">Active 2021-2022</p>
-    </div>
-  </li>
-
-  <li className="flex justify-between gap-x-6 py-5">
-    <div className="flex gap-x-4">
-        <a href="/portfolio/projects/psy-app"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/quak.png" alt="" /></a>
-      <div className="min-w-0 flex-auto">
-          <a href="/portfolio/projects/psy-app"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">PsyApp</p></a>
-        <p className="mt-1 truncate text-xs leading-5 text-gray-500">Psychologist interactive psycho-test</p>
-      </div>
-    </div>
-    <div className="hidden sm:flex sm:flex-col sm:items-end">
-      <p className="text-sm leading-6 text-gray-900">Status</p>
-      <p className="mt-1 text-xs leading-5 text-gray-500">Active 2021-2022</p>
-    </div>
-  </li>
-
-  <li className="flex justify-between gap-x-6 py-5">
-    <div className="flex gap-x-4">
-        <a href="/portfolio/projects/wrh"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/wrh.png" alt="" /></a>
-      <div className="min-w-0 flex-auto">
-          <a href="/portfolio/projects/wrh"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Wielkopolski Rajd Historyczny</p></a>
-        <p className="mt-1 truncate text-xs leading-5 text-gray-500">Automobilklub Wielkopolski Official website for oldtimer's event</p>
-      </div>
-    </div>
-    <div className="hidden sm:flex sm:flex-col sm:items-end">
-      <p className="text-sm leading-6 text-gray-900">Status</p>
-      <p className="mt-1 text-xs leading-5 text-gray-500">Active 2019-2021</p>
-    </div>
-  </li>
-
-</ul>
-
-<em>I'm showing only that projects which was made by QUAK only. I have a lot of projects where I work/ed, which I can't show, because of NDA.</em>
-<br />
-<br />
-<em>Currently working in Solwit for one of their clients on worldwide E-Learning app. I'm working with this company for 2 years now as a full stack developer with Python and Angular + Google Cloud Platform.</em>
-
-## QUAK Platform
-
-List of all applications that are available on the QUAK platform.
 <br />
 <em>QUAK is migrating main functionalities to the new platform, so apps and games in fullscreen on phones are not available yet ;( (some time is needed, probably few months more)</em>
 
 <ul role="list" className="divide-y divide-gray-100 bg-white p-3 mt-5">
   <li className="flex justify-between gap-x-6 py-5">
     <div className="flex gap-x-4">
-        <a href="/portfolio/quak-platform/qchat"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/qchat.png" alt="" /></a>
+        <a href="/portfolio/qchat"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/qchat.png" alt="" /></a>
       <div className="min-w-0 flex-auto">
-        <a href="/portfolio/quak-platform/qchat"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qchat</p></a>
+        <a href="/portfolio/qchat"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qchat</p></a>
         <p className="mt-1 truncate text-xs leading-5 text-gray-500">Chat app, even had it's own domain `qchat.pl`</p>
       </div>
     </div>
@@ -130,9 +130,9 @@ List of all applications that are available on the QUAK platform.
 
   <li className="flex justify-between gap-x-6 py-5">
     <div className="flex gap-x-4">
-        <a href="/portfolio/quak-platform/qwallet"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/qwallet.png" alt="" /></a>
+        <a href="/portfolio/qwallet"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/qwallet.png" alt="" /></a>
       <div className="min-w-0 flex-auto">
-        <a href="/portfolio/quak-platform/qwallet"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qwallet</p></a>
+        <a href="/portfolio/qwallet"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qwallet</p></a>
         <p className="mt-1 truncate text-xs leading-5 text-gray-500">Manage your money assets</p>
       </div>
     </div>
@@ -149,9 +149,9 @@ List of all applications that are available on the QUAK platform.
 
   <li className="flex justify-between gap-x-6 py-5">
     <div className="flex gap-x-4">
-        <a href="/portfolio/quak-platform/qgames"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/quak.png" alt="" /></a>
+        <a href="/portfolio/qgames"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/quak.png" alt="" /></a>
       <div className="min-w-0 flex-auto">
-        <a href="/portfolio/quak-platform/qgames"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qgames</p></a>
+        <a href="/portfolio/qgames"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qgames</p></a>
         <p className="mt-1 truncate text-xs leading-5 text-gray-500">Free games search</p>
       </div>
     </div>
@@ -168,9 +168,9 @@ List of all applications that are available on the QUAK platform.
 
   <li className="flex justify-between gap-x-6 py-5">
     <div className="flex gap-x-4">
-        <a href="/portfolio/quak-platform/qcrypto"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/quak.png" alt="" /></a>
+        <a href="/portfolio/qcrypto"><img className="h-12 w-12 flex-none rounded-full bg-gray-50" src="/logos/quak.png" alt="" /></a>
       <div className="min-w-0 flex-auto">
-        <a href="/portfolio/quak-platform/qcrypto"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qcrypto</p></a>
+        <a href="/portfolio/qcrypto"><p className="hover:underline text-sm font-semibold leading-6 text-gray-900">Qcrypto</p></a>
         <p className="mt-1 truncate text-xs leading-5 text-gray-500">Crypto charts, data from Coingecko</p>
       </div>
     </div>
@@ -186,9 +186,11 @@ List of all applications that are available on the QUAK platform.
   </li>
 </ul>
 
-## Games
+### Games
 
-All games are available for 🖥️ Desktop and 📱 Mobile devices.
+<div className="mt-5 p-2 py-3 rounded-r-2xl bg-blue-900 bg-opacity-10 border-l-4 border-blue-600">
+    <span className="text-blue-500">All games are available for 🖥️ Desktop and 📱 Mobile devices.</span>
+</div>
 
 <div className="">
   <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">

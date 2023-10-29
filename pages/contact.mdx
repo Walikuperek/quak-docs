@@ -1,53 +1,26 @@
-<style jsx global>{`
-  .ml-2 {
-    margin-left: 0.5rem;
-  }
-`}</style>
+import {Spacer} from "../components/ui/generics/spacer";
+import {HeaderText} from "../components/ui/generics/header-text";
 
-# Contact
+<HeaderText>Contact</HeaderText>
 
-QUAK Kacper Walczak is a company that provides services in the field of software development. The company was founded in 2017 (in IT since 2019) by Kacper Walczak. The company's headquarters is located in Poznań, Poland.
+QUAK Kacper Walczak is a company that provides services in the field of software development. Founded in 2017 (in IT since 2019) by Kacper Walczak. Headquarter is located in Poznań, Poland.
 
-<br />
-
-<img
-  src="/about/kacus.png"
-  alt="Kacper Walczak"
-  width="200"
-  align="right"
-  className={"ml-2"}
-/>
+<img src="/about/kacus.png" alt="Kacper Walczak" width="200" align="right" className={"ml-2"} />
 
 Feel free to contact in case of any questions.
 
 ## Contact with me
 
-<br />
-<a
-  className="hover:nx-text-primary-600"
-  href="https://www.linkedin.com/in/kacper-walczak-b4122717a/"
->
-  ➡️ LinkedIn
-</a>
-<br />
-<br />
-<a
-  className="hover:nx-text-primary-600"
-  href="https://www.facebook.com/profile.php?id=100014391284754"
->
-  ➡️ Facebook
-</a>
-<br />
-<br />
-<a className="hover:nx-text-primary-600" href="tel:+48515624369">
-  ➡️ +48 515 624 369
-</a>
-<br />
-<br />
-<a className="hover:nx-text-primary-600" href="mailto:k.walczak@quak.com.pl">
-  ➡️ k.walczak@quak.com.pl
-</a>
+<section className="flex flex-col">
+    <Spacer height={10} />
+    <a className="hover:nx-text-primary-600" href="https://www.linkedin.com/in/kacper-walczak-b4122717a/">➡️ LinkedIn</a>
+    <a className="hover:nx-text-primary-600" href="https://www.facebook.com/profile.php?id=100014391284754">➡️ Facebook</a>
+    <a className="hover:nx-text-primary-600" href="tel:+48515624369">➡️ +48 515 624 369</a>
 
-## Location
+    <p>k.walczak@quak.com.pl</p>
+    <Spacer height={10} />
+</section>
+<HeaderText>Location</HeaderText>
+<p>Poland, Poznań</p>
 
-Poland, Poznań
+<Spacer height={20} />

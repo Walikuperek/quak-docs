@@ -19,7 +19,10 @@
   },
   "portfolio": {
     "title": "Portfolio",
-    "type": "page"
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
   },
   "contact": {
     "title": "Contact",

@@ -1,48 +1,38 @@
-import { Callout } from 'nextra/components'
-import { Cards, Card } from 'nextra/components'
-import { Tabs, Tab } from 'nextra/components'
+import {Text} from "../../components/ui/generics/text";
+import {HeaderText} from "../../components/ui/generics/header-text";
+import {Spacer} from "../../components/ui/generics/spacer";
+import {TagsList} from "../../components/ui/buttons/tags-list";
+import {GCPTag} from "../../components/tags/gcp";
+import {ArchitectureTag} from "../../components/tags/architecture";
+import {LatestCloudReadingHero} from "../../components/ui/sections/latest-cloud-reading-hero";
+import {CloudPosts} from "../../data/cloud-posts";
+import {PostsList} from "../../components/lists/posts-list";
 
-<style jsx global>{`
-    .d-flex {display: flex;}
-    .align-center {align-items: center;}
-    .text-muted {color: #999;}
-    .text-center {text-align: center;}
-    .mt-5 {margin-top: 1.5rem;}
-    .ml-1 {margin-left: 0.25rem;}
-`}</style>
+# Learn / Cloud
 
-# Cloud
+<LatestCloudReadingHero />
 
-Cloud related topics (how-to guides).
+<Spacer />
 
-## Cloud Providers
+<article className="bg-neutral-500 bg-opacity-10 mt-5 mb-20 p-2 pb-5 rounded-3xl">
+    <HeaderText size="h3" color="gray">TAGS</HeaderText>
+    <HeaderText size="h2">All Cloud tags</HeaderText>
+    <Text color="gray" textLines={[
+        "Tag purpose is to show what is the topic of given",
+        "article. Click one to see all related articles."
+    ]} />
 
-<Cards>
-    <Card title={
-            <div>
-                <img src="/logos/gcp.png" />
-                <span>Google Cloud Platform</span>
-            </div>
-        }
-        href="/learn/cloud/google-cloud-platform"
-    />
-</Cards>
+    <hr />
+    <Spacer />
 
-<div className="text-center mt-5">
-  <h2 className="fs-24 text-muted">Guides for products</h2>
-</div>
+    <TagsList>
+        <ArchitectureTag />
+        <GCPTag/>
+    </TagsList>
+</article>
 
-<Tabs items={['GCP']}>
-  <Tab>
-    <Cards>
-        <Card
-            title={
-                <div className={'d-flex align-center'}>
-                    <svg fill="none" fillRule="evenodd" height="20" viewBox="0 0 32 32" width="20" preserveAspectRatio="xMidYMid meet" focusable="false"><path d="M1 9h4v3H1zm0 5h4v3H1zm0 5h4v3H1zM26 9h4v3h-4zm0 5h4v3h-4zm0 5h4v3h-4zM19 1h3v4h-3zm-5 0h3v4h-3zM9 1h3v4H9zm10 25h3v4h-3zm-5 0h3v4h-3zm-5 0h3v4H9z" fill="#616161"></path><path d="M5 5v21h21V5H5zm18 18H8V8h15v15z" fill="#757575"></path><path d="M11 11h9v9h-9z" fill="#757575"></path><path d="M20 20h-4.5v-4.5L20 11z" fill="#424242"></path><path d="M20 20h-9l4.5-4.5z" fill="#616161"></path></svg>
-                    <span className={'ml-1'}>Compute Engine</span>
-                </div>
-            } href="/learn/cloud/google-cloud-platform/compute-engine"
-        />
-    </Cards>
-  </Tab>
-</Tabs>
+<h3 className="text-lg mb-2 text-gray-500 font-bold">READ</h3>
+<h2 className="text-4xl mb-3 font-bold">Readings</h2>
+<p className="mb-10 text-gray-500">Read all Cloud related articles</p>
+
+<PostsList posts={CloudPosts} />

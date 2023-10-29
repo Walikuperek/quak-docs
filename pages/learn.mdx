@@ -1,99 +1,68 @@
----
-title: Learn
----
+import {Spacer} from "../components/ui/generics/spacer";
+import {TagsList} from "../components/ui/buttons/tags-list";
+import {BunTag} from '../components/tags/bun';
+import {JSTag} from "../components/tags/javascript";
+import {TSTag} from "../components/tags/typescript";
+import {GCPTag} from "../components/tags/gcp";
+import {ArchitectureTag} from "../components/tags/architecture";
+import {AngularTag} from "../components/tags/angular";
+import {ExpressJSTag} from "../components/tags/expressjs";
+import {NestJSTag} from "../components/tags/nestjs";
+import {NextJSTag} from "../components/tags/nextjs";
+import {NodeTag} from "../components/tags/node";
+import {PythonTag} from "../components/tags/python";
+import {ReactTag} from "../components/tags/react";
+import {MainCategoriesBtns} from "../components/ui/buttons/main-categories";
+import {HeroLearnCard} from "../components/ui/generics/hero-learn-card";
+import {AllPosts, latestReading} from "../data/posts";
+import {PostsList} from "../components/lists/posts-list";
 
-<section class="header__height w-full border border-2 border-violet-500">
-  <article class="flex flex-col align-between h-full relative">
-    <div class="absolute top-0 left-0 p-2">
-      <div class="bg-orange-50 border border-2 border-orange-300 px-5 text-black rounded-lg font-bold">
-        Bun
-      </div>
-    </div>
-    <section class="content h-full overflow-hidden">
-      <img src="/assets/read/onion_neon_city.png" class="mx-auto" />
-    </section>
-    <header class="px-4 pt-4">
-      <a href="/read/build-bun-http" class="hover:underline text-2xl font-bold mb-3">How to build HTTP server with Bun</a>
-      <p class="text-lg text-gray-400">Build with me bun-http library</p>
-      <p class="text-lg text-gray-400">and check how easy it is.</p>
-    </header>
-    <footer class="px-4 pt-4 pb-10">
-      <a href="/learn/backend" class="w-40 align-center justify-center flex bg-violet-500 hover:bg-violet-900 text-white font-bold px-4 py-1 rounded">
-        Read more
-      </a>
-    </footer>
-  </article>
-</section>
+# Learn /
 
-<h1 class="text-4xl mt-16 mb-3 font-bold">
-  Learn with <span class="text-yellow-500">Q</span>
-  <span class="text-fuchsia-500">U</span>
-  <span class="text-violet-500">A</span>
-  <span class="text-red-500">K</span>
-</h1>
-<p class="text-gray-500">Go for knowledge about programming aspects. QUAK</p>
-<p class="text-gray-500">created multiple apps, games and websites, take this knowlege</p>
-<p class="mb-10 text-gray-500">from QUAK. Click Categories to learn more.</p>
+<HeroLearnCard
+    category={latestReading.color}
+    link={latestReading.link}
+    tag={latestReading.tag}
+    image={latestReading.image}
+    author={latestReading.author}
+    createdAt={latestReading.createdAt}
+    title={latestReading.title}
+    descriptionTextLines={latestReading.descriptionTextLines}
+    label={latestReading.label}
+/>
 
-<section class="flex align-center justify-evenly gap-1 w-full">
-  <a href="/learn/backend" class="h-12 border-solid border-2 p-2 border-violet-500 hover:border-violet-900 hover:cursor-pointer rouded-2xl w-full flex flex-col align-center justify-center gap-3">
-    <span class="mx-auto font-bold text-lg">Backend</span>
-  </a>
-  <a href="/learn/frontend" class="h-12 border-solid border-2 border-fuchsia-500 hover:border-fuchsia-900 hover:cursor-pointer rouded-2xl w-full flex flex-col align-center justify-center gap-3">
-    <span class="mx-auto font-bold text-lg">Frontend</span>
-  </a>
-  <a href="/learn/cloud" class="h-12 border-solid border-2 border-sky-500 hover:border-sky-900 hover:cursor-pointer rouded-2xl w-full flex flex-col align-center justify-center gap-3">
-    <span class="mx-auto font-bold text-lg">Cloud</span>
-  </a>
-</section>
+<h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">CATEGORIES</h3>
+<h2 className="text-4xl mb-3 font-bold">Main categories</h2>
 
-<section class="bg-lines flex mt-10 mb-20 h-12 w-full"></section>
+<MainCategoriesBtns />
 
-<h3 class="text-lg mb-2 text-gray-500 font-bold">TAGS</h3>
-<h2 class="text-4xl mb-3 font-bold">All available tags</h2>
-<p class="text-gray-500">Tag purpose is to show what is the topic of given</p>
-<p class="mb-10 text-gray-500">article. Click one to see all articles with this tag.</p>
+<article className="bg-neutral-500 bg-opacity-10 mt-20 mb-20 p-2 pb-5 rounded-3xl">
+    <h3 className="text-lg mb-2 text-gray-500 font-bold">TAGS</h3>
+    <h2 className="text-4xl mb-3 font-bold">All available tags</h2>
+    <p className="text-gray-500">Tag purpose is to show what is the topic of given</p>
+    <p className="mb-10 text-gray-500">article. Click one to see all articles with this tag.</p>
 
-<section class="flex align-center gap-3">
-  <div class="bg-orange-50 border border-2 border-orange-300 w-fit px-5 text-black rounded-lg">
-    Bun
-  </div>
-  <div class="bg-yellow-200 border border-2 border-yellow-500 w-fit px-5 text-black rounded-lg">
-    JavaScript
-  </div>
-  <div class="bg-blue-200 border border-2 border-blue-500 w-fit px-5 text-black rounded-lg">
-    GCP
-  </div>
-</section>
+    <hr />
+    <Spacer />
 
-<section class="bg-lines-accent flex mt-10 mb-20 h-40 w-full"></section>
+    <TagsList>
+        <ArchitectureTag />
+        <BunTag/>
+        <JSTag/>
+        <TSTag/>
+        <GCPTag/>
+        <AngularTag />
+        <ExpressJSTag />
+        <NestJSTag />
+        <NextJSTag />
+        <NodeTag />
+        <PythonTag />
+        <ReactTag />
+    </TagsList>
+</article>
 
-<h3 class="text-lg mb-2 text-gray-500 font-bold">READ</h3>
-<h2 class="text-4xl mb-3 font-bold">Latest readings</h2>
-<p class="text-gray-500">Readings are sites with detailed informations</p>
-<p class="text-gray-500">about given topic. Read latest ones from Learn</p>
-<p class="mb-10 text-gray-500">or go to [Categories](/learn) list.</p>
+<h3 className="text-lg mb-2 text-gray-500 font-bold">READ</h3>
+<h2 className="text-4xl mb-3 font-bold">All readings</h2>
+<p className="mb-10 text-gray-500">You can jump right in and read all articles.</p>
 
-<section class="mb-20 flex align-center justify-evenly gap-1 w-full">
-  <div class="p-2 border-solid border-2 border-violet-900 hover:border-violet-500 hover:bg-violet-300 hover:text-black hover:cursor-pointer w-full flex flex-col align-center gap-3">
-    <span class="bg-orange-50 border border-2 border-orange-300 w-fit px-5 text-black rounded-lg">
-      Bun
-    </span>
-    <span class="font-bold text-lg">Bun http library</span>
-    <p class="text-gray-500 mt-0">Build with me Express like library but with Bun.</p>
-  </div>
-  <div class="p-2 border-solid border-2 border-fuchsia-900 hover:border-fuchsia-500 hover:bg-fuchsia-300 hover:text-black hover:cursor-pointer w-full flex flex-col align-center gap-3">
-    <span class="bg-yellow-200 border border-2 border-yellow-500 w-fit px-5 text-black rounded-lg">
-      JavaScript
-    </span>
-    <span class="font-bold text-lg">Light/dark</span>
-    <p class="text-gray-500 mt-0">Check out how to light/dark your app and more.</p>
-  </div>
-  <div class="p-2 border-solid border-2 border-sky-900 hover:border-sky-500 hover:bg-sky-300 hover:text-black hover:cursor-pointer w-full flex flex-col align-center gap-3">
-    <span class="bg-blue-200 border border-2 border-blue-500 w-fit px-5 text-black rounded-lg">
-      GCP
-    </span>
-    <span class="font-bold text-lg">Running a basic server</span>
-    <p class="text-gray-500 mt-0">Compute Engine on Google Cloud Platform is easy to start with.</p>
-  </div>
-</section>
+<PostsList posts={AllPosts} />

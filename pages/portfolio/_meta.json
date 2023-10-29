@@ -1,0 +1,30 @@
+{
+  "index": {
+    "title": "Portfolio",
+    "display": "hidden"
+  },
+  "-": {
+    "type": "separator",
+    "title": "Games"
+  },
+  "adventurer": "Adventurer",
+  "quakky": "Quakky",
+  "retro-games": "Retro games",
+  "--": {
+    "type": "separator",
+    "title": "Projects"
+  },
+  "creativo-app": "Creativo App",
+  "psy-app": "Psy App",
+  "shop-app": "Shop App",
+  "tech-app": "Tech App",
+  "wrh": "WRH Website",
+  "---": {
+    "type": "separator",
+    "title": "Platform"
+  },
+  "qchat": "Qchat",
+  "qcrypto": "Qcrypto",
+  "qgames": "Qgames",
+  "qwallet": "Qwallet"
+}

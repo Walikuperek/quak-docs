@@ -1,0 +1,10 @@
+{
+  "state-management": {
+    "title": "State management in Angular",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  }
+}

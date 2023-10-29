@@ -1,22 +1,20 @@
-import { Callout } from 'nextra/components'
-import { Cards, Card } from 'nextra/components'
+import {PostsList} from "../../components/lists/posts-list";
+import {ArchitecturePosts} from "../../data/tag-posts/architecture";
 
-<style jsx global>{`
-    .text-muted {color: #999;}
-    .text-center {text-align: center;}
-    .mt-5 {margin-top: 1.5rem;}
-`}</style>
+# #Architecture
 
-# Architecture
+<h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">LEARN</h3>
+<h2 className="text-4xl mb-3 font-bold">What is Architecture</h2>
+<p className="text-gray-500">Architecture in programming is the high level structure of a software system,</p>
+<p className="text-gray-500">the discipline of creating such structures, and the documentation of these structures.</p>
+<p className="text-gray-500">It is the set of structures needed to reason about the software system,</p>
+<p className="text-gray-500">which comprise the software elements, the relations between them</p>
+<p className="text-gray-500">and the properties of both elements and relations.</p>
 
-Available architectures developed or explained by QUAK.
+<section className="bg-lines flex mt-10 mb-20 h-12 w-full"></section>
 
-## Developed by QUAK
+<h3 className="text-lg mb-2 text-gray-500 font-bold">READ</h3>
+<h2 className="text-4xl mb-3 font-bold">All Architecture readings</h2>
+<p className="mb-10 text-gray-500">Read all Architecture related articles</p>
 
-<div className="text-center mt-5">
-  <h2 className="fs-24 text-muted">Frontend</h2>
-</div>
-
-<Cards>
-  <Card title="🏛 DRD - SPA frontend" href="/learn/architecture/drd-frontend" />
-</Cards>
+<PostsList posts={ArchitecturePosts}/>

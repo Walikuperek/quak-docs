@@ -25,21 +25,67 @@ body {
 .header__height {
   height: var(--header-height);
 }
+.row-spacer {
+  flex: 1 1 auto;
+}
 
 .bg-lines {
-  background: repeating-linear-gradient(45deg,var(--primary-inner),var(--primary-inner) 30px, #04040500 30px, #04040500 50px);
+  background: repeating-linear-gradient(189deg,var(--primary-inner),var(--primary-inner) 30px, #04040500 30px, #04040500 50px);
   color: var(--primary-content);
 }
 .bg-lines-accent {
-  background: repeating-linear-gradient(45deg,var(--accent),var(--accent) 30px, #04040500 30px, #04040500 50px);
+  background: repeating-linear-gradient(189deg,var(--accent),var(--accent) 30px, #04040500 30px, #04040500 50px);
   color: var(--accent-content);
 }
+.bg-lines-violet {
+  background: repeating-linear-gradient(189deg,#8b5cf6,#8b5cf6 30px, #2e1065 30px, #2e1065 50px);
+  color: white;
+}
+.bg-lines-purple {
+  background: repeating-linear-gradient(189deg,#a855f7,#a855f7 30px, #3b0764 30px, #3b0764 50px);
+  color: white;
+}
+.bg-lines-fuchsia {
+  background: repeating-linear-gradient(189deg,#d946ef,#d946ef 30px, #4a044e 30px, #4a044e 50px);
+  color: white;
+}
+.bg-lines-sky {
+  background: repeating-linear-gradient(189deg,#0ea5e9,#0ea5e9 30px, #082f49 30px, #082f49 50px);
+  color: white;
+}
 .bg-lines-gray {
-  background: repeating-linear-gradient(45deg, gray, gray 30px, #04040500 30px, #04040500 50px);
+  background: repeating-linear-gradient(189deg, gray, gray 30px, #04040500 30px, #04040500 50px);
   color: var(--accent-content);
 }
 
 .link::after {
   content: '\2693';
   cursor: pointer;
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 190px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

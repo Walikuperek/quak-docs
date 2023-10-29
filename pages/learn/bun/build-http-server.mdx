@@ -1,0 +1,328 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";import { FileTree } from 'nextra/components'
+import { BunTag } from '../../../components/tags/bun';
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+
+# Build HTTP with Bun
+
+<HeroLearnCard
+    category="bun"
+    tag={<BunTag />}
+    image={<section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-pink-600 animate-bounce delay-1000 h-20 w-20 p-1 mt-20 text-white font-bold">Req</div>
+        <div className="bg-blue-600 h-40 w-40 p-1 mt-20 text-white font-bold">Server</div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="25-10-2023"
+    title="Build HTTP with Bun"
+    descriptionTextLines={[
+        "Learn how to build HTTP server with Bun.",
+        "It's very easy and fast.",
+        "You can use it in your projects.",
+    ]}
+    label={<></>}
+/>
+
+Very fast HTTP server library based on Bun. Feel free to use it in your projects. Just copy the `lib/src/http`.
+
+[Bun-http GutHub repo](https://github.com/Walikuperek/Bun-http/tree/master)
+
+## Final usage
+
+This is how you can use it in your project.
+
+> `serve` method should be last method in chain.
+
+```ts
+import { http, Res } from "./lib/src/http";
+
+const str = (val: any) => JSON.stringify(val);
+
+http.get("/", (req) => {
+  return new Res(`Hello from home`);
+});
+http.get("/product/:productId", (req) => {
+  return new Res(`Product (id: ${req.params.productId})`);
+});
+http.post("/blog/create", (req) => {
+  return new Res(`
+    params: ${str(req.params)},
+    query: ${str(req.query)},
+    body: ${str(req.body)}
+  `);
+});
+
+const server = http.serve({ port: 3000 });
+console.log(`Listening on port ${server.port}...`);
+
+/* Example output
+bun main.ts
+    [0.90ms] ".env"
+    Listening on port 3000...
+    8:27:48 PM: 200 GET /
+    8:27:52 PM: 405 GET /blog/123
+    8:27:56 PM: 200 POST /blog/123
+    8:27:58 PM: 200 GET /__endpoints
+*/
+```
+
+## How to build it
+
+1. Create library folder `mkdir lib`
+2. Create `src` folder `mkdir lib/src`
+3. Create `http.ts` file `touch lib/src/http.ts`
+4. Create `index.ts` file `touch lib/index.ts`
+5. Create `tsconfig.json` file `touch lib/tsconfig.json`
+6. Create `package.json` file `touch lib/package.json`
+7. Create `README.md` file `touch lib/README.md`
+
+### Final folder structure
+
+<FileTree>
+  <FileTree.Folder name="lib" defaultOpen>
+    <FileTree.File name="package.json" />
+    <FileTree.File name="tsconfig.json" />
+    <FileTree.File name="index.ts" />
+    <FileTree.File name="README.md" />
+    <FileTree.Folder name="src" defaultOpen>
+      <FileTree.File name="http.ts" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+### Build http object
+
+Http object will be our main object to build http server. It will have methods like `get`, `post`, `put`, etc. and `serve` method to start server.
+
+> router shouldn't be public. Consider change to class with private router.
+
+```ts
+// lib/src/http.ts
+export type ServeOptions = { port?: number };
+const defaultServeOptions: ServeOptions = {
+  port: 3000,
+};
+
+export const http = {
+  router: new Router(),
+
+  get(path: string, handler: (req: Req) => Res) {
+    this.router.endpoints.push({ path, handler, method: "GET" });
+  },
+
+  post(path: string, handler: (req: Req) => Res) {
+    this.router.endpoints.push({ path, handler, method: "POST" });
+  },
+
+  put(path: string, handler: (req: Req) => Res) {
+    this.router.endpoints.push({ path, handler, method: "PUT" });
+  },
+
+  delete(path: string, handler: (req: Req) => Res) {
+    this.router.endpoints.push({ path, handler, method: "DELETE" });
+  },
+
+  patch(path: string, handler: (req: Req) => Res) {
+    this.router.endpoints.push({ path, handler, method: "PATCH" });
+  },
+
+  serve(opts = defaultServeOptions) {
+    return Bun.serve({
+      port: opts.port,
+      fetch(req) {
+        return http.router.route(req);
+      },
+      error(err) {
+        return new Res(`<p>${err}\n${err.stack}</pre>`, {
+          headers: {
+            "Content-Type": "text/html",
+          },
+        });
+      },
+    });
+  },
+};
+```
+
+### Build router class
+
+Router should be able to handle request and route to proper endpoint. For example:
+
+```ts
+const router = new Router();
+router.endpoints.push({ path: "/blog/:id", handler: (req) => {...} });
+
+// request GET /blog/123
+router.route(request); // { path: "/blog/:id", handler: (req) => {...} }
+```
+
+```ts
+export class Router {
+  endpoints: Endpoints = new Endpoints();
+
+  constructor() {
+    if (Bun.env.PRODUCTION == "false") {
+      // [DEV ONLY] Adds showcase page with all endpoints
+      this.endpoints.push(AdminEndpoints.showcase(this.endpoints));
+    }
+  }
+
+  // Request init from Bun
+  async route(req: Request) {
+    const url = new URL(req.url);
+    const path = url.pathname;
+    const query = url.searchParams;
+    const pathArr = path.split("/");
+    const log = (status: number) =>
+      reqLog({ status, method: req.method, path });
+
+    const endpoint = this.endpoints.getByPath(path);
+    if (!endpoint) {
+      log(404);
+      return new Res("Not found", { status: 404 });
+    }
+    if (req.method !== endpoint.method) {
+      log(405);
+      return new Res("Method not allowed", { status: 405 });
+    }
+
+    const request = new Req(req);
+    request.params = Params.fromPathArray(endpoint.pathArr ?? [], pathArr);
+    request.query = Object.fromEntries(query.entries());
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      request.body = await req.json();
+    }
+    const response = endpoint.handler(request);
+    log(response.status);
+    return response;
+  }
+}
+```
+
+### Create Endpoints
+
+Endpoints should be able to find by path. For example:
+
+```ts
+const endpoints = new Endpoints();
+endpoints.push({ path: "/blog/:id", handler: (req) => {...} });
+endpoints.getByPath("/blog/123"); // { path: "/blog/:id", handler: (req) => {...} }
+```
+
+```ts
+export type Endpoint = {
+  path: string; // /blog/:id
+  handler: (req: Req) => Res;
+  pathArr?: (string | any)[]; // ['blog', ':id']
+  method?: string;
+};
+
+export class Endpoints extends Array<Endpoint> {
+  override push(...endpoints: Endpoint[]) {
+    endpoints.forEach((e) => (e.pathArr = e.path.split("/")));
+    return super.push(...endpoints);
+  }
+
+  override unshift(...endpoints: Endpoint[]) {
+    endpoints.forEach((e) => (e.pathArr = e.path.split("/")));
+    return super.unshift(...endpoints);
+  }
+
+  getByPath(path: string) {
+    const endpoint = this.find((e) => {
+      const pathArr = path.split("/");
+      if (e.path === path) return true;
+      if (!e.pathArr) return false;
+      if (e.pathArr.length !== pathArr.length) return false;
+      return e.pathArr.every((p, i) => {
+        if (p.startsWith(":")) {
+          return true;
+        }
+        return p === pathArr[i];
+      });
+    });
+    return endpoint;
+  }
+}
+```
+
+### Flavor with Req, Res and Params
+
+```ts
+export class Req extends Request {
+  private _body: any = {};
+  public params: { [key: string]: string } = {};
+  public query: { [key: string]: string } = {};
+  get body(): any {
+    return this._body;
+  }
+  set body(val: any) {
+    this._body = val;
+  }
+}
+
+export class Res extends Response {}
+
+const Params = {
+  fromPathArray(endpointPath: string[], requestPath: string[]) {
+    const params: { [key: string]: string } = {};
+    endpointPath.forEach((p, i) => {
+      if (!p.startsWith(":")) return;
+      params[p.slice(1)] = requestPath[i];
+    });
+    return params;
+  },
+};
+```
+
+### Create showcase page
+
+```ts
+/**
+ * [SHOULD BE AVAILABLE DEV ONLY] Adds showcase page with all endpoints
+ */
+class AdminEndpoints {
+  static showcase(endpoints: Endpoint[]): Endpoint {
+    return {
+      path: "/__endpoints",
+      method: "GET",
+      handler: (req) =>
+        new Response(
+          "<h1>Endpoints:</h1>\n<ol>\n" +
+            endpoints
+              .filter((e) => !e.path.startsWith("/__"))
+              .map((e) => "  <li>" + e.path + "</li>")
+              .sort()
+              .join("\n") +
+            "\n</ol>",
+          {
+            headers: {
+              "Content-Type": "text/html",
+            },
+          }
+        ),
+    };
+  }
+}
+```
+
+## Endpoints showcase
+
+This endpoints list was generated for [Final usage](#final-usage) section.
+
+When user writes http.get, http.post, etc. then should be able to visit `localhost:3000/__endpoints` to see all endpoints.
+
+This page will look like this:
+
+![Endpoints showcase](/assets/read/bun_admin_endpoints.png)
+
+That's all. Now you can use your http library.
+
+Consider to add few more features like:
+
+- [ ] Add `http.head` method
+- [ ] Add `middlewares`
+- [ ] etc...
+
+<section className="rounded-2xl bg-lines-violet flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

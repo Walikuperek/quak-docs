@@ -1,0 +1,65 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";import { FileTree } from 'nextra/components'
+import {PythonTag} from "../../../components/tags/python";
+
+# Resize image with Python
+
+<section className="header__height w-full rounded-2xl bg-blue-900 bg-opacity-10 border-2 border-blue-500">
+  <article className="flex flex-col align-between h-full relative">
+    <div className="absolute top-0 left-0 p-2">
+      <PythonTag />
+    </div>
+    <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-pink-600 animate-bounce delay-700 h-20 w-20 p-1 mt-20 text-white font-bold">200x200</div>
+        <div className="bg-pink-600 animate-bounce h-40 w-40 p-1 mt-20 text-white font-bold">400x400</div>
+    </section>
+    <header className="px-4 pb-4 pt-4">
+      <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 28-10-2023</p>
+        <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-blue-200">Resize <b>img</b> with PIL library</h1>
+      <p className="mt-2 text-lg">Get to know how to use PIL library</p>
+      <p className="text-lg">for Python img resize solution.</p>
+    </header>
+  </article>
+</section>
+
+## How to resize image with Python?
+
+You can use PIL library to resize your images. PIL is a Python Imaging Library. It is free and open-source library. It supports many file formats and provides powerful image processing and graphics capabilities.
+
+Other libraries that you can use to resize images are:
+
+- OpenCV
+- Scikit-image
+- Python Wand
+- PythonMagick
+- Pyvips
+
+### Install PIL library
+
+```bash
+pip install Pillow
+```
+
+### Resize image
+
+```python
+from PIL import Image
+
+
+class ImageResizer:
+    @staticmethod
+    def resize(file_path: str, width=100, height=100) -> Image:
+        image = Image.open(file_path)
+        new_image = image.resize((width, height))
+        return new_image
+
+
+if __name__ == "__main__":
+    new_img = ImageResizer.resize(file_path="dalle_onion_img.png", width=200, height=200)
+    new_img.save(f"img_resized(x:{200},y:{200}).png")
+```
+
+That's it! Now you can use this code to resize your images.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

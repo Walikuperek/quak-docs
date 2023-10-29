@@ -1,0 +1,17 @@
+{
+  "index": {
+    "title": "Learn",
+    "display": "hidden"
+  },
+  "-": {
+    "type": "separator",
+    "title": "Categories"
+  },
+  "backend": "Backend",
+  "frontend": "Frontend",
+  "cloud": "Cloud",
+  "--": {
+    "type": "separator",
+    "title": "Tags"
+  }
+}

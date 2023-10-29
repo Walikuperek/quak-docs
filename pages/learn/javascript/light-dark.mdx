@@ -1,0 +1,111 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {JSTag} from '../../../components/tags/javascript';
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+
+# Light / Dark
+
+<HeroLearnCard
+    category="javascript"
+    tag={<JSTag />}
+    image={<section className="flex align-center justify-center h-full overflow-hidden">
+        <div className="bg-zinc-200 h-20 w-20 p-1 mt-20 text-black font-bold">Light</div>
+        <div className="bg-zinc-500 h-20 w-20 p-1 mt-20 text-white font-bold">Dark</div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="23-10-2023"
+    title="Light/dark"
+    descriptionTextLines={[
+        "Check out how to light/dark your website or app."
+    ]}
+    label={<></>}
+/>
+
+## How to light/dark
+
+### Only CSS
+
+To change theme only with CSS you can use `prefers-color-scheme` media query.
+
+```css
+@media (prefers-color-scheme: dark) {
+    body {
+        background: black;
+        color: white;
+    }
+}
+```
+
+### CSS variables
+
+You can also use CSS variables to change theme.
+
+```css
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+body.dark {
+    --bg-color: black;
+    --text-color: white;
+}
+
+body.light {
+    --bg-color: white;
+    --text-color: black;
+}
+```
+
+And then you will need to change class on body element.
+
+```js
+document.body.classList.add('dark');
+document.body.classList.remove('light');
+```
+
+### Use library
+
+Check out [Qtheme](/libraries/qtheme) library. Qtheme is a library that allows you to create themes and change them dynamically.
+
+#### Qtheme
+
+Init theme at the beginning of your app.
+
+```js
+import {Qtheme} from '@quak.lib/qtheme';
+
+Qtheme.setTheme({
+    name: 'dark',
+    atoms: [
+        ['bg-color', 'background:black'],
+        ['text-color', 'color:white']
+    ]
+})
+```
+
+Use in HTML:
+
+```html
+<body class="bg-color text-color">
+    <p>Regular text</p>
+</body>
+```
+
+Change to light theme:
+
+```js
+Qtheme.setTheme({
+    name: 'light',
+    atoms: [
+        ['bg-color', 'background:white'],
+        ['text-color', 'color:black']
+    ]
+})
+```
+
+That's all. You can theme your apps and websites with any approach you want.
+
+
+<section className="rounded-2xl bg-lines-violet flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

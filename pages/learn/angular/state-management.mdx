@@ -1,0 +1,315 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {AngularTag} from "../../../components/tags/angular";
+
+# State management
+
+<section className="header__height w-full rounded-2xl bg-rose-900 bg-opacity-10 border-2 border-rose-500">
+  <article className="flex flex-col align-between h-full relative">
+    <div className="absolute top-0 left-0 p-2">
+      <AngularTag />
+    </div>
+    <section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="flex flex-col bg-gray-800 h-40 w-40 p-1 mt-20 text-white font-bold">
+            <p>Store</p>
+            <p className="text-sm text-slate-400">  &middot; usersList</p>
+            <p className="text-sm text-slate-400">  &middot; selectedUserID</p>
+        </div>
+    </section>
+    <header className="px-4 pb-4 pt-4">
+      <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 10-08-2023</p>
+        <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-rose-200">State management</h1>
+      <p className="mt-2 text-lg">Learn how to manage state in Angular.</p>
+    </header>
+  </article>
+</section>
+
+## How to manage data in Angular?
+
+### What is state management?
+
+State management is a way to manage data in your application. It's a way to store data in one place and share it between components.
+
+It's a way to keep your data in understandable manor and to be easy to access and modify.
+
+### Data in components
+
+It is most often used to manage data in a single component.
+
+It is a good solution where the `data is not shared between components`.
+
+```typescript
+@Component({
+  selector: 'app-users-list',
+  templateUrl: './users-list.component.html',
+  styleUrls: ['./users-list.component.scss']
+})
+export class UsersListComponent implements OnInit {
+  usersList: User[] = [];
+
+  constructor(private usersService: UsersService) {}
+
+  ngOnInit(): void {
+    this.usersService.getUsers().subscribe((users) => {
+      this.usersList = users;
+    });
+  }
+}
+```
+
+Or declarative way:
+
+```typescript
+@Component({
+  selector: 'app-users-list',
+  styleUrls: ['./users-list.component.scss'],
+  template: `
+    <ul>
+      <li *ngFor="let user of usersList$ | async">
+        {{ user.name }}
+      </li>
+    </ul>
+  `
+})
+export class UsersListComponent {
+  usersList$: Observable<User[]>;
+
+  constructor(private usersService: UsersService) {
+    this.usersList$ = this.usersService.getUsers();
+  }
+}
+```
+
+### Data in services
+
+Store data in service when you need to share it between components. It will be very readable and easy to use.
+
+It is a good solution where the `data is shared between components`.
+
+```typescript
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersService {
+  usersList$: Observable<User[]>;
+  selectedUserID$: Observable<number | null>;
+
+  constructor(private http: HttpClient) {
+      this.usersList$ = this.http.get<User[]>('https://jsonplaceholder.typicode.com/users');
+      this.selectedUserID$ = new BehaviorSubject<number | null>(null);
+  }
+
+  selectUser(id: number): void {
+      this.selectedUserID$.next(id);
+  }
+}
+```
+
+It can be used in components like this:
+
+```typescript
+@Component({
+  selector: 'app-users-list',
+  styleUrls: ['./users-list.component.scss'],
+  template: `
+    <ul>
+      <li *ngFor="let user of usersService.usersList$ | async">
+        <button (click)="usersService.selectUser(user.id)">{{ user.name }}</button>
+      </li>
+    </ul>
+    <p *ngIf="usersService.selectedUserID$ | async as selectedUserID">
+      Selected user ID: {{ selectedUserID }}
+    </p>
+  `
+})
+export class UsersListComponent {
+  constructor(public usersService: UsersService) {}
+}
+```
+
+### Data in store
+
+Store data in store when you need to share it between components. Just focus on the data, not on the implementation. And encapsulate the implementation in the store.
+
+It is a good solution where the `data is shared and listened between multiple components`.
+
+```typescript
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersStore {
+  private usersListSubject = new BehaviorSubject<User[]>([]);
+  private selectedUserIDSubject = new BehaviorSubject<number | null>(null);
+
+  usersList$: Observable<User[]> = this.usersListSubject.asObservable();
+  selectedUserID$: Observable<number | null> = this.selectedUserIDSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    this.http.get<User[]>('https://jsonplaceholder.typicode.com/users').subscribe((users) => {
+      this.usersListSubject.next(users);
+    });
+  }
+
+  selectUser(id: number): void {
+    this.selectedUserIDSubject.next(id);
+  }
+}
+```
+
+Or maybe add Actions to the store, you can listen to them and react to them in any place of your application:
+
+```typescript
+@Injectable({
+  providedIn: 'root'
+})
+export class UsersStore {
+  private usersListSubject = new BehaviorSubject<User[]>([]);
+  private selectedUserIDSubject = new BehaviorSubject<number | null>(null);
+  private actions$ = new Subject<Action>();
+
+  usersList$: Observable<User[]> = this.usersListSubject.asObservable();
+  selectedUserID$: Observable<number | null> = this.selectedUserIDSubject.asObservable();
+
+  constructor() {
+      this.listen('SELECT_USER').pipe(
+          tap(action => this.selectedUserIDSubject.next(action.payload.id))
+      ).subscribe();
+  }
+
+  dispatch(action: Action): void {
+    this.actions$.next(action);
+  }
+
+  listen(actionType: string): Observable<Action> {
+    return this.actions$.pipe(ofType(actionType));
+  }
+}
+
+function ofType(type: string) {
+  return function<Action>(source: Observable<Action>) {
+    return source.pipe(filter(action => action.type === type));
+  }
+}
+
+class Action {
+  constructor(public type: string, public payload?: any) {}
+}
+```
+
+It can be used in components like this:
+
+```typescript
+@Component({
+  selector: 'app-users-list',
+  styleUrls: ['./users-list.component.scss'],
+  template: `
+    <ul>
+      <li *ngFor="let user of usersStore.usersList$ | async">
+        <button (click)="usersStore.dispatch({ type: 'SELECT_USER', payload: { id: user.id } })">
+          {{ user.name }}
+        </button>
+      </li>
+    </ul>
+    <p *ngIf="usersStore.selectedUserID$ | async as selectedUserID">
+      Selected user ID: {{ selectedUserID }}
+    </p>
+  `
+})
+export class UsersListComponent {
+  constructor(public usersStore: UsersStore) {}
+}
+```
+
+### Use library
+
+You can use library to manage your state. There are many libraries to choose from.
+
+1. [NgRx](https://ngrx.io/)
+2. [Redux](https://redux.js.org/)
+3. [NGXS](https://www.ngxs.io/)
+4. [QStore](/libraries/qstore)
+
+
+#### Qstore
+
+##### Install
+
+Navigate to [Qstore library](/libraries/qstore) for more info about installation.
+
+##### Use
+
+```typescript
+class UsersStore extends Store<{users: User[], selectedUserID: number}> {
+    usersList$ = this.select(state => state.users);
+    selectedUserID$ = this.select(state => state.selectedUserID);
+
+    constructor() {
+        super({
+            users: [],
+            selectedUserID: null
+        });
+    }
+
+    selectUser(id: number): void {
+        this.set({ selectedUserID: id });
+    }
+}
+```
+
+Or use actions:
+
+```typescript
+class UsersStore extends Store<{users: User[], selectedUserID: number}> {
+    usersList$ = this.select(state => state.users);
+    selectedUserID$ = this.select(state => state.selectedUserID);
+
+    actions = {
+        selectUser: ActionWith<number>(),
+        fetchUsers: Action()
+    }
+
+    constructor() {
+        super({
+            users: [],
+            selectedUserID: null
+        });
+        this.actions.fetchUsers.listen().subscribe(async () => {
+            this.set({ users: await this.http.get<User[]>('https://jsonplaceholder.typicode.com/users') });
+        });
+        this.actions.selectUser.listen().subscribe((id) => {
+            this.set({ selectedUserID: id });
+        });
+    }
+}
+```
+
+And use store in components:
+
+```typescript
+@Component({
+  selector: 'app-users-list',
+  styleUrls: ['./users-list.component.scss'],
+  template: `
+    <ul>
+      <li *ngFor="let user of usersStore.usersList$ | async">
+        <button (click)="usersStore.actions.selectUser.execute(user.id)">
+          {{ user.name }}
+        </button>
+      </li>
+    </ul>
+    <p *ngIf="usersStore.selectedUserID$ | async as selectedUserID">
+      Selected user ID: {{ selectedUserID }}
+    </p>
+  `
+})
+export class UsersListComponent {
+  constructor(public usersStore: UsersStore) {
+      this.usersStore.actions.fetchUsers.execute();
+  }
+}
+```
+
+That's it! Now you can use this examples to manage your state in Angular.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />
