@@ -1,0 +1,208 @@
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+import {TSTag} from "../../../components/tags/typescript";
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+
+# Dependency-Injection-TS
+
+<HeroLearnCard
+    category="typescript"
+    tag={<TSTag/>}
+    image={<section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="flex flex-col">
+            <div className="bg-pink-600 animate-bounce h-10 w-20 p-1 mt-20 text-white font-bold">Service</div>
+            <div className="bg-pink-600 h-10 w-20 p-1 mt-1 text-white font-bold">Service</div>
+        </div>
+        <div className="bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
+            <span className="text-sm text-orange-500">@Injectable()</span><br/><span className="text-sm text-orange-500">class</span> App
+        </div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="05-11-2023"
+    title="Dependency Injection Pattern in TypeScript"
+    descriptionTextLines={[
+        "Learn how to implement Dependency Injection in TS."
+    ]}
+    label={<></>}
+/>
+
+Dependency Injection Pattern in TypeScript.
+
+> Note!
+> Unfortunately it does not work with Bun, but it works with NodeJS.
+
+## Usage
+
+Pattern usage:
+
+```typescript
+
+// Simple class for dependency injection testing
+class Test {
+  constructor() {
+    console.log("Test constructor - created");
+  }
+
+  doSomething(): void {
+    console.log("Test did something");
+  }
+}
+
+// Entry point class
+@Injectable()
+class App implements OnDestroy {
+  constructor(public test: Test) {}
+
+  onDestroy(): void {
+    console.log("App destroyed");
+  }
+}
+
+const [entryClass, destroy] = bootstrap<App>(App);
+// Initialize the entry point class instance
+// Output:
+//   Injector resolving class Test
+//   Test constructor - created
+//   Injector created class Test
+//   Injector resolving class App
+//   Injector created class App
+
+entryClass.test.doSomething();
+// Use the entry point class instance
+// Output:
+//   Test did something
+
+destroy();
+// Destroy the entry point class instance
+// Output:
+//   App destroyed
+```
+
+## Pattern
+
+### Import reflect-metadata
+
+Import the `reflect-metadata` package to be able to use `Reflect`'s metadata.
+
+```typescript
+import "reflect-metadata";
+```
+
+### Type interface
+
+Create type for classes that will be resolved in `Injector`.
+
+```typescript
+export interface Type<T> {
+  new (...args: any[]): T;
+}
+```
+
+### Injectable decorator
+
+Decorator function to annotate classes which can inject another ones in constructors.
+
+```typescript
+@Injectable()
+class App { /* ... */ }
+```
+
+```typescript
+export const Injectable = (): ((target: Type<any>) => void) => {
+  return (target: Type<any>) => {};
+};
+```
+
+### OnDestroy interface
+
+Lifecycle hook that is used for releasing a resource.
+
+> It will be called automatically by DI container.
+
+```typescript
+export interface OnDestroy {
+  onDestroy(): void;
+}
+```
+
+### Injector class
+
+Injector class that is used for resolving classes.
+
+
+```typescript
+class App { /* ... */ }
+const injector = new Injector();
+
+// bootstrap all dependencies
+const entryClass = injector.resolve<App>(App);
+```
+
+```typescript
+/**
+ * Every entry point class instance starts its own dependency container.
+ * Injector ensures that all decorated classes in the container are singletons.
+ */
+export class Injector extends Map {
+  public resolve<T>(target: Type<any>): T {
+    const tokens = Reflect.getMetadata("design:paramtypes", target) || [];
+    const injections = tokens.map((token: Type<any>) => {
+      return this.resolve<any>(token);
+    });
+    console.log(`Injector is resolving class ${target.name}`);
+
+    const classInstance = this.get(target);
+    if (classInstance) {
+      return classInstance;
+    }
+
+    const newClassInstance = new target(...injections);
+    this.set(target, newClassInstance);
+
+    console.log(
+      `Injector has created class ${newClassInstance.constructor.name}`
+    );
+
+    return newClassInstance;
+  }
+
+  public onDestroy(): void {
+    for (const value of this.values()) {
+      if (typeof value["onDestroy"] === "function") {
+        value["onDestroy"]();
+      }
+    }
+
+    this.clear();
+  }
+}
+```
+
+### Bootstrap function
+
+Function that is used for bootstrapping the entry point class instance.
+
+```typescript
+const [entryClass, destroy] = bootstrap<App>(App);
+```
+
+```typescript
+/**
+ * Bootstraps the entry point class instance of type T.
+ *
+ * @returns entry point class instance and the "destroy" function which destroy the DI container
+ */
+export const bootstrap = <T>(target: Type<any>): [T, () => void] => {
+  // there is exactly one Injector pro entry point class instance
+  const injector = new Injector();
+  // bootstrap all dependencies
+  const entryClass = injector.resolve<T>(target);
+
+  return [entryClass, () => injector.onDestroy()];
+};
+```
+
+That's it! Now you can use this pattern in your applications/libraries.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

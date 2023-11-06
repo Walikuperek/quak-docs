@@ -5,6 +5,7 @@ import {ArchitecturePosts} from "./tag-posts/architecture";
 import {NextjsPosts} from "./tag-posts/nextjs";
 import {ReactPosts} from "./tag-posts/react";
 import {TypescriptPosts} from "./tag-posts/typescript";
+import {newestUpSorter} from "./sorter";
 
 export const FrontendPosts = [
     ...AngularPosts,
@@ -15,3 +16,4 @@ export const FrontendPosts = [
     ...ReactPosts,
     ...TypescriptPosts
 ];
+newestUpSorter(FrontendPosts);

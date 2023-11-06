@@ -10,6 +10,7 @@ import {NextjsPosts} from "./tag-posts/nextjs";
 import {NodePosts} from "./tag-posts/node";
 import {ReactPosts} from "./tag-posts/react";
 import {TypescriptPosts} from "./tag-posts/typescript";
+import {newestUpSorter} from "./sorter";
 
 export const AllPosts = [
     ...AngularPosts,
@@ -25,18 +26,18 @@ export const AllPosts = [
     ...ReactPosts,
     ...TypescriptPosts
 ];
+newestUpSorter(AllPosts);
 
-export const latestReading = PythonPosts[0];
+export const latestReading = AllPosts[0];
 
-export const latestBackendReading = PythonPosts[0];
+export const latestBackendReading = AllPosts.find(post => post.category === "backend");
 
-export const latestFrontendReading = JavascriptPosts[0];
+export const latestFrontendReading = AllPosts.find(post => post.category === "frontend");
 
-export const latestCloudReading = GCPPosts[0];
-
+export const latestCloudReading = AllPosts.find(post => post.category === "cloud");
 
 export const latestThreeReadings = [
-    latestBackendReading,
-    latestFrontendReading,
-    latestCloudReading
+    AllPosts[0],
+    AllPosts[1],
+    AllPosts[2]
 ];

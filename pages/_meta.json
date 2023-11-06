@@ -32,5 +32,21 @@
     "title": "Useful",
     "display": "hidden",
     "type": "page"
+  },
+  "privacy": {
+    "display": "hidden",
+    "title": "Privacy Policy",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
+  },
+  "issue-contact": {
+    "display": "hidden",
+    "title": "Issue contact",
+    "type": "page",
+    "theme": {
+      "layout": "full"
+    }
   }
 }

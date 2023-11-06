@@ -7,7 +7,7 @@ export const GCPPosts = [
         link: "/learn/google-cloud-platform/running-a-basic-server",
         tag: <GCPTag disabled={true}/>,
         image: <section className="flex align-center justify-center gap-3 h-full overflow-hidden">
-            <div className="bg-blue-600 h-40 w-40 p-1 mt-20 text-white font-bold">Server</div>
+            <div className="bg-blue-600 h-40 w-40 p-1 mt-20 text-white font-bold"><span className="text-gray-400 font-bold">$</span> run VM</div>
         </section>,
         author: "Kacper Walczak",
         createdAt: "20-10-2023",

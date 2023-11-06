@@ -1,0 +1,10 @@
+{
+  "dependency-injection": {
+    "title": "How to utilize DI pattern in your application",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  }
+}

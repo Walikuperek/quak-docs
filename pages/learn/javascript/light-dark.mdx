@@ -35,9 +35,29 @@ To change theme only with CSS you can use `prefers-color-scheme` media query.
 }
 ```
 
+To set only dark theme for your website you can use `color-scheme` attribute on `root` element.
+
+> Mozilla color-scheme docs: [MDN docs](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme)
+
+```css
+:root {
+    color-scheme: dark; /* or light */
+}
+```
+
+To set system theme you can use `color-scheme` attribute on `root` element.
+
+It will apply dark when your system has dark theme and light when your system has light theme.
+
+```css
+:root {
+    color-scheme: light dark;
+}
+```
+
 ### CSS variables
 
-You can also use CSS variables to change theme.
+You can also use CSS variables to change theme dynamically.
 
 ```css
 body {

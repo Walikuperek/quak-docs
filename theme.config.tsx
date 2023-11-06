@@ -36,7 +36,6 @@ const config: DocsThemeConfig = {
   //   link: 'https://github.com/Walikuperek/quak-docs',
   // },
   docsRepositoryBase: 'https://github.com/Walikuperek/quak-docs/tree/main/',
-  // TODO: Add chat link
   // chat: {
   //   link: 'https://discord.com',
   // },
@@ -52,17 +51,14 @@ const config: DocsThemeConfig = {
         <div className="flex flex-col">
           <b className="text-gray-500 font-bold">CONTACT</b>
           <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://www.linkedin.com/in/kacper-walczak-b4122717a/" className="text-green-500 hover:underline">
               LinkedIn
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://www.facebook.com/profile.php?id=100014391284754" className="text-green-500 hover:underline">
               Facebook
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://www.instagram.com/walikuperek/" className="text-green-500 hover:underline">
               Instagram
-            </a>
-            <a href="tel:+48515624369" className="text-green-500 hover:underline">
-              +48 515 624 369
             </a>
             <a href="mailto:k.walczak@quak.com.pl" className="text-green-500 hover:underline">
               k.walczak@quak.com.pl
@@ -72,10 +68,10 @@ const config: DocsThemeConfig = {
         <div className="flex flex-col">
           <b className="text-gray-500 font-bold">GAMES</b>
           <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
               Play Quakky
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://quak.com.pl/adventurer/" className="text-green-500 hover:underline">
               Play Adventurer
             </a>
           </div>
@@ -83,19 +79,16 @@ const config: DocsThemeConfig = {
         <div className="flex flex-col">
           <b className="text-gray-500 font-bold">GITHUB</b>
           <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
-              This page repo
-            </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://github.com/Walikuperek/TS-snippets" className="text-green-500 hover:underline">
               TS-snippets
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
-              Python-snippets
+            <a target="_blank" href="https://github.com/Walikuperek/Python-code-smells" className="text-green-500 hover:underline">
+              Python code smells
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://github.com/Walikuperek/Qtheme" className="text-green-500 hover:underline">
               Qtheme
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a target="_blank" href="https://github.com/Walikuperek/Qstore" className="text-green-500 hover:underline">
               Qstore
             </a>
           </div>
@@ -103,10 +96,10 @@ const config: DocsThemeConfig = {
         <div className="flex flex-col">
           <b className="text-gray-500 font-bold">PRIVACY</b>
           <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a href="/privacy" className="text-green-500 hover:underline">
               Privacy policy
             </a>
-            <a href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+            <a href="/issue-contact" className="text-green-500 hover:underline">
               Issue contact
             </a>
           </div>
