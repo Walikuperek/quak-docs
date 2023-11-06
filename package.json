@@ -13,7 +13,6 @@
     "url": "git+https://github.com/shuding/nextra-docs-template.git"
   },
   "author": "QUAK Kacper Walczak <k.walczak@quak.com.pl>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/shuding/nextra-docs-template/issues"
   },
