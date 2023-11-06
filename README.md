@@ -9,7 +9,4 @@ First, run `pnpm i` to install the dependencies.
 Then, run `pnpm dev` to start the development server and visit localhost:3000.
 
 > [!IMPORTANT]
-> This is a test note.
-```
-   ... 
-```
+> This is a QUAK.COM.PL website repository.
