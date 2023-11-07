@@ -1,0 +1,27 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+
+# Date
+
+## What is date in JS?
+
+Date is a built-in object in JavaScript that stores the date and time. It provides a number of built-in methods for formatting and managing that data.
+
+```javascript
+const f = new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    dayPeriod: "short"
+})
+const today = new Date()
+const yesterday = new Date()
+yesterday.setDate(yesterday.getDate() - 1)
+console.warn(f.format(yesterday))
+console.warn(f.format(today))
+const options = { hour: "numeric", dayPeriod: "short" };
+console.log(new Intl.DateTimeFormat("en-us", options).format(today));
+```
+
+That's all. Start using maps with more confidence.
+
+<section className="rounded-2xl bg-lines-violet flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

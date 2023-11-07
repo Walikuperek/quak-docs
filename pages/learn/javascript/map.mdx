@@ -1,0 +1,235 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+import {JSTag} from "../../../components/tags/javascript";
+
+# Map
+
+<HeroLearnCard
+    category="javascript"
+    tag={<JSTag/>}
+    image={<section className="flex align-center justify-center h-full overflow-hidden">
+        <div className="bg-black h-40 w-40 p-1 mt-20 text-white font-bold"><span className="font-bold">new Map()</span><span className="text-gray-600"><br />&nbsp;&nbsp;.<span className="text-violet-500">set</span>(key, value)<br />&nbsp;&nbsp;.<span className="text-violet-500">get</span>(key)</span></div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="07-11-2023"
+    title="Maps in JS"
+    descriptionTextLines={[
+        "Learn how to use Map in JS, interesting usage."
+    ]}
+    label={<></>}
+/>
+
+## What is map in JS?
+
+- A map is a collection of keyed data items, just like an Object. But the main difference is that Map allows keys of any type.
+
+```javascript
+const map = new Map();
+
+map.set("1", "str1");
+map.get("1"); // str1
+map.delete("1");
+```
+
+## Pass object as a key
+
+We don't have to use only strings as keys. We can use objects as keys.
+
+```javascript
+class Person {
+    constructor(id) {
+        this.id = id;
+    }
+}
+
+const person = new Person(1);
+const personsMap = new Map();
+personsMap.set(person, person);
+
+// some time later
+console.warn(personsMap.get(person)); // Person: { "id": 1 }
+```
+
+### Real world example
+
+We can store data in the Map associated with the current user.
+
+And when the user leaves, we can easily delete all data related to it.
+
+```javascript
+const user = { name: "John" };
+const visitsCountMap = new Map();
+
+visitsCountMap.set(user, 1);
+
+console.warn(visitsCountMap.get(user)); // 1
+
+// delete all data related to the user
+visitsCountMap.delete(user);
+```
+
+## Regular object vs Map
+
+```javascript
+const map = new Map();
+
+map.set("1", "str1"); // a string key
+map.set(1, "num1"); // a numeric key
+map.set(true, "bool1"); // a boolean key
+
+// remember the regular Object? it would convert keys to string
+
+const obj = { 1: "num1" };
+
+// That's why they are different:
+console.warn(map.get(1)); // 'num1'
+console.warn(obj["1"]); // 'num1'
+
+// Map keeps the type:
+console.warn(map.get(1)); // 'num1'
+console.warn(map.get("1")); // 'str1'
+```
+
+## Chaining
+
+```javascript
+const map = new Map();
+
+map
+    .set("1", "str1")
+    .set(1, "num1")
+    .set(true, "bool1");
+
+console.log(map.values()) // MapIterator {'str1', 'num1', 'bool1'}
+```
+
+## Properties
+
+### Symbol.species
+> According to [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/@@species)
+> The @@species property returns the default constructor function, which is the Map constructor for Map.
+```javascript
+const map = new Map();
+console.warn(map[Symbol.species]); // [Function: Map]
+```
+
+### size
+```javascript
+const map = new Map();
+map.set("1", "str1");
+console.warn(map.size); // 1
+```
+
+## Methods
+
+### Symbol.iterator
+```javascript
+const map = new Map();
+map.set("1", "str1");
+for (const item of map[Symbol.iterator]()) {
+console.warn(item); // [ '1', 'str1' ]
+}
+```
+
+### clear
+```javascript
+const map = new Map();
+map.set("1", "str1");
+map.clear();
+```
+
+### delete
+```javascript
+const map = new Map();
+map.set("1", "str1");
+map.delete("1");
+```
+
+### entries
+```javascript
+const map = new Map();
+map.set("1", "str1");
+console.warn(map.entries()); // [Map Entries] { [ '1', 'str1' ] }
+```
+
+### forEach
+```javascript
+const map = new Map();
+map.set("1", "str1");
+map.forEach((value, key) => {
+    console.warn(value, key); // str1 1
+});
+```
+
+### get
+```javascript
+const map = new Map();
+map.set("1", "str1");
+console.warn(map.get("1")); // str1
+```
+
+### groupBy
+```javascript
+const users = [
+    { id: 1, name: "John" },
+    { id: 2, name: "John" },
+    { id: 3, name: "Jane" }
+];
+
+const map = Map.groupBy(users, (user) => user.name);
+console.log(map); // Map(2) {'John' => Array(2), 'Jane' => Array(1)}
+```
+
+### has
+```javascript
+const map = new Map();
+map.set("1", "str1");
+console.warn(map.has("1")); // true
+```
+
+### keys
+```javascript
+const map = new Map();
+map.set("1", "str1");
+console.warn(map.keys()); // [Map Iterator] { '1' }
+```
+
+### set
+> Will override the value if the key already exists.
+```javascript
+const map = new Map();
+map.set("1", "str1");
+```
+
+### values
+```javascript
+const map = new Map();
+map.set("1", "str1");
+console.warn(map.values()); // [Map Iterator] { 'str1' }
+```
+
+## Extending Map
+
+Take a look how to extend Map class.
+
+```javascript
+class ExtMap extends Map {
+    get(key) {
+        return super.get(key);
+    }
+
+    set(key, value) {
+        return super.set(key, value);
+    }
+}
+
+const map = new ExtMap();
+map.set("1", "str1");
+console.warn(map.get("1")); // str1
+```
+
+That's all. Start using maps with more confidence.
+
+<section className="rounded-2xl bg-lines-violet flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

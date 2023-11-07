@@ -1,0 +1,18 @@
+```javascript
+```javascript
+const groupBy = (array, key) => {
+    return array.reduce((result, currentValue) => {
+        (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
+        return result;
+    }, {});
+};
+
+const array = [
+    { id: 1, name: "John" },
+    { id: 2, name: "John" },
+    { id: 3, name: "Jane" }
+];
+
+const grouped = groupBy(array, "name");
+console.warn(grouped); // { John: [ { id: 1, name: 'John' }, { id: 2, name: 'John' } ], Jane: [ { id: 3, name: 'Jane' } ] }
+```

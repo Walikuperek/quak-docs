@@ -26,6 +26,7 @@ export function PostsList({posts}: {posts: CardPost[]}) {
                             <div className="p-2 flex flex-row">
                                 <img loading="lazy" className="h-12 w-12 my-auto flex-none rounded-full bg-neutral-300 bg-opacity-10" src={post.authorAvatarUrl ?? "/logos/quak.png"} alt="Post Author Avatar" />
                                 <div className="p-2 min-w-0 flex-auto">
+                                    {/*<p className="text-sm text-gray-500 font-semibold leading-4">{post.createdAt}</p>*/}
                                     <p className="text-sm font-semibold leading-6">{post.title}</p>
                                     <p className="mt-1 truncate text-xs leading-5">{post.description}</p>
                                 </div>

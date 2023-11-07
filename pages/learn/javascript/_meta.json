@@ -6,5 +6,29 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "array": {
+    "title": "Array",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  },
+  "map": {
+    "title": "Map",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  },
+  "date": {
+    "title": "Date",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }

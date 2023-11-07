@@ -20,9 +20,9 @@ export const TypescriptPosts = [
         createdAt: "05-11-2023",
         title: <><b>DI</b> in TypeScript</>,
         descriptionTextLines: [
-            "Learn how to implement Dependency Injection in TS",
+            "Learn how to implement Dependency Injection in TS.",
         ],
-        description: "Learn how to implement Dependency Injection in TS",
+        description: "Learn how to implement Dependency Injection in TS.",
         label: <></>
     },
 ];
