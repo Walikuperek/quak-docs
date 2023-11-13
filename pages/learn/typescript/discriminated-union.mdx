@@ -1,0 +1,111 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {TSTag} from "../../../components/tags/typescript";
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+
+# Discriminated Unions
+
+<HeroLearnCard
+    category="typescript"
+    tag={<TSTag/>}
+    image={<section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-violet-500 h-40 w-40 p-1 mt-20 text-white font-bold">
+            <span className="text-lg">
+                $ buyProduct<br />
+                <span className="text-violet-300">&middot; vipCode?</span>
+            </span>
+        </div>
+        <div className="flex flex-col">
+            <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-20 text-white font-bold">VIPUser</div>
+            <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-1 text-white font-bold">User</div>
+        </div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="08-11-2023"
+    title="Discriminated Unions"
+    descriptionTextLines={[
+        "Learn how to deal with optional properties in typescript.",
+    ]}
+    label={<></>}
+/>
+
+## Problem
+
+We have two types of users: VIP and regular users. VIP users have a `vipCode` property, but regular users don't.
+
+We can sell product to a VIP user with discount based on their `vipCode`, but we can't sell product to a regular user with discount.
+
+Most likely we will have an interface for User with optional `vipCode` property, but it's not a good solution, because we can't use it to distinguish between VIP and regular users.
+
+> TS compiler will yell at you if you try to access `vipCode` property on a regular user. TS doesn't know that you have checked the type of user before accessing `vipCode` property.
+
+```typescript
+type User = {
+    type: "default" | "VIP";
+    id: string;
+    vipCode?: string;
+};
+
+function buyProduct(productID: string, buyer: User) {
+    switch (buyer.type) {
+        case "default":
+            return sales.order({
+                what: productID,
+                buyer: buyer.id
+            });
+        case "VIP":
+            return sales.order({
+                what: productID,
+                buyer: buyer.id,
+                vipCode: buyer.vipCode // can be undefined here, so it's an error for the compiler
+            });
+    }
+}
+```
+
+## Solution
+
+The solution is to use two types: `User` and `VipUser` - both have only one type - what allows TS to distinguish between them.
+
+It is called **Discriminated Unions** in Typescript.
+
+
+> Visit docs to learn more at [Discriminated Unions - typescriptlang.org](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html#discriminated-unions).
+
+```typescript
+type User = {
+    type: "default";
+    id: string;
+};
+
+type VipUser = {
+    type: "VIP";
+    id: string;
+    vipCode: string;
+};
+
+type Buyer =
+    | User
+    | VipUser;
+
+function buyProduct(productID: string, buyer: Buyer) {
+    switch (buyer.type) {
+        case "default":
+            return sales.order({
+                what: productID,
+                buyer: buyer.id
+            });
+        case "VIP":
+            return sales.order({
+                what: productID,
+                buyer: buyer.id,
+                vipCode: buyer.vipCode
+            });
+    }
+}
+```
+
+That way we can properly distinguish between VIP and regular users. That's all.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

@@ -1,31 +1,29 @@
 import {Callout, Tab, Tabs} from 'nextra/components'
-import { Cards, Card } from 'nextra/components'
-import { FileTree } from 'nextra/components'
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
 
 # DRD Architecture
 
-*QUAK developed DRD architecture (DTO's Repository Domain) for frontend.*
+*QUAK developed DRD architecture (DTO's Repository Domain) for SPA frontend.*
 
 ## What is DRD?
 
 Example of DRD Architecture for `users` feature:
 
-[DRD - Example Angular GitHub Repo](https://github.com/Walikuperek/DRD-frontend-architecture)
-
-
 ### Graph
 
 ```mermaid
 flowchart TD
-    C{DRD}
-    C -->|Data Transfer Object| D(DTO)
-    C --> E(Repository)
-    C --> F(Domain)
-
+    D(DTO)
+    E(Repository)
+    F(Domain)
     G(Use Case)
-    D --> G
-    E --> G
-    F --> G
+
+    D --> E
+    F -->|Factories creates Models from DTOs| D
+    F -->|use Repo Interfaces| E
+
+    G -->|use Models, Services, Stores, Politics| F
+    G -->|use Repo Interfaces| E
 ```
 
 ### Description
@@ -54,125 +52,153 @@ DRD makes views creation simple, secure and fast.
 - **When you have frontend client** - DRD Architecture makes sense only if you have separate frontend client, like SPA or mobile app
 - **Complexity** - DRD Architecture makes sense for small and enterprise projects, but not for simple projects (let HTML and JS/TS be the king in simple apps)
 
-## Layers
-
-Take a look at each layer page to see layer explanation with code examples.
-
-<Cards>
-  <Card title="👤 1. DTO" href="#example" />
-  <Card title="🏪 2. Repository" href="#example" />
-  <Card title="💰 3. Domain" href="#example" />
-  <Card title="📈 4. Use Case" href="#example" />
-</Cards>
-
-## Example Folder structure
-
-<FileTree>
-  <FileTree.Folder name="src" defaultOpen>
-    <FileTree.Folder name="features" defaultOpen>
-      <FileTree.Folder name="users" defaultOpen>
-
-        <FileTree.Folder name="dto">
-          <FileTree.Folder name="types">
-            <FileTree.File name="user-id.ts" />
-          </FileTree.Folder>
-          <FileTree.File name="fetch-user-list.dto.ts" />
-        </FileTree.Folder>
-        <FileTree.Folder name="repo">
-          <FileTree.Folder name="types">
-            <FileTree.File name="user-repository.interface.ts" />
-          </FileTree.Folder>
-          <FileTree.File name="user.repository.ts" />
-        </FileTree.Folder>
-        <FileTree.Folder name="domain">
-          <FileTree.File name="user.model.ts" />
-          <FileTree.File name="users-list-item.model.ts" />
-          <FileTree.File name="users-list.store.ts" />
-          <FileTree.File name="create-user.service.ts" />
-        </FileTree.Folder>
-      </FileTree.Folder>
-    </FileTree.Folder>
-
-    <FileTree.Folder name="views" defaultOpen>
-      <FileTree.Folder name="users" defaultOpen>
-        <FileTree.File name="users-list-view.component.ts" />
-        <FileTree.File name="user-details-view.component.ts" />
-      </FileTree.Folder>
-    </FileTree.Folder>
-  </FileTree.Folder>
-</FileTree>
-
 ## Example
 
 *Example common feature: `users`*
 
-<Tabs items={['fetch-user.dto.ts', 'user.model.ts', 'user.repository.ts', 'user-creation.service.ts']}>
+<Tabs selectedIndex={5} items={['DTO /types', 'DTO fetch-user', 'DTO create-user', 'Repository user', 'Domain user', 'Domain user-creation']}>
   <Tab>
   ```typescript
-  type Address = { street: string; city: string; };
+    type UserID = string;
+    type Role = "admin" | "user" | "moderator";
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  import {UserID, Role} from './types';
 
-  class FetchUserDto {
+  type FetchUserResponse = {
+    id: UserID;
+    user_name: string;
+    roles: Role[];
+  };
+
+  class FetchedUserDto {
     id: UserID;
     username: string;
-    address: Address;
+    roles: Role[];
 
-    constructor(response: FetchUserDto) {
-      this.id = response.id;
-      this.username = response.user_name;
-      this.address = response.adress;
+    constructor(dto: FetchUserResponse) {
+      this.id = dto.id;
+      this.username = dto.user_name;
+      this.roles = dto.roles;
+    }
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  import {UserID, Role} from './types';
+
+  type CreateUserResponse = {
+    id: UserID;
+    user_name: string;
+    roles?: Role[];
+  };
+
+  class CreateUserDto {
+    user_name: string;
+    roles: Role[];
+
+    constructor(username: string, roles: Role[]) {
+      this.user_name = username;
+      this.roles = roles;
+    }
+  };
+
+  class CreatedUserDto {
+    id: UserID;
+    username: string;
+    roles: Role[];
+
+    constructor(dto: CreateUserResponse) {
+      this.id = dto.id;
+      this.username = dto.user_name;
+      this.roles = dto.roles;
+    }
+  };
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  class UserRepository {
+    async fetchOne(id: UserID): Promise<FetchedUserDto> {
+      return await fetch(`/api/users/${id}`)
+        .then((response) => response.json())
+        .then((response) => new FetchedUserDto(response));
+    }
+
+    async create(dto: CreateUserDto): Promise<CreatedUserDto> {
+      return await fetch(`/api/users`, {
+          method: 'POST',
+          body: JSON.stringify(dto),
+      })
+        .then((response) => response.json())
+        .then((response) => new CreatedUserDto(response));
     }
   }
   ```
   </Tab>
   <Tab>
   ```typescript
+  import {UserID, Role} from './types';
+
   class User {
     id: UserID;
     username: string;
-    address: Address;
+    roles: Role[];
 
     constructor(user: User) {
-      this.id = user.id;
-      this.username = user.username;
-      this.address = user.address;
+      Object.assign(this, user);
     }
 
-    get fullAddress() {
-      return `${this.address.street} ${this.address.city}`;
+    hasRole(role: Role): boolean {
+      return this.roles.includes(role);
     }
   }
+
+  const UserFactory = {
+    fromFetchedUser(dto: FetchedUserDto): User {
+      return new User({
+        id: dto.id,
+        username: dto.username,
+        roles: dto.roles,
+      });
+    },
+    fromCreatedUser(dto: CreatedUserDto): User {
+      return new User({
+        id: dto.id,
+        username: dto.username,
+        roles: dto.roles,
+      });
+    }
+  };
   ```
   </Tab>
   <Tab>
   ```typescript
-  class UserRepo implements UserRepository {
-    async fetchUser(id: UserID): Promise<User> {
-      const response = await fetch(`/api/users/${id}`);
-      return new FetchUserDto(response);
-    }
-  }
-  ```
-  </Tab>
-  <Tab>
-  ```typescript
+  import {UserFactory} from './user.model';
+
   class UserCreationService {
     constructor(
         private settings: Settings,
         private userRepo: UserRepository,
     ) {}
 
-    async createUser(username: string, address: Address): Promise<boolean> {
+    async createUser(username: string, roles: Role): Promise<User> {
       if (username.length < this.settings.minUsernameLength) {
         throw new Error('Username is too short');
       }
-      const response = await fetch(`/api/users`, {
-        method: 'POST',
-        body: JSON.stringify({ username, address }),
-      });
-      return response.ok;
+      const response = await this.userRepo.create(new CreateUserDto(username, roles));
+      return UserFactory.fromCreatedUser(response);
     }
   }
   ```
   </Tab>
 </Tabs>
 
+<p>This is it! Now you can use your models in views and use cases.</p>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />
