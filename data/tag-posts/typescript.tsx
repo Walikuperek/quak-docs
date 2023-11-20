@@ -7,7 +7,7 @@ export const TypescriptPosts = [
         category: "backend",
         link: "/learn/typescript/dependency-injection",
         tag: <TSTag disabled={true}/>,
-        image: <section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
             <div className="flex flex-col">
                 <div className="bg-pink-600 h-10 w-20 p-1 mt-20 text-white font-bold">Service</div>
                 <div className="bg-pink-600 h-10 w-20 p-1 mt-1 text-white font-bold">Service</div>
@@ -31,7 +31,7 @@ export const TypescriptPosts = [
         category: "frontend",
         link: "/learn/typescript/discriminated-union",
         tag: <TSTag disabled={true}/>,
-        image: <section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
             <div className="bg-violet-500 h-40 w-40 p-1 mt-20 text-white font-bold">
             <span className="text-lg">
                 $ buyProduct<br/>

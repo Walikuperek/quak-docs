@@ -11,6 +11,9 @@ import {NodePosts} from "./tag-posts/node";
 import {ReactPosts} from "./tag-posts/react";
 import {TypescriptPosts} from "./tag-posts/typescript";
 import {newestUpSorter} from "./sorter";
+import { BackendPosts } from "./backend-posts";
+import { FrontendPosts } from "./frontend-posts";
+import { CloudPosts } from "./cloud-posts";
 
 export const AllPosts = [
     ...AngularPosts,

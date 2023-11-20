@@ -9,6 +9,7 @@ import {NextjsPosts} from "./tag-posts/nextjs";
 import {NodePosts} from "./tag-posts/node";
 import {TypescriptPosts} from "./tag-posts/typescript";
 import {newestUpSorter} from "./sorter";
+import { AllPosts } from "./posts";
 
 export const BackendPosts = [
     ...ArchitecturePosts,

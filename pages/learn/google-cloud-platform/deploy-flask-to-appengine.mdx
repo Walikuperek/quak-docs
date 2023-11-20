@@ -1,0 +1,214 @@
+import { FileTree, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { GCPTag } from "../../../components/tags/gcp";
+import { HeroLearnCard } from "../../../components/ui/generics/hero-learn-card";
+
+# Deploy Flask to GCP
+
+<HeroLearnCard
+    category="gcp"
+    tag={<GCPTag />}
+    image={<section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="flex shadow-2xl justify-between rounded-2xl bg-blue-600 h-40 w-40 p-2 mt-20 text-white font-bold">
+            <div className="bg-fuchsia-600 h-20 w-20 rounded-lg p-1 text-white font-bold">Flask<br /><small className="font-thin">➡️ main.py</small></div>
+            <span className="text-center text-sm font-bold">App<br />Engine</span>
+        </div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="19-11-2023"
+    title="Deploy Flask to AppEngine"
+    descriptionTextLines={[
+        "Learn how to deploy Flask to AppEngine on Google Cloud Platform.",
+    ]}
+    label={<></>}
+/>
+
+## Introduction
+
+App Engine is a fully managed, serverless platform for developing and hosting web applications at scale.
+
+You can choose from several popular languages, libraries, and frameworks to develop your apps, then let App Engine take care of provisioning servers and scaling your app instances based on demand.
+
+We will focus on Python 3 and Flask framework.
+
+## Before you begin
+
+Before you start this tutorial, you need:
+- [X] Google Cloud Platform account,
+- [X] `project` with enabled billing,
+- [X] enabled `Cloud Build` API,
+- [X] `gcloud` command line tool installed on your machine.
+
+## Configure App Engine
+
+<Steps>
+
+### Visit App Engine
+
+Firstly you need to go to your GCP Console and open `App Engine` and create an app (if you haven't done it yet).
+
+### Select region
+
+I'm located in Poland so I have selected region: `europe-central2`, choose nearest one to you.
+
+### Select service account
+
+Choose `default service account` and click `Next`.
+
+> Service account is a special account that represents your app rather than an individual user.
+
+</Steps> 
+
+That's all with the configuration. Now we can start writing our Flask service.
+
+## Write Flask Service
+
+<Steps>
+
+### Create files
+
+<Tabs items={['app.yaml', 'main.py', 'requirements.txt', 'static/script.js', 'static/style.css', 'templates/index.html']}>
+    <Tabs.Tab>
+    ```yaml
+    runtime: python39
+
+    handlers:
+    - url: /static
+        static_dir: static
+
+    - url: /.*
+        script: auto
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+    ```python
+    from flask import Flask, render_template
+    
+    app = Flask(__name__)
+    
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
+    if __name__ == "__main__":
+        # This is used when running locally only. When deploying to Google App
+        # Engine, a webserver process such as Gunicorn will serve the app.
+        # Flask's development server will automatically serve static files in
+        # the "static" directory. Once deployed App Engine itself will serve
+        # those files as configured in app.yaml.
+        app.run(host="127.0.0.1", port=5000, debug=True)
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+    ```txt
+    Flask==2.0.2
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+    ```js
+    console.log('Hello from script.js');
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+    ```css
+    html,
+    body {
+        background-color: #333;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+    ```html
+    <html>
+        <head>
+            <title>Flask App Engine Example</title>
+            <script src="{{ url_for('static', filename='script.js') }}"></script>
+            <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        </head>
+        <body>
+            <h1>Hello QUAK!</h1>
+        </body>
+    </html>
+    ```
+    </Tabs.Tab>
+</Tabs>
+
+### Final structure
+
+<FileTree>
+  <FileTree.Folder name="your-flask-service" defaultOpen>
+    <FileTree.File name="app.yaml" />
+    <FileTree.File name="main.py" />
+    <FileTree.File name="requirements.txt" />
+    <FileTree.Folder name="static">
+      <FileTree.File name="script.js" />
+      <FileTree.File name="style.css" />
+    </FileTree.Folder>
+    <FileTree.Folder name="templates">
+      <FileTree.File name="index.html" />
+    </FileTree.Folder>
+  </FileTree.Folder>
+</FileTree>
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run Flask
+
+```bash
+python main.py
+```
+
+### Visit localhost
+
+```bash
+http://localhost:5000
+```
+
+</Steps>
+
+## Deploy to App Engine
+
+Deployment is the simplest step in this tutorial.
+
+<Steps>
+
+### Initialize gcloud
+
+If you haven't done it yet, you need to initialize `gcloud` command line tool.
+
+```bash
+gcloud init
+```
+
+### Deploy
+
+This is the final step. Just run the command below and wait for the deployment to finish.
+
+> Deploy is based on the `app.yaml` file.
+
+```bash
+gcloud app deploy
+```
+
+### Visit your app
+
+```bash
+gcloud app browse
+```
+
+</Steps>
+
+
+That's all! You have successfully deployed your Flask service to App Engine.
+
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

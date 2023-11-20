@@ -11,6 +11,7 @@ body {
 }
 
 :root {
+  font-size: 16px;
   --primary: rgb(147,99,219);
   --primary-inner: rgb(39 21 77);
   --primary-focus: rgb(69,47,103);
@@ -20,6 +21,12 @@ body {
 
   --home-header-height: 600px;
   --header-height: 500px;
+}
+
+@media screen and (max-width: 768px) {
+  .sm-text-12 {
+    font-size: 12px;
+  }
 }
 
 .header__height {
@@ -88,4 +95,85 @@ body {
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+}
+
+/* Morph text anim */
+.morph-content {
+  position: relative;
+  width: 100%;
+}
+
+.morph-content h2 {
+  z-index: 3;
+  color: #fff;
+  font-size: 8em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.morph-content h2:nth-child(1) {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--primary);
+}
+
+.morph-content h2:nth-child(2) {
+  color: var(--primary-inner);
+  user-select: none;
+  animation: animate 4s ease-in-out infinite;
+}
+
+.grid-card-title {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5em;
+}
+
+.grayed-full-width-text {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #8b8b8b1f;
+  z-index: -1;
+  font-size: 7em;
+  letter-spacing: 10px;
+  font-weight: 900;
+  pointer-events: none;
+  user-select: none;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+@keyframes animate {
+  0%,
+  100% {
+    clip-path: polygon(
+      0% 45%,
+      16% 44%,
+      33% 50%,
+      54% 60%,
+      70% 61%,
+      84% 59%,
+      100% 52%,
+      100% 100%,
+      0% 100%
+    );
+  }
+
+  50% {
+    clip-path: polygon(
+      0% 60%,
+      15% 65%,
+      34% 66%,
+      51% 62%,
+      67% 50%,
+      84% 45%,
+      100% 46%,
+      100% 100%,
+      0% 100%
+    );
+  }
 }

@@ -17,7 +17,7 @@ import {HeroLearnCard} from "../components/ui/generics/hero-learn-card";
 import {AllPosts, latestReading} from "../data/posts";
 import {PostsList} from "../components/lists/posts-list";
 
-# Learn /
+# Learn
 
 <HeroLearnCard
     category={latestReading.color}
@@ -28,7 +28,7 @@ import {PostsList} from "../components/lists/posts-list";
     createdAt={latestReading.createdAt}
     title={latestReading.title}
     descriptionTextLines={latestReading.descriptionTextLines}
-    label={latestReading.label}
+    label={<>Latest post</>}
 />
 
 <h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">CATEGORIES</h3>

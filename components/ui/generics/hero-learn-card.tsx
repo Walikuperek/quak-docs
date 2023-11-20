@@ -22,7 +22,7 @@ export function HeroLearnCard({category, tag, link, image, author, createdAt, ti
         category = "backend";
     }
     const color = colors[category];
-    const heroClasses = `header__height w-full rounded-2xl bg-opacity-10 border-2 bg-${color}-900 border-${color}-500`;
+    const heroClasses = `w-full rounded-2xl bg-opacity-10 border-2 bg-${color}-900 border-${color}-500`;
     const titleClasses = `text-2xl font-bold mb-3 border-b-2 border-b-${color}-500`;
     const linkClasses = `hover:text-${color}-500 hover:underline underline-offset-2`;
     const imageLinkField = link ? <a className="h-full" href={link}>{image}</a> : image;

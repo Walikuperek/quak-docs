@@ -71,6 +71,9 @@ const config: DocsThemeConfig = {
             <a target="_blank" href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
               Play Quakky
             </a>
+            <a target="_blank" href="https://quak.com.pl/labyrinth/" className="text-green-500 hover:underline">
+              Play Labyrinth
+            </a>
             <a target="_blank" href="https://quak.com.pl/adventurer/" className="text-green-500 hover:underline">
               Play Adventurer
             </a>

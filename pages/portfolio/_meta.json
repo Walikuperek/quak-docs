@@ -7,8 +7,9 @@
     "type": "separator",
     "title": "Games"
   },
-  "adventurer": "Adventurer",
   "quakky": "Quakky",
+  "labyrinth": "Labyrinth",
+  "adventurer": "Adventurer",
   "retro-games": "Retro games",
   "--": {
     "type": "separator",

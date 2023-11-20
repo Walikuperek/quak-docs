@@ -6,7 +6,7 @@ export const PythonPosts = [
         category: "backend",
         link: "/learn/python/resize-image",
         tag: <PythonTag disabled={true} />,
-        image: <section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
             <div className="bg-pink-600 h-20 w-20 p-1 mt-20 text-white font-bold">200x200</div>
             <div className="bg-pink-600 h-40 w-40 p-1 mt-20 text-white font-bold">400x400</div>
         </section>,
