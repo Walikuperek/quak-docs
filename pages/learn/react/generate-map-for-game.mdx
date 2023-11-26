@@ -1,0 +1,297 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+import {ReactTag} from "../../../components/tags/react";
+
+# Building a map generator in React
+
+<HeroLearnCard
+    category="react"
+    tag={<ReactTag/>}
+    image={<section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+        <img src="/assets/read/gen_map_1.png" className="mx-auto h-40 object-contain mt-20 p-1" width="100%" />
+    </section>}
+    author="Kacper Walczak"
+    createdAt="26-11-2023"
+    title="Arcade Map Generator"
+    descriptionTextLines={[
+        "Generate random maps for arcade games with React.",
+    ]}
+    label={<em className="text-gray-500">Generated map example</em>}
+/>
+
+## Building the map
+
+We are going to use a 2D array to build the map, and we will use the `GameBoard` class to generate the map.
+
+### Define elements to place
+
+First, we need to define the elements we want to place on the map. We will use an enum `ToPlace` to define the elements in the system.
+
+```tsx
+
+enum ToPlace {
+    PLAYER,
+    ENEMY,
+    WALL,
+    HOLE,
+    FLOOR,
+    GHOST,
+    CHEST,
+    BOSS,
+}
+const elements = {
+    [ToPlace.PLAYER]: "🧙",
+    [ToPlace.WALL]: "🧱",
+    [ToPlace.HOLE]: "🕳️",
+    [ToPlace.FLOOR]: "‧",
+    [ToPlace.ENEMY]: "💀",
+    [ToPlace.CHEST]: "📦",
+    [ToPlace.BOSS]: "👹",
+} as Record<ToPlace, string>;
+
+const toPlaceCounters = {
+    [ToPlace.ENEMY]: 7,
+    [ToPlace.CHEST]: 5,
+    [ToPlace.HOLE]: 2
+} as Record<ToPlace, number>;
+```
+
+### Generate the map
+
+Now we can generate the map. We will use the `generate()` method to generate the map. We will use the `getHTML()` method to get the HTML of the map.
+
+#### Map generation
+
+Map is a simple 2D array where each el is simply `ToPlace.ENEMY` or `ToPlace.FLOOR`, etc.
+
+```tsx
+type BoardOpts = { width: number, height: number };
+
+export class GameBoard {
+    opts: BoardOpts;
+
+    constructor(opts: BoardOpts = {width: 5, height: 5}) {
+        this.opts = opts;
+    }
+
+    generate() {
+        const map = [];
+        let isStoppedPutting = false;
+        for (let x = 0; x < this.opts.width; x++) {
+            const yRows = [];
+            for (let y = 0; y < this.opts.height; y++) {
+                // remove top right and bottom left corners
+                if (x === 0 && y === this.opts.height - 1) {
+                    yRows.push(elements[ToPlace.WALL]);
+                    continue;
+                }
+                if (x === this.opts.width - 1 && y === 0) {
+                    yRows.push(elements[ToPlace.WALL]);
+                    continue;
+                }
+                // put player and boss
+                if (x === 0 && y === 0) {
+                    yRows.push(elements[ToPlace.PLAYER]);
+                    continue;
+                }
+                if (x === this.opts.width - 1 && y === this.opts.height - 1) {
+                    yRows.push(elements[ToPlace.BOSS]);
+                    continue;
+                }
+                // put floors
+                const emptyFloor = "‧";
+                if (isStoppedPutting) {
+                    isStoppedPutting = false;
+                    yRows.push(emptyFloor);
+                    continue; // skip putting elements for this iteration
+                }
+                const randomElement = () => {
+                    const keys = Object.keys(toPlaceCounters);
+                    const randomKey = parseInt(keys[Math.floor(Math.random() * keys.length)]) as ToPlace;
+                    if (toPlaceCounters[randomKey] > 0) {
+                        toPlaceCounters[randomKey]--;
+                        if (toPlaceCounters[randomKey] === 0) delete toPlaceCounters[randomKey];
+                        return elements[randomKey];
+                    }
+                    return emptyFloor;
+                }
+                yRows.push(randomElement());
+                isStoppedPutting = Math.random() > 0.5; // 50% chance to stop putting elements until next Math.random() iteration
+            }
+            map.push(yRows);
+        }
+        return map;
+    }
+}
+```
+
+#### Map HTML
+
+We will use the `getHTML()` method to get the HTML of the map. We will use the `getButton()` method to get the HTML of each button.
+
+```tsx
+export class GameBoard {
+    // ...
+
+    getHTML(rows: string[][] = [], player: Player | null = null) {
+        const _rows = rows ? rows : this.generate();
+        const getButton = (x: number, y: number) => {
+            const valueWithHP = (<div className="col">
+                {_rows[x][y]}
+                <span className="text-6">{`${Math.ceil(Math.random() * 1000)} HP`}</span>
+            </div>);
+            const value = _rows[x][y];
+            switch (value) {
+                case elements[ToPlace.PLAYER]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "#535bf2"}}>{
+                        player ? player.getSprite() : value // get emoji as a player sprite(below is an example)
+                    }</button>;
+                case elements[ToPlace.FLOOR]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "transparent"}}>{value}</button>;
+                case elements[ToPlace.ENEMY]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "transparent"}}>{valueWithHP}</button>;
+                case elements[ToPlace.GHOST]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "transparent"}}>{value}</button>;
+                case elements[ToPlace.CHEST]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "transparent"}}>{value}</button>;
+                case elements[ToPlace.BOSS]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "white"}}>{value}</button>;
+                case elements[ToPlace.WALL]:
+                    return <button className="map-button" disabled key={y} style={{backgroundColor: "transparent"}}>{value}</button>;
+                case elements[ToPlace.HOLE]:
+                    return <button className="map-button" key={y} style={{backgroundColor: "transparent"}}>{value}</button>;
+                default:
+                    return <button className="map-button" key={y} style={{backgroundColor: "transparent"}}>{value}</button>;
+            }
+        }
+        return <div className="col">{_rows.map((xRow, x) =>
+            <div key={x} className="row">
+                {xRow.map((_, y) => getButton(x, y))}<br />
+            </div>)}</div>;
+    }
+}
+```
+
+### Render the map
+
+Now we can render the map. We will use the `GameBoard` class to generate the map and the `getHTML()` method to get the HTML of the map.
+
+```tsx
+import { GameBoard } from "./game-board";
+
+const board = new GameBoard({width: 5, height: 5});
+const map = board.generate();
+const mapHTML = board.getHTML(map);
+
+function App() {
+    return (
+        <main>{mapHTML}</main>
+    );
+}
+```
+
+## Adding the player
+
+We will use the `Player` class to add the player to the map.
+
+### Define the player
+
+We will use the `Player` class to define the player. We will use the `getSprite()` method to get the sprite of the player.
+
+```tsx
+export interface Player {
+    getSprite(): string; // get an emoji, default is �?
+}
+
+export class Mage implements Player {
+    getSprite() {
+        return "🧙";
+    }
+}
+
+export class Rogue implements Player {
+    getSprite() {
+        return "🗡️";
+    }
+}
+
+export class Warrior implements Player {
+    getSprite() {
+        return "🛡️";
+    }
+}
+
+export class Duck implements Player {
+    getSprite() {
+        return "🦆";
+    }
+}
+```
+
+That's it! Now we can add the player to the map.
+
+### Add the player to the map
+
+We will use the `getHTML()` method to get the HTML of the map. We will use the `getSprite()` method to get the sprite of the player.
+
+```tsx
+import { GameBoard } from "./game-board";
+import { Duck } from "./characters";
+
+const board = new GameBoard({width: 5, height: 5});
+const map = board.generate();
+const mapHTML = board.getHTML(map, new Duck());
+
+function App() {
+    return (
+        <main>{mapHTML}</main>
+    );
+}
+```
+
+## CSS styles
+
+We will use the `map-button` class to style the map buttons.
+
+```css
+.col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-button {
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3em;
+    height: 3em;
+    /* Rest is up to you */
+}
+```
+
+## Result
+
+Run the code and you will see the map with the player on it.
+
+<div className="h-10 text-center">&middot;</div>
+
+<img src="/assets/read/gen_map_1.png" className="mx-auto" width="100%" style={{maxWidth: "600px"}} />
+<div className="mx-auto text-center w-full">
+    <em className="text-gray-500">Generated map example</em>
+</div>
+
+That's it! We have generated a map with a player on it.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

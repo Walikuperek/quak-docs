@@ -13,5 +13,5 @@ export function MorphTextHero() {
 }
 
 export default function MyApp() {
-    return <MorphTextHero/>
+    return <MorphTextHero />
 }

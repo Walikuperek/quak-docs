@@ -1,3 +1,7 @@
+---
+title: Home
+---
+
 import VantaHero from "components/ui/sections/vanta-hero";
 import {HeaderText} from "../components/ui/generics/header-text";
 import {Text} from "../components/ui/generics/text";
@@ -6,10 +10,6 @@ import {QuakV1Hero} from "../components/ui/sections/quak-v1-hero";
 import {Spacer} from "../components/ui/generics/spacer";
 import {LatestReadings} from "../components/ui/sections/latest-readings";
 import {QuakColored} from "../components/ui/quak-colored";
-import {BackendPosts} from "../data/backend-posts";
-import {FrontendPosts} from "../data/frontend-posts";
-import {CloudPosts} from "../data/cloud-posts";
-import {AllPosts} from "../data/posts";
 
 <VantaHero />
 
@@ -85,9 +85,9 @@ import {AllPosts} from "../data/posts";
         [0.90ms] ".env"
         Listening on port 3000...
         8:27:48 PM: 200 GET /
-        8:27:52 PM: 405 GET /blog/123
-        8:27:56 PM: 200 POST /blog/123
-        8:27:58 PM: 200 GET /__endpoints // [DEV] view with list of all endpoints
+        8:27:52 PM: 200 GET /blog/123
+        8:27:56 PM: 405 POST /blog/123
+        8:27:58 PM: 200 GET /__endpoints // [DEV VIEW] list of all endpoints
     */
     ```
   </div>
@@ -173,6 +173,104 @@ import {AllPosts} from "../data/posts";
 </section>
 
 <section className="bg-lines-accent opacity-10 flex mt-20 mb-20 h-40 w-full"></section>
+
+
+<HeaderText size="h3" color="gray">GAMES</HeaderText>
+<HeaderText size="h2">
+  <QuakColored /> Games
+</HeaderText>
+<div className="h-2">&nbsp;</div>
+<Text color="gray" textLines={[
+    "Play games made by QUAK",
+    "and have fun. Click game to play."
+]} />
+
+<div className="mt-5 p-2 py-3 rounded-r-2xl bg-blue-900 bg-opacity-10 border-l-4 border-blue-600">
+    <span className="text-blue-500">All games are available for 🖥️ <span className="text-gray-500">(Desktop)</span> and 📱 <span className="text-gray-500">(Mobile)</span> devices.</span>
+</div>
+
+<div className="">
+  <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+
+    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+      <a href="https://quak.com.pl/quakky">
+          <div className="group relative">
+              <div
+                  className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                  <img loading="lazy" src="/portfolio/games/quakky.png" alt=""
+                       className="h-full w-full object-cover object-center lg:h-full lg:w-full"/>
+              </div>
+              <div className="mt-4 flex justify-between">
+                  <div>
+                      <b className="text-sm">
+                          <span aria-hidden="true" className="absolute inset-0"></span>
+                          QUAKKY
+                      </b>
+                      <p className="mt-1 text-sm">2D, tapper</p>
+                  </div>
+              </div>
+          </div>
+      </a>
+
+      <a href="https://quak.com.pl/labyrinth/">
+          <div className="group relative">
+              <div
+                  className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                  <img loading="lazy" src="/portfolio/games/labyrinth.png" alt=""
+                       className="h-full w-full object-cover object-center lg:h-full lg:w-full"/>
+              </div>
+              <div className="mt-4 flex justify-between">
+                  <div>
+                      <b className="text-sm">
+                          <span aria-hidden="true" className="absolute inset-0"></span>
+                          Labyrinth
+                      </b>
+                      <p className="mt-1 text-sm">Story, RPG</p>
+                  </div>
+              </div>
+          </div>
+      </a>
+
+      <a href="https://quak.com.pl/adventurer/">
+          <div className="group relative">
+            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <img loading="lazy" src="/portfolio/games/adventurer.png" alt="" className="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+            </div>
+            <div className="mt-4 flex justify-between">
+              <div>
+                <b className="text-sm">
+                    <span aria-hidden="true" className="absolute inset-0"></span>
+                    ADVENTURER
+                </b>
+                <p className="mt-1 text-sm">2D, slash, shoot, dash</p>
+              </div>
+            </div>
+          </div>
+      </a>
+
+      <a href="https://quak.com.pl/snake/js/snake.html">
+          <div className="group relative">
+            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <img loading="lazy" src="/portfolio/games/snake.png" alt="" className="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+            </div>
+            <div className="mt-4 flex justify-between">
+              <div>
+                <b className="text-sm">
+                    <span aria-hidden="true" className="absolute inset-0"></span>
+                    SNAKE
+                </b>
+                <p className="mt-1 text-sm">2D, nostalgic</p>
+              </div>
+            </div>
+          </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
 
 <HeaderText size="h3" color="gray">HISTORY</HeaderText>
 <HeaderText size="h2"><QuakColored /> History</HeaderText>

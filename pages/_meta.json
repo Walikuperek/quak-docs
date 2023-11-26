@@ -6,10 +6,6 @@
       "layout": "full"
     }
   },
-  "libraries": {
-    "title": "Libraries",
-    "type": "page"
-  },
   "learn": {
     "title": "Learn",
     "type": "page",
@@ -17,12 +13,13 @@
       "layout": "full"
     }
   },
+  "libraries": {
+    "title": "Libraries",
+    "type": "page"
+  },
   "portfolio": {
     "title": "Portfolio",
-    "type": "page",
-    "theme": {
-      "layout": "full"
-    }
+    "type": "page"
   },
   "contact": {
     "title": "Contact",

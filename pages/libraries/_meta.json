@@ -1,0 +1,12 @@
+{
+  "index": {
+    "title": "Libraries",
+    "display": "hidden"
+  },
+  "-": {
+    "type": "separator",
+    "title": "Libraries"
+  },
+  "qtheme": "Qtheme",
+  "qstore": "Qstore"
+}

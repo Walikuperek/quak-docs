@@ -3,14 +3,6 @@
     "title": "Portfolio",
     "display": "hidden"
   },
-  "-": {
-    "type": "separator",
-    "title": "Games"
-  },
-  "quakky": "Quakky",
-  "labyrinth": "Labyrinth",
-  "adventurer": "Adventurer",
-  "retro-games": "Retro games",
   "--": {
     "type": "separator",
     "title": "Projects"
@@ -27,5 +19,13 @@
   "qchat": "Qchat",
   "qcrypto": "Qcrypto",
   "qgames": "Qgames",
-  "qwallet": "Qwallet"
+  "qwallet": "Qwallet",
+  "-": {
+    "type": "separator",
+    "title": "Games"
+  },
+  "quakky": "Quakky",
+  "labyrinth": "Labyrinth",
+  "adventurer": "Adventurer",
+  "retro-games": "Retro games"
 }

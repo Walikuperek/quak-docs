@@ -1,0 +1,10 @@
+{
+  "generate-map-for-game": {
+    "title": "How to generate a random map for your game",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  }
+}

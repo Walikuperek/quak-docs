@@ -3,177 +3,224 @@
 @tailwind utilities;
 
 body {
-  font-family: "IBM Plex Sans", sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
 }
 
 .nextra-body {
-  width: 100%;
+    width: 100%;
 }
 
 :root {
-  font-size: 16px;
-  --primary: rgb(147,99,219);
-  --primary-inner: rgb(39 21 77);
-  --primary-focus: rgb(69,47,103);
-  --primary-content: rgb(255,255,255);
-  --accent: #ff9801;
-  --accent-content: rgb(255,255,255);
+    font-size: 16px;
+    --primary: rgb(147, 99, 219);
+    --primary-inner: rgb(39 21 77);
+    --primary-focus: rgb(69, 47, 103);
+    --primary-content: rgb(255, 255, 255);
+    --accent: #ff9801;
+    --accent-content: rgb(255, 255, 255);
 
-  --home-header-height: 600px;
-  --header-height: 500px;
+    --home-header-height: 600px;
+    --header-height: 500px;
 }
 
 @media screen and (max-width: 768px) {
-  .sm-text-12 {
-    font-size: 12px;
-  }
+    .sm-text-12 {
+        font-size: 12px;
+    }
 }
 
 .header__height {
-  height: var(--header-height);
+    height: var(--header-height);
 }
+
 .row-spacer {
-  flex: 1 1 auto;
+    flex: 1 1 auto;
 }
 
 .bg-lines {
-  background: repeating-linear-gradient(189deg,var(--primary-inner),var(--primary-inner) 30px, #04040500 30px, #04040500 50px);
-  color: var(--primary-content);
+    background: repeating-linear-gradient(189deg, var(--primary-inner), var(--primary-inner) 30px, #04040500 30px, #04040500 50px);
+    color: var(--primary-content);
 }
+
 .bg-lines-accent {
-  background: repeating-linear-gradient(189deg,var(--accent),var(--accent) 30px, #04040500 30px, #04040500 50px);
-  color: var(--accent-content);
+    background: repeating-linear-gradient(189deg, var(--accent), var(--accent) 30px, #04040500 30px, #04040500 50px);
+    color: var(--accent-content);
 }
+
 .bg-lines-violet {
-  background: repeating-linear-gradient(189deg,#8b5cf6,#8b5cf6 30px, #2e1065 30px, #2e1065 50px);
-  color: white;
+    background: repeating-linear-gradient(189deg, #8b5cf6, #8b5cf6 30px, #2e1065 30px, #2e1065 50px);
+    color: white;
 }
+
 .bg-lines-purple {
-  background: repeating-linear-gradient(189deg,#a855f7,#a855f7 30px, #3b0764 30px, #3b0764 50px);
-  color: white;
+    background: repeating-linear-gradient(189deg, #a855f7, #a855f7 30px, #3b0764 30px, #3b0764 50px);
+    color: white;
 }
+
 .bg-lines-fuchsia {
-  background: repeating-linear-gradient(189deg,#d946ef,#d946ef 30px, #4a044e 30px, #4a044e 50px);
-  color: white;
+    background: repeating-linear-gradient(189deg, #d946ef, #d946ef 30px, #4a044e 30px, #4a044e 50px);
+    color: white;
 }
+
 .bg-lines-sky {
-  background: repeating-linear-gradient(189deg,#0ea5e9,#0ea5e9 30px, #082f49 30px, #082f49 50px);
-  color: white;
+    background: repeating-linear-gradient(189deg, #0ea5e9, #0ea5e9 30px, #082f49 30px, #082f49 50px);
+    color: white;
 }
+
 .bg-lines-gray {
-  background: repeating-linear-gradient(189deg, gray, gray 30px, #04040500 30px, #04040500 50px);
-  color: var(--accent-content);
+    background: repeating-linear-gradient(189deg, gray, gray 30px, #04040500 30px, #04040500 50px);
+    color: var(--accent-content);
 }
 
 .link::after {
-  content: '\2693';
-  cursor: pointer;
+    content: '\2693';
+    cursor: pointer;
+}
+
+.col {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.text-6 {
+    font-size: 6px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.map-button {
+    width: 63px;
+    height: 63px;
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.311);
+    padding: 0.6em;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+#map.map {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Tooltip container */
 .tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
 .tooltip .tooltiptext {
-  visibility: hidden;
-  width: 190px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
+    visibility: hidden;
+    width: 190px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
 
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
-  visibility: visible;
+    visibility: visible;
 }
 
 /* Morph text anim */
 .morph-content {
-  position: relative;
-  width: 100%;
+    position: relative;
+    width: 100%;
 }
 
 .morph-content h2 {
-  z-index: 3;
-  color: #fff;
-  font-size: 8em;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    z-index: 3;
+    color: #fff;
+    font-size: 8em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .morph-content h2:nth-child(1) {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--primary);
+    color: transparent;
+    -webkit-text-stroke: 1px var(--primary);
 }
 
 .morph-content h2:nth-child(2) {
-  color: var(--primary-inner);
-  user-select: none;
-  animation: animate 4s ease-in-out infinite;
+    color: var(--primary-inner);
+    user-select: none;
+    animation: animate 4s ease-in-out infinite;
 }
 
 .grid-card-title {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.5em;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5em;
 }
 
 .grayed-full-width-text {
-  position: absolute;
-  top: -30%;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #8b8b8b1f;
-  z-index: -1;
-  font-size: 7em;
-  letter-spacing: 10px;
-  font-weight: 900;
-  pointer-events: none;
-  user-select: none;
-  font-family: "IBM Plex Sans", sans-serif;
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #8b8b8b1f;
+    z-index: -1;
+    font-size: 7em;
+    letter-spacing: 10px;
+    font-weight: 900;
+    pointer-events: none;
+    user-select: none;
+    font-family: "IBM Plex Sans", sans-serif;
 }
 
 @keyframes animate {
-  0%,
-  100% {
-    clip-path: polygon(
-      0% 45%,
-      16% 44%,
-      33% 50%,
-      54% 60%,
-      70% 61%,
-      84% 59%,
-      100% 52%,
-      100% 100%,
-      0% 100%
-    );
-  }
+    0%,
+    100% {
+        clip-path: polygon(
+                0% 45%,
+                16% 44%,
+                33% 50%,
+                54% 60%,
+                70% 61%,
+                84% 59%,
+                100% 52%,
+                100% 100%,
+                0% 100%
+        );
+    }
 
-  50% {
-    clip-path: polygon(
-      0% 60%,
-      15% 65%,
-      34% 66%,
-      51% 62%,
-      67% 50%,
-      84% 45%,
-      100% 46%,
-      100% 100%,
-      0% 100%
-    );
-  }
+    50% {
+        clip-path: polygon(
+                0% 60%,
+                15% 65%,
+                34% 66%,
+                51% 62%,
+                67% 50%,
+                84% 45%,
+                100% 46%,
+                100% 100%,
+                0% 100%
+        );
+    }
 }

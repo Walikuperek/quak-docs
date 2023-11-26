@@ -15,7 +15,7 @@ export function HeroLearnCard({category, tag, link, image, author, createdAt, ti
         "nextjs": "gray",
         "node": "green",
         "python": "blue",
-        "react": "cyan",
+        "react": "sky",
         "typescript": "blue"
     };
     if (!category) {
