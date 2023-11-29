@@ -56,7 +56,7 @@ DRD makes views creation simple, secure and fast.
 
 *Example common feature: `users`*
 
-<Tabs selectedIndex={5} items={['DTO /types', 'DTO fetch-user', 'DTO create-user', 'Repository user', 'Domain user', 'Domain user-creation']}>
+<Tabs selectedIndex={6} items={['DTO /types', 'DTO fetch-user', 'DTO create-user', 'Repository user', 'Domain user', 'Domain policy', 'Domain user-creation']}>
   <Tab>
   ```typescript
     type UserID = string;
@@ -121,7 +121,12 @@ DRD makes views creation simple, secure and fast.
   </Tab>
   <Tab>
   ```typescript
-  class UserRepository {
+  interface UserRepository {
+    fetchOne(id: UserID): Promise<FetchedUserDto>;
+    create(dto: CreateUserDto): Promise<CreatedUserDto>;
+  }
+
+  class UserRepositoryService implements UserRepository {
     async fetchOne(id: UserID): Promise<FetchedUserDto> {
       return await fetch(`/api/users/${id}`)
         .then((response) => response.json())
@@ -155,6 +160,10 @@ DRD makes views creation simple, secure and fast.
     hasRole(role: Role): boolean {
       return this.roles.includes(role);
     }
+
+    static async create(username: string, roles: Role[], service: CreateUser): Promise<User> {
+      return await service.createUser(username, roles);
+    }
   }
 
   const UserFactory = {
@@ -177,16 +186,25 @@ DRD makes views creation simple, secure and fast.
   </Tab>
   <Tab>
   ```typescript
-  import {UserFactory} from './user.model';
+  class UserCreationPolicy {
+      readonly minUsernameLength = 3;
+  }
+  ```
+  </Tab>
+  <Tab>
+  ```typescript
+  interface CreateUser {
+    createUser(username: string, roles: Role[]): Promise<User>;
+  }
 
-  class UserCreationService {
+  class UserCreationService implements CreateUser {
     constructor(
-        private settings: Settings,
+        private policy: UserCreationPolicy,
         private userRepo: UserRepository,
     ) {}
 
-    async createUser(username: string, roles: Role): Promise<User> {
-      if (username.length < this.settings.minUsernameLength) {
+    async createUser(username: string, roles: Role[]): Promise<User> {
+      if (username.length < this.policy.minUsernameLength) {
         throw new Error('Username is too short');
       }
       const response = await this.userRepo.create(new CreateUserDto(username, roles));
@@ -196,6 +214,84 @@ DRD makes views creation simple, secure and fast.
   ```
   </Tab>
 </Tabs>
+
+### Create User usage
+
+#### DI setup
+
+```typescript
+const userRepo = new UserRepositoryService();
+const userCreationService = new UserCreationService(new UserCreationPolicy(), userRepo);
+```
+
+#### Create User
+
+```typescript
+const user = await User.create('John', ['user', 'moderator'], userCreationService);
+```
+
+#### Use decorator pattern
+
+In case when you want to add some additional logic to your model, you can use decorator pattern.
+
+```typescript
+class SendEmailOnUserCreation implements CreateUser {
+  constructor(
+    private userCreationService: CreateUser,
+    private emailService: EmailService,
+  ) {}
+
+  async createUser(username: string, roles: Role[]): Promise<User> {
+    const user = await this.userCreationService.createUser(username, roles);
+    await this.emailService.sendEmail(user);
+    return user;
+  }
+}
+```
+
+When you need another decorator, you can easily add it.
+
+```typescript
+class NotifyAdminOnUserCreation implements CreateUser {
+  constructor(
+    private userCreationService: CreateUser,
+    private adminService: AdminService,
+  ) {}
+
+  async createUser(username: string, roles: Role[]): Promise<User> {
+    const user = await this.userCreationService.createUser(username, roles);
+    await this.adminService.notifyAdmin(user);
+    return user;
+  }
+}
+```
+
+Then simply use it.
+
+```typescript
+const userRepo = new UserRepositoryService();
+const createUserWithAnEmail = new SendEmailOnUserCreation(
+    userCreationService, new EmailService()
+);
+
+const user = await new NotifyAdminOnUserCreation(createUserWithAnEmail, new AdminService())
+    .createUser('login', ['moderator']);
+```
+
+#### Testing
+
+Since every layer is separated, you can easily test each layer.
+
+```typescript
+describe('UserCreationService', () => {
+  it('should create user', async () => {
+    const userRepo = new TestUserRepositoryService(); // mocked repo
+    const userCreationService = new UserCreationService(new UserCreationPolicy(), userRepo);
+    const user = await userCreationService.createUser('John', ['user', 'moderator']);
+    expect(user).toBeInstanceOf(User);
+  });
+});
+```
 
 <p>This is it! Now you can use your models in views and use cases.</p>
 

@@ -15,7 +15,21 @@
   },
   "libraries": {
     "title": "Libraries",
-    "type": "page"
+    "type": "menu",
+    "items": {
+      "index": {
+        "title": "Why Qtools",
+        "href": "/libraries"
+      },
+      "qtheme": {
+        "title": "Qtheme",
+        "href": "/libraries/qtheme"
+      },
+      "qstore": {
+        "title": "Qstore",
+        "href": "/libraries/qstore"
+      }
+    }
   },
   "portfolio": {
     "title": "Portfolio",

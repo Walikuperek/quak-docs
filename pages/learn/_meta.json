@@ -1,7 +1,10 @@
 {
   "index": {
     "title": "Learn",
-    "display": "hidden"
+    "display": "hidden",
+    "theme": {
+      "layout": "full"
+    }
   },
   "-": {
     "type": "separator",

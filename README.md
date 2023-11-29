@@ -1,5 +1,13 @@
 # QUAK Website
 
+```text
+RewriteEngine on
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^quak\.com\.pl$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.quak\.com\.pl$
+RewriteRule ^/?$ "https\:\/\/quak\.com\.pl\/" [R=301,L]
+```
 
 > [!IMPORTANT]
 > This is a QUAK.COM.PL website repository.

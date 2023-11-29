@@ -4,6 +4,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   }

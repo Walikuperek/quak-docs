@@ -1,6 +1,6 @@
 import {Text} from "./text";
 
-export function HeroLearnCard({category, tag, link, image, author, createdAt, title, descriptionTextLines, label}) {
+export function HeroLearnCard({category, tag, link, image, author, createdAt, title, descriptionTextLines, label}: { category: string, tag: any, link: string, image: any, author: string, createdAt: string, title: string, descriptionTextLines: string[], label?: JSX.Element }) {
     const colors = {
         "angular": "rose",
         "architecture": "indigo",
@@ -44,7 +44,7 @@ export function HeroLearnCard({category, tag, link, image, author, createdAt, ti
                     </header>
                 </article>
             </section>
-            <p className="text-center text-gray-500 mb-3">{label ? label : <>Post from <b>QUAK Learn</b></>}</p>
+            {label && <p className="text-center text-gray-500 mb-3">{label}</p>}
         </>
     );
 }
