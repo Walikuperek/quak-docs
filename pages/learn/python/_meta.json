@@ -14,5 +14,29 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "flask-crud-json-api": {
+    "title": "Flask CRUD JSON API",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  },
+  "flask-json-api-with-services": {
+    "title": "Flask CRUD JSON API with services",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  },
+  "flask-json-api-unit-testing": {
+    "title": "Flask CRUD JSON API - testing your API",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }

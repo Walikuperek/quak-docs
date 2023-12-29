@@ -1,0 +1,209 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {PythonTag} from "../../../components/tags/python";
+
+# Flask JSON CRUD API
+
+<section className="header__height w-full rounded-2xl bg-blue-900 bg-opacity-10 border-2 border-blue-500">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <PythonTag/>
+        </div>
+        <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="bg-violet-600 h-20 text-sm w-20 p-1 mt-20 text-white font-bold">
+                Make Post From Draft
+            </div>
+            <div className="bg-violet-500 bg-opacity-10 h-40 w-40 p-1 mt-20 text-white font-bold">
+                <pre><code>
+                    SendEmailThatPostIsPublished(
+                    &nbsp;&nbsp;MakePostFromDraftService(draft_repo=PostDraftRepository(), post_repo=PostRepository())
+                    ).publish(post_draft_id="put_real_post_draft_id_here")
+                    <span className="text-gray-500"># decorator</span>
+                    <span className="text-gray-500"># pattern</span>
+                </code></pre>
+            </div>
+        </section>
+        <header className="px-4 pb-4 pt-4">
+            <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 29-12-2023</p>
+            <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-blue-200">Flask API with services</h1>
+            <p className="mt-2 text-lg">Learn how, why and when to use services</p>
+            <p className="text-lg">with Flask and easy to test architecture.</p>
+        </header>
+    </article>
+</section>
+
+## Introduction
+
+> This is `second` part of the series about Flask JSON API. You don't need to visit first article catch up with this one.
+>
+> This article is a part of Flask JSON API series.
+>   - [Flask JSON API](/learn/python/flask-crud-json-api)
+>   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)  # this article
+>   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)
+
+We start with the code at the point where first article ended.
+
+Follow [first article](/learn/python/flask-crud-json-api) or clone repository from [GitHub](https://github.com/Walikuperek/Flask-JSON-API/) to catch up.
+
+## Services
+
+Services are a way to separate business logic from the rest of the code. It's a good practice to keep your code clean and easy to test.
+
+### What is a service?
+
+Service is a class that contains business logic, can be used in multiple places and is easy to test.
+
+> This example omits some details like try/catch, batch, transactions, etc. to keep it simple.
+
+```python copy filename="**/services/make_post_from_draft_service.py"
+class MakePostFromDraftService(MakePostFromDraft):  # interface described below
+    def __init__(self, draft_repo: PostDraftRepository, post_repo: PostRepository):
+        self.draft_repo = draft_repo
+        self.post_repo = post_repo
+
+    def publish_draft(self, post_draft_id: str) -> BlogPost:
+        post_draft = self.draft_repo.get_by_id(post_draft_id)
+        post = BlogPost(
+            filename=post_draft.title,
+            content=post_draft.content,
+            author=post_draft.author,
+            created_at=post_draft.created_at,
+            updated_at=post_draft.updated_at,
+        )
+        self.post_repo.save(post)
+        self.draft_repo.delete(post_draft_id)
+        return post
+```
+
+Usage of this service is very simple. Just pass repositories to the constructor and call `publish_draft` method.
+
+```python copy filename="**/services/make_post_from_draft_service.py"
+service = MakePostFromDraftService(draft_repo=PostDraftRepository(), post_repo=PostRepository())
+blog_post = service.publish_draft(post_draft_id="put_real_post_draft_id_here")
+```
+
+### Why services?
+
+Services are a good place to put your business logic with proper abstraction -> so can be `reused` and `decorated`.
+
+Services to work properly needs interfaces. This is a good way to keep your code clean and `easy to test`.
+
+> Without service interfaces it's very hard to test easily e.g. controllers.
+
+#### Interfaces
+
+Interfaces are a way to define what methods should be implemented in a class. It's a good practice to use interfaces to keep your code easy to reuse/reimplement/decorate.
+
+```python copy filename="**/services/make_post_from_draft_service.py"
+class MakePostFromDraft(ABC):
+    @abstractmethod
+    def publish_draft(self, post_draft_id: str) -> BlogPost:
+        pass
+```
+
+What it gives us? We can use this interface to create a service that will send an email after publishing a post with `decorator pattern`.
+
+#### Decorator pattern
+
+Decorators are a way to add additional functionality to a function. But not python decorators, but `decorator pattern`.
+
+> It's a good practice to use decorators to keep your code clean and `easy to test` (because every part can be tested separately).
+
+```python copy filename="**/services/send_email_that_post_is_published.py"
+class SendEmailThatPostIsPublished(MakePostFromDraft):
+    """Decorator pattern"""
+    def __init__(self, make_post_from_draft_service: MakePostFromDraft):
+        self.make_post_from_draft_service = make_post_from_draft_service
+
+    def publish_draft(self, post_draft_id: str) -> BlogPost:
+        post = self.make_post_from_draft_service.publish_draft(post_draft_id)
+        self.send_email(post)
+        return post
+
+    def send_email(self, post: BlogPost):
+        # send email about created post to post.author_id
+```
+
+##### Example usage
+
+```python copy filename="**/routes.py"
+def make_post_from_draft_endpoint(request: Request):
+    post_draft_id = request.json.get("post_draft_id")
+    post = SendEmailThatPostIsPublished(
+        MakePostFromDraftService(draft_repo=PostDraftRepository(), post_repo=PostRepository())
+    ).publish(post_draft_id)
+    return jsonify(post.to_dict())
+```
+
+#### Testing services
+
+##### Unit testing
+
+Services are easy to test because they are `easy to mock`. You can mock repositories and test only business logic.
+
+```python copy filename="**/tests/unit/test_make_post_from_draft_service.py"
+def test_publish_draft():
+    # given
+    draft_repo = Mock()
+    post_repo = Mock()
+    service = MakePostFromDraftService(draft_repo=draft_repo, post_repo=post_repo)
+    post_draft_id = "test_post_draft_id_here"
+    post_draft = PostDraft(
+        id=post_draft_id,
+        title="title",
+        content="content",
+        author="author",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    draft_repo.get_by_id.return_value = post_draft
+
+    # when
+    service.publish_draft(post_draft_id)
+
+    # then
+    draft_repo.get_by_id.assert_called_once_with(post_draft_id)
+    post_repo.save.assert_called_once_with(
+        BlogPost(
+            filename=post_draft.title,
+            content=post_draft.content,
+            author=post_draft.author,
+            created_at=post_draft.created_at,
+            updated_at=post_draft.updated_at,
+        )
+    )
+    draft_repo.delete.assert_called_once_with(post_draft_id)
+```
+
+##### Integration testing
+
+You can test endpoints that uses services easily.
+
+```python copy filename="**/tests/integration/test_make_post_from_draft.py"
+def test_make_post_from_non_existing_draft(client):  # client from first article
+    # given
+    post_draft_id = "fake_post_draft_id_here"
+
+    # when
+    make_post_from_non_existing_draft_response = client.post(
+        "/make_post_from_draft",
+        json={"post_draft_id": post_draft_id},
+    )
+
+    # then
+    assert make_post_from_non_existing_draft_response.status_code == 404
+```
+
+That's it! Now you can use this as a base for your extended needs with JSON API.
+
+## Next
+
+You can go to the following articles about Flask JSON API series.
+
+> This article is a part of Flask JSON API series.
+>   - [Flask JSON API](/learn/python/flask-json-api)
+>   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)  # this article
+>   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

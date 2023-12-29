@@ -1,0 +1,420 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {PythonTag} from "../../../components/tags/python";
+
+# Flask JSON CRUD API
+
+<section className="header__height w-full rounded-2xl bg-blue-900 bg-opacity-10 border-2 border-blue-500">
+  <article className="flex flex-col align-between h-full relative">
+    <div className="absolute top-0 left-0 p-2">
+      <PythonTag />
+    </div>
+    <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-violet-600 delay-700 h-20 w-20 p-1 mt-20 text-white font-bold">Get Post<br />Request</div>
+        <div className="bg-emerald-600 h-40 w-40 p-1 mt-20 text-white font-bold">
+            Response 200<br />
+            <pre>
+                <code>{'{'}
+                    "id": "blog_post_(&*&IAJSIDJAS",
+                    "title": "Resize image with Python",
+                    "content": "Learn how to resize image with Python",
+                    "author_id": "user_OAIJSDOIJ"
+                {'}'}</code>
+            </pre>
+        </div>
+    </section>
+    <header className="px-4 pb-4 pt-4">
+      <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 26-12-2023</p>
+        <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-blue-200">Flask JSON CRUD API</h1>
+      <p className="mt-2 text-lg">Get to know how to easily build json API</p>
+      <p className="text-lg">with Flask and easy to test architecture.</p>
+    </header>
+  </article>
+</section>
+
+## Introduction
+
+In this article I will show you how to build a simple JSON API with Flask. We will use in memory to simulate DB. We will also use pytest to test our API.
+
+Main goal is to show you architecture that let to build a json API with Flask and test it easily.
+
+> This article is a part of Flask JSON API series.
+>   - [Flask JSON API](/learn/python/flask-crud-json-api)  # this article
+>   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)
+>   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)
+
+## Setup
+
+First of all we need to create a virtual environment. We will use `venv` module to do that.
+
+```bash copy
+python3 -m venv venv
+```
+
+Now we need to activate our virtual environment.
+
+```bash copy
+source venv/bin/activate
+```
+
+Now we can install Flask.
+
+```bash copy
+pip install Flask
+```
+
+We will also need pytest.
+
+```bash copy
+pip install pytest
+```
+
+## Build JSON API
+
+### Project structure
+
+We will create a simple project structure.
+
+import { Tabs, FileTree } from "nextra/components";
+
+<Tabs items={['Linux/MacOS', 'Windows']}>
+  <Tabs.Tab>
+    ```bash copy
+    mkdir flask-json-api
+    cd flask-json-api
+    mkdir app
+    touch app/__init__.py
+    touch app/models.py
+    touch app/repository.py
+    touch app/routes.py
+    touch app/tests/__init__.py
+    touch app/tests/integration.py
+    touch main.py
+    touch requirements.txt
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    Create a directory called `flask-json-api` and all files and directories inside it.
+    <br />
+    <FileTree>
+      <FileTree.Folder name="flask-json-api" defaultOpen>
+        <FileTree.File name="main.py" />
+        <FileTree.File name="requirements.txt" />
+
+        <FileTree.Folder name="app" defaultOpen>
+          <FileTree.File name="__init__.py" />
+          <FileTree.File name="models.py" />
+          <FileTree.File name="repository.py" />
+          <FileTree.File name="routes.py" />
+
+          <FileTree.Folder name="tests" defaultOpen>
+              <FileTree.File name="__init__.py" />
+              <FileTree.File name="integration.py" />
+            </FileTree.Folder>
+        </FileTree.Folder>
+      </FileTree.Folder>
+    </FileTree>
+  </Tabs.Tab>
+</Tabs>
+
+
+### Models
+
+We will create a simple model for our blog post.
+
+```python copy filename="app/models.py"
+from dataclasses import dataclass
+from datetime import datetime
+
+
+@dataclass
+class BlogPost:
+    id: str
+    title: str
+    content: str
+    author_id: str
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+```
+
+### Repository
+
+Now we can create our repository.
+
+```python copy filename="app/repository.py"
+import uuid
+
+from dataclasses import dataclass
+from datetime import datetime
+from typing import List
+
+from app.models import BlogPost
+
+
+@dataclass
+class CreatePostDto:
+    title: str
+    content: str
+    author_id: str
+
+
+@dataclass
+class UpdatePostDto:
+    post_id: str
+    title: str | None = None
+    content: str | None = None
+    author_id: str | None = None
+
+
+class BlogPostRepository:
+    def __init__(self):
+        self.posts = []
+
+    def get_all(self) -> List[BlogPost]:
+        return self.posts
+
+    def get_by_id(self, post_id: str) -> BlogPost | None:
+        for post in self.posts:
+            if post.id == post_id:
+                return post
+        return None
+
+    def create(self, dto: CreatePostDto) -> BlogPost:
+        post = BlogPost(id=str(uuid.uuid4()),
+                        title=dto.title,
+                        content=dto.content,
+                        author_id=dto.author_id)
+        self.posts.append(post)
+        return post
+
+    def update(self, dto: UpdatePostDto) -> BlogPost | None:
+        post = self.get_by_id(dto.post_id)
+        if post is None:
+            return None
+        post.title = dto.title if dto.title else post.title
+        post.content = dto.content if dto.content else post.content
+        post.author_id = dto.author_id if dto.author_id else post.author_id
+        post.updated_at = datetime.now()
+        return post
+
+    def delete(self, post_id: str) -> bool:
+        post = self.get_by_id(post_id)
+        if post is None:
+            return False
+        self.posts.remove(post)
+        return True
+
+
+post_repo = BlogPostRepository()
+```
+
+### Routes
+
+Now we can create our routes.
+
+```python copy filename="app/routes.py"
+from flask import Blueprint, jsonify, request
+
+from app.repository import post_repo, CreatePostDto, UpdatePostDto
+
+bp = Blueprint("blog_posts", __name__, url_prefix="/blog_posts")
+
+
+@bp.route("/", methods=["GET"])
+def get_blog_posts():
+    return jsonify({"blog_posts": post_repo.get_all()})
+
+
+@bp.route("/", methods=["POST"])
+def create_blog_post():
+    data = request.get_json()
+    blog_post = post_repo.create(dto=CreatePostDto(title=data.get("title"),
+                                                   content=data.get("content"),
+                                                   author_id=data.get("author_id")))
+    return jsonify(blog_post.__dict__)
+
+
+@bp.route("/<blog_post_id>", methods=["GET"])
+def get_blog_post(blog_post_id):
+    return jsonify({"blog_post": post_repo.get_by_id(blog_post_id)})
+
+
+@bp.route("/<blog_post_id>", methods=["PUT"])
+def update_blog_post(blog_post_id):
+    data = request.get_json()
+    blog_post = post_repo.update(dto=UpdatePostDto(post_id=blog_post_id,
+                                                   title=data.get("title"),
+                                                   content=data.get("content")))
+    return jsonify(blog_post.__dict__ if blog_post else {})
+
+
+@bp.route("/<blog_post_id>", methods=["DELETE"])
+def delete_blog_post(blog_post_id):
+    return jsonify({"deleted": post_repo.delete(blog_post_id)})
+```
+
+### Main
+
+Now we can create our main file.
+
+> See that we use Blueprint to register our routes.
+> It's a good practice to separate routes from main file.
+>
+> Move repository, routes and models to **app/blog_posts/** directory.
+> With this approach you created so-called **modular** application.
+
+```python copy filename="main.py"
+from flask import Flask
+
+from app.routes import bp as blog_posts_bp
+
+
+def create_app():
+    app = Flask(__name__)
+    app.register_blueprint(blog_posts_bp)
+    return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)
+```
+
+### Tests
+
+Now we can create our tests. We are going to implement only integration tests for now.
+
+> In a scenario like this there is no point to write unit tests for it.
+>
+> But when we will introduce some more logic to our app, we will need to write unit tests.
+>
+> We will cover unit tests in next article, when example will need unit tests.
+>
+> We will cover testing API as a whole in [Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing) article.
+
+- We will use in memory repository to simulate DB.
+- We will use pytest to test our API.
+- We will use `client` fixture to test our API endpoints.
+
+```python copy filename="app/tests/integration.py"
+import json
+import pytest
+
+from main import create_app
+
+
+@pytest.fixture
+def client():
+    app = create_app()
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        yield client
+
+
+# Tests
+test_posts_data = {
+    "resize_image": {
+        "title": "Resize image with Python",
+        "content": "Learn how to resize image with Python",
+        "author_id": "user_OAIJSDOIJ"
+    }
+}
+
+
+def test_get_blog_posts(client):
+    get_all_posts_response = client.get("/blog_posts/")
+    assert get_all_posts_response.status_code == 200
+    assert json.loads(get_all_posts_response.data) == {"blog_posts": []}  # empty list for now
+
+
+def test_create_blog_post(client):
+    create_post_response = given_a_blog_post_exists(client, blog_post_data=test_posts_data["resize_image"])
+    assert create_post_response["title"] == test_posts_data["resize_image"]["title"]
+    assert create_post_response["content"] == test_posts_data["resize_image"]["content"]
+    assert create_post_response["author_id"] == test_posts_data["resize_image"]["author_id"]
+
+
+def test_get_blog_by_id_post(client):
+    given_post_in_db = given_a_blog_post_exists(client)
+    get_blog_by_id_response = client.get(f"/blog_posts/{given_post_in_db['id']}")
+    assert get_blog_by_id_response.status_code == 200
+    assert json.loads(get_blog_by_id_response.data) == {"blog_post": given_post_in_db}
+
+
+def test_update_blog_post(client):
+    given_post_in_db = given_a_blog_post_exists(client)
+    fields_to_update = {"title": "Updated Title"}
+    update_response = client.put(
+        f"/blog_posts/{given_post_in_db['id']}",
+        data=json.dumps(fields_to_update),
+        content_type="application/json",
+    )
+    assert update_response.status_code == 200
+    assert json.loads(update_response.data)["title"] == "Updated Title"
+
+
+def test_delete_blog_post(client):
+    given_post_in_db = given_a_blog_post_exists(client)
+    response = client.delete(f"/blog_posts/{given_post_in_db['id']}")
+    assert response.status_code == 200
+    assert json.loads(response.data) == {"deleted": True}
+
+
+# Helper functions
+def given_a_blog_post_exists(client, blog_post_data=None):
+    if blog_post_data is None:
+        blog_post_data = test_posts_data["resize_image"]
+    create_post_response = client.post(
+        "/blog_posts/",
+        data=json.dumps(blog_post_data),
+        content_type="application/json",
+    )
+    assert create_post_response.status_code == 200
+    return json.loads(create_post_response.data)
+```
+
+Tests are passing, so we can move on.
+
+<img src="/assets/read/tests_passing_flask_crud.png" className="rounded-2xl mx-auto" alt="Tests passing" />
+
+### Requirements file
+
+Now we can create our requirements file.
+
+```text copy filename="requirements.txt"
+pytest~=7.4.3
+Flask~=3.0.0
+```
+
+## Run
+
+Now we can run our app.
+
+```bash copy
+python main.py
+```
+
+## Test
+
+Now we can run our tests.
+
+```bash copy
+pytest app/tests/integration.py
+
+# or with verbose flag (shows more details, for verbosity levels use -v or -vv, where -vv is the most verbose)
+pytest app/tests/integration.py -vv
+```
+
+That's it! Now you can use this as a base for your simple JSON API with Flask.
+
+## Next
+
+You can go to the following articles about Flask JSON API.
+
+> This article is a part of Flask JSON API series.
+>   - [Flask JSON API](/learn/python/flask-json-api)  # this article
+>   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)
+>   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />
