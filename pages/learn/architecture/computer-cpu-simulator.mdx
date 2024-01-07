@@ -1,0 +1,211 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {ArchitectureTag} from "../../../components/tags/architecture";
+
+# Computer CPU Simulator
+
+<section className="header__height w-full rounded-2xl bg-indigo-900 bg-opacity-10 border-2 border-indigo-500">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <ArchitectureTag/>
+        </div>
+        <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="bg-violet-600 h-20 text-sm w-20 p-1 mt-20 text-white font-bold">
+                CPU Simulator
+            </div>
+            <div className="bg-violet-500 bg-opacity-10 h-40 w-40 p-1 mt-20 text-white font-bold">
+                <pre><code>
+                    <span className="text-gray-500"># NOT gate</span>
+                    <span className="text-gray-500">def</span> <span className="text-yellow-500">gate</span>(<span className="text-yellow-500">bit</span>):
+                    &nbsp;<span className="text-gray-500">return</span> <span className="text-yellow-500">1</span>
+                    &nbsp;&nbsp;<span className="text-gray-500">if</span> <span className="text-yellow-500">bit</span> == <span className="text-yellow-500">0</span>
+                    &nbsp;&nbsp;<span className="text-gray-500">else</span> <span className="text-yellow-500">0</span>
+                </code></pre>
+            </div>
+        </section>
+        <header className="px-4 pb-4 pt-4">
+            <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 06-01-2024</p>
+            <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-indigo-300">Computer CPU Simulator</h1>
+            <p className="mt-2 text-lg">Learn how computer works by simulating</p>
+            <p className="text-lg">every part of it with a programming language.</p>
+        </header>
+    </article>
+</section>
+
+## Introduction
+
+In this article we will build a simulator of the CPU. It will be a simple model of the CPU that will allow us to understand how the CPU works.
+
+
+> To fully understand how to build quantum computer
+> we need to know how regular version of the computer works.
+>
+> This article is a part of Quantum Computing series:
+>   - [Computer CPU Simulator](/learn/architecture/computer-cpu-simulator)  # You are here
+
+
+## What is CPU?
+
+CPU is a `Central Processing Unit`. It is a part of the computer that is responsible for executing instructions. It is a brain of the computer.
+
+## What is instruction?
+
+Instruction is a command that CPU executes. It is a simple command that tells CPU what to do. For example, `ADD` instruction tells CPU to add two numbers.
+
+## How to add two numbers?
+
+To add two numbers we need to use `ADD` instruction. It takes two numbers as an input and returns a sum of them.
+
+But how to tell CPU to add two numbers? We need to use a programming language. Let's use Python.
+
+```python copy filename="calc.py"
+def add(a, b):
+    return a + b
+
+add(1, 2)  # 3
+```
+
+### How processor sees it?
+
+> Assume we got 4-bit system, e.g. [0001] = 1, [0010] = 2, [0011] = 3, etc.
+
+Let's see how processor sees it. We will use a simple model of the CPU that will allow us to understand how the CPU works.
+
+```text
+ADD 1 2
+# result in bits => 0001 + 0010 = 0011
+```
+
+## How to build a CPU simulator?
+
+> We will use TypeScript to build a CPU simulator.
+
+Build interfaces for CPU and instruction.
+
+```typescript filename="cpu.ts" copy
+type Bit = 0 | 1;
+type Word = Bit[];
+const WORD_SIZE = 4; // 4-bit system
+
+interface CPU {
+    memory: Word[];
+    registers: Word[];
+    stack: Word[];
+    flags: {
+        zero: boolean;
+        carry: boolean;
+        overflow: boolean;
+    };
+    instructionPointer: number;
+    stackPointer: number;
+    halted: boolean;
+}
+
+class CPU {
+    constructor() {
+        this.memory = [];
+        this.registers = [];
+        this.stack = [];
+        this.flags = {
+            zero: false,
+            carry: false,
+            overflow: false,
+        };
+        this.instructionPointer = 0;
+        this.stackPointer = 0;
+        this.halted = false;
+    }
+}
+
+interface Instruction {
+    name: string;
+    opcode: number;
+    execute: (cpu: CPU, operands: Word[]) => void;
+}
+```
+
+Build instructions.
+
+```typescript filename="instructions.ts" copy
+const instructions: Instruction[] = [
+    {
+        name: "ADD",
+        opcode: 0b0000,
+        execute: (cpu, operands) => {
+            const [a, b] = operands;
+            const result = add(a, b);
+            cpu.registers[0] = result;
+        },
+    },
+    // ...
+];
+
+function add(a: Word, b: Word): Word {
+    if (a.length !== b.length) {
+        throw new Error("Words must have the same length");
+    }
+
+    const result: Word = [];
+    let carry = 0;
+
+    for (let i = 0; i < a.length; i++) {
+        const sum = a[i] + b[i] + carry;
+        const bit = sum % 2;
+        carry = sum > 1 ? 1 : 0;
+        result.push(bit);
+    }
+
+    return result;
+}
+```
+
+Build CPU simulator.
+
+```typescript filename="simulator.ts" copy
+const cpu = new CPU();
+
+while (!cpu.halted) {
+    const instruction = instructions[cpu.memory[cpu.instructionPointer]];
+    const operands = cpu.memory.slice(
+        cpu.instructionPointer + 1,
+        cpu.instructionPointer + 1 + instruction.operandsCount
+    );
+
+    instruction.execute(cpu, operands);
+    cpu.instructionPointer += instruction.operandsCount + 1;
+}
+```
+
+## How to use CPU simulator?
+
+> We will use CPU simulator to add two numbers.
+
+```typescript filename="calc.ts" copy
+const cpu = new CPU();
+
+cpu.memory = [
+    Instruction.ADD,
+    0b0001,
+    0b0010,
+];
+
+while (!cpu.halted) {
+    const instruction = instructions[cpu.memory[cpu.instructionPointer]];
+    const operands = cpu.memory.slice(
+        cpu.instructionPointer + 1,
+        cpu.instructionPointer + 1 + instruction.operandsCount
+    );
+
+    instruction.execute(cpu, operands);
+    cpu.instructionPointer += instruction.operandsCount + 1;
+}
+
+console.log(cpu.registers[0]); // [0011]
+```
+
+## Conclusion
+
+In this article we have learned how to build a CPU simulator. We have learned how to add two numbers using CPU simulator.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />
