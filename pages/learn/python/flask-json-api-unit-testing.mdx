@@ -1,0 +1,212 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {PythonTag} from "../../../components/tags/python";
+
+<section className="header__height w-full rounded-2xl bg-blue-900 bg-opacity-10 border-2 border-blue-500 mt-2">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <PythonTag/>
+        </div>
+        <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="bg-orange-600 h-20 text-sm w-20 p-1 mt-20 text-white font-bold">
+                Testing
+                <hr className="mb-0 pb-0" />
+                <span>- Case</span>
+            </div>
+            <div className="bg-violet-500 bg-opacity-10 h-40 w-40 p-1 mt-20 text-white font-bold">
+                <pre><code>
+                    <span className="text-gray-500"># given</span>
+                    <span className="text-gray-500"># when</span>
+                    <span className="text-gray-500"># then</span>
+                    <span><span className="text-rose-500">assert</span> true</span>
+                </code></pre>
+            </div>
+        </section>
+        <header className="px-4 pb-4 pt-4">
+            <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 01-05-2024</p>
+            <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-blue-200">Flask API Unit Testing</h1>
+            <p className="mt-2 text-lg">Learn how to unit test your APIs.</p>
+        </header>
+    </article>
+</section>
+
+## Introduction
+
+This is the `third` part of the series about Flask JSON API.
+
+You don't need to have any previous code. But if you want to catch up, you can follow the first/second article or clone the repository from [GitHub](https://github.com/Walikuperek/Flask-JSON-API/).
+
+> This article is a part of the Flask JSON API series.
+>   - [Flask JSON API](/learn/python/flask-crud-json-api)
+>   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)
+>   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)  # this article
+
+## Unit testing
+
+Unit testing is a type of testing that tests individual units of code. In this case, we will unit test our endpoints.
+
+> Endpoints make calls to a services, grabs/persists data, and returns it.
+>
+> We should test if the endpoint internal service calls are correct and if the response is as expected.
+
+### What to test?
+
+Let's look at the following endpoint and `get_data(data_id, user)` method.
+
+```python copy /get_data/
+class Service:
+    def __init__(self, repository, notifier):
+        self.repository = repository
+        self.notifier = notifier
+
+    def get_data(self, data_id, user):
+        data = self.repository.get(data_id)
+        self.notifier.notify(data, { "fetch_by": user })
+        return {"list": data}
+
+def endpoint(request, data_id):
+    repo = Repository()
+    notifier = Notifier()
+    service = Service(repo, notifier)
+    data = service.get_data(data_id, request.user)
+    return data.get("list", [])
+```
+
+#### Testing Service
+
+To test service we should test if:
+- service.`get_data` is called and returns proper data for a given set of arguments
+- notifier is called with proper arguments
+
+##### Testing get_data
+
+To test get_data we need testing `repository` and `notifier`.
+
+```python copy /repository/ /notifier/
+class Service:
+    def get_data(self, data_id, user):
+        data = self.repository.get(data_id)
+        self.notifier.notify(data, { "fetch_by": user })
+        return {"list": data}
+```
+
+Once we get here we can understand that we have to:
+- make an `abstraction for repository and notifier services`.
+
+###### Repository and Notifier ABC
+
+These are abstract classes that we can use to define the interface for the repository and notifier.
+
+They allow us to easily swap the implementation of the repository and notifier. We can use the actual repository and notifier in the production code and the testing repository and notifier in the testing code.
+
+**It is way better than using mocks.**
+
+> We will be able to `REUSE` the testing repository and notifier in other tests.
+
+```python copy
+from abc import ABC, abstractmethod
+from typing import List, Any
+
+class RepositoryABC(ABC):
+    @abstractmethod
+    def get(self, data_id) -> List[Any]:
+        pass
+
+class NotifierABC(ABC):
+    @abstractmethod
+    def notify(self, data, meta):
+        pass
+```
+
+###### Testing Repository and Notifier
+
+With this approach we can easily stub the repository and notifier services with an actual testing the system.
+
+```python copy
+class TestRepository(RepositoryABC):
+    data = {
+        "fake_data_id": [],
+        "1": [1]
+    }
+
+    def get(self, data_id):
+        return self.data.get(data_id, [])
+
+class TestNotifier(NotifierABC):
+    def notify(self, data, meta):
+        pass
+```
+
+###### An Actual Test
+
+Now we can test `get_data` the service without any mocks.
+
+```python copy filename="**/tests/unit/test_service.py"
+def test_get_data_for_fake_id():
+    # given
+    test_repository = TestRepository()
+    test_notifier = TestNotifier()
+    service = Service(test_repository, test_notifier)
+    data_id = "fake_data_id"
+    user = "fake_user"
+
+    # when
+    returned_data = service.get_data(data_id, user)
+
+    # then
+    assert returned_data == []  # we return empty list for non-existing/fake data_id
+```
+
+#### Testing Endpoint
+
+Testing endpoint should be done only if the service is tested and more logic or data manipulation is done in the endpoint.
+
+> Most likely, you will test the endpoint in integration tests.
+>
+> Or... you have a lot of abstracted logic in the endpoint or CQRS pattern, etc.
+> then you end up with way easier testing of the endpoint.
+> Due to the ex. `DoSmthBusinessRelatedCommand` or `DoSmthBusinessRelatedQuery`
+> classes or similar and their ABCs can be easily tested as well.
+
+## Integration testing
+
+Integration testing is a type of testing that tests the integration of multiple units of code. In this case, we will test the endpoints.
+
+### Difference between unit and integration testing
+
+Unit testing tests `individual units of code`. In this case, we tested the service.
+
+Integration testing tests the integration of `multiple units of code` at once. In this case, we will test the endpoints.
+
+### Actual integration test example
+
+You can test endpoints that uses services easily.
+
+```python copy filename="**/tests/integration/test_make_post_from_draft.py"
+def test_make_post_from_non_existing_draft(client):  # client from first article
+    # given
+    post_draft_id = "fake_post_draft_id_here"
+
+    # when
+    make_post_from_non_existing_draft_response = client.post(
+        "/make_post_from_draft",
+        json={"post_draft_id": post_draft_id},
+    )
+
+    # then
+    assert make_post_from_non_existing_draft_response.status_code == 404
+```
+
+## Next
+
+That's it! Now you can use this as a base for your extended testing needs with JSON API.
+
+You can go to the following articles about Flask JSON API series.
+
+> This article is a part of Flask JSON API series.
+>   - [Flask JSON API](/learn/python/flask-json-api)
+>   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)
+>   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)  # this article
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

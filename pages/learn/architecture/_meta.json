@@ -7,5 +7,50 @@
       "typesetting": "article",
       "sidebar": false
     }
+  },
+  "cpu-simulator": {
+    "title": "CPU Simulator",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "mvc": {
+    "title": "MVC Architecture",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "monolith": {
+    "title": "Monolith Architecture",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "modular-monolith": {
+    "title": "Modular Monolith Architecture",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "cqrs": {
+    "title": "CQRS",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
   }
 }

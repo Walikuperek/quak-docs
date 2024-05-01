@@ -18,8 +18,7 @@ export const PythonPosts = [
             "Get to know how to use PIL library",
             "for Python img resize solution."
         ],
-        description: "Get to know how to use PIL library for Python img resize solution.",
-        label: <>Latest post from <b>QUAK Learn</b></>
+        description: "Get to know how to use PIL library for Python img resize solution."
     },
     {
         color: "python",
@@ -50,8 +49,7 @@ export const PythonPosts = [
             "Get to know how to easily build json API",
             "with Flask and easy to test architecture."
         ],
-        description: "Get to know how to easily build json API with Flask and easy to test architecture.",
-        label: <>Latest post from <b>QUAK Learn</b></>
+        description: "Get to know how to easily build json API with Flask and easy to test architecture."
     },
     {
         color: "python",
@@ -79,8 +77,34 @@ export const PythonPosts = [
             "Learn how, why and when to use services",
             "with Flask and easy to test architecture."
         ],
-        description: "Learn how, why and when to use services with Flask and easy to test architecture.",
-        label: <>Latest post from <b>QUAK Learn</b></>
+        description: "Learn how, why and when to use services with Flask and easy to test architecture."
+    },
+    {
+        color: "python",
+        category: "backend",
+        link: "/learn/python/flask-json-api-unit-testing",
+        tag: <PythonTag disabled={true}/>,
+        image: <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="bg-orange-600 h-20 text-sm w-20 p-1 mt-20 text-white font-bold">
+                Testing
+                <hr className="mb-0 pb-0"/>
+                <span>- Case</span>
+            </div>
+            <div className="bg-violet-500 bg-opacity-10 h-40 w-40 p-1 mt-20 text-white font-bold">
+                <pre><code>
+                    <span className="text-gray-500"># given, when</span>
+                    <span className="text-gray-500"># then &rarr;</span>
+                    <span><span className="text-rose-500">assert</span> true</span>
+                </code></pre>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "01-05-2024",
+        title: <>API Unit Testing</>,
+        descriptionTextLines: [
+            "Learn how to Unit test your API",
+        ],
+        description: "Learn how to Unit test your API"
     },
 ];
 newestUpSorter(PythonPosts);

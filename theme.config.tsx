@@ -41,7 +41,7 @@ const config: DocsThemeConfig = {
   // },
   footer: {
     text: (
-      <div className="flex flex-col lg:flex-row flex-wrap justify-start w-full gap-5">
+      <div id="footer" className="flex flex-col lg:flex-row flex-wrap justify-start w-full gap-5">
         <div className="flex flex-col gap-3 px-5">
           <img src="/logos/quak.png" width="44" height="44" alt="QUAK Logo" className="mx-auto" />
           <strong className="mx-auto">QUAK</strong>

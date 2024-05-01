@@ -23,7 +23,7 @@ export function HeroLearnCard({category, tag, link, image, author, createdAt, ti
     }
     const color = colors[category];
     const heroClasses = `w-full rounded-2xl bg-opacity-10 border-2 bg-${color}-900 border-${color}-500`;
-    const titleClasses = `text-2xl font-bold mb-3 border-b-2 border-b-${color}-500`;
+    const titleClasses = `text-2xl font-bold mb-4 border-b-2 border-b-${color}-500 flex flex-row justify-between items-center`;
     const linkClasses = `hover:text-${color}-500 hover:underline underline-offset-2`;
     const imageLinkField = link ? <a className="h-full" href={link}>{image}</a> : image;
     const linkField = link ? <a className={linkClasses} href={link}>{title}</a> : title;
@@ -35,12 +35,12 @@ export function HeroLearnCard({category, tag, link, image, author, createdAt, ti
                         {tag}
                     </div>
                     {imageLinkField}
-                    <header className="px-4 pb-4 pt-4">
-                        <p className="text-right mt-2 text-lg text-gray-500">{author} &middot; {createdAt}</p>
-                        <h1 className={titleClasses}>
-                            {linkField}
-                        </h1>
-                        <Text textLines={descriptionTextLines} />
+                    <header className="flex flex-col px-4 pb-4 pt-4">
+                        <div className={titleClasses}>
+                            <h1 className="text-2xl font-bold">{linkField}</h1>
+                            <p className="mt-2 text-lg text-gray-500">{author} &middot; {createdAt}</p>
+                        </div>
+                        <Text textLines={descriptionTextLines}/>
                     </header>
                 </article>
             </section>
@@ -50,5 +50,6 @@ export function HeroLearnCard({category, tag, link, image, author, createdAt, ti
 }
 
 export default function MyApp({category, tag, link, image, author, createdAt, title, descriptionTextLines, label}) {
-    return <HeroLearnCard category={category} tag={tag} link={link} image={image} author={author} createdAt={createdAt} title={title} descriptionTextLines={descriptionTextLines} label={label} />
+    return <HeroLearnCard category={category} tag={tag} link={link} image={image} author={author} createdAt={createdAt}
+                          title={title} descriptionTextLines={descriptionTextLines} label={label}/>
 };

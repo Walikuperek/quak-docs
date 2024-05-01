@@ -1,20 +1,27 @@
 import {PostsList} from "../../components/lists/posts-list";
 import {ArchitecturePosts} from "../../data/tag-posts/architecture";
+import {Spacer} from "../../components/ui/generics/spacer";
 
 # #Architecture
 
-<h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">LEARN</h3>
-<h2 className="text-4xl mb-3 font-bold">What is Architecture</h2>
-<p className="text-gray-500">Architecture in programming is the high level structure of a software system,</p>
-<p className="text-gray-500">the discipline of creating such structures, and the documentation of these structures.</p>
-<p className="text-gray-500">It is the set of structures needed to reason about the software system,</p>
-<p className="text-gray-500">which comprise the software elements, the relations between them</p>
-<p className="text-gray-500">and the properties of both elements and relations.</p>
-
-<section className="bg-lines flex mt-10 mb-20 h-12 w-full"></section>
-
-<h3 className="text-lg mb-2 text-gray-500 font-bold">READ</h3>
+<h3 className="text-lg mb-2 text-gray-500 font-bold mt-2">READ</h3>
 <h2 className="text-4xl mb-3 font-bold">All Architecture readings</h2>
 <p className="mb-10 text-gray-500">Read all Architecture related articles</p>
 
 <PostsList posts={ArchitecturePosts}/>
+
+<section className="bg-lines flex mt-10 mb-20 h-12 w-full"></section>
+
+<h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">LEARN</h3>
+<h2 className="text-4xl mb-3 font-bold">What is an Architecture</h2>
+<p className="text-gray-500">Architecture in programming is the high level structure of a software system,</p>
+<p className="text-gray-500">the discipline of creating such structures and the documentation of these structures.</p>
+<p className="text-gray-500">It is the set of structures needed to reason about the business needs,</p>
+<p className="text-gray-500">which comprise the software elements, the relations between them</p>
+<p className="text-gray-500">and the properties of both elements and relations.</p>
+
+<Spacer />
+
+<em className="text-gray-500">In a nutshell arch is: "way of producing code, way of testing, way of deploying, way of developing... or anything else it's hard to say".</em>
+
+
