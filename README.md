@@ -41,7 +41,7 @@ $ sh scripts/build-deploy.sh 'Archive_19_05_2024_3.zip'
 
 #### Deploy another version
 
-Use to deploy another version of the website. Useful when the website is already deployed and you want to deploy another version.
+Use to deploy another version of the website. Useful when the website is already deployed and you want to deploy another version from given zip package.
 
 > Remember to put `Archive_17_05_2024.zip` in the `quak-docs/out/` directory.
 
