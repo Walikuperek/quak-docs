@@ -5,7 +5,7 @@ export function QuakV1Hero() {
             <p className="mb-5 text-center text-lg">Was on the WEB 2019-2020</p>
             <p className="mb-3 text-center text-gray-500">Archived V1 version ={">"} <a target="_blank" href="https://storage.googleapis.com/quak-poland-395819.appspot.com/quak-archived/v1/index.html" className="text-fuchsia-500 hover:underline hover:cursor-pointer">link to archived website</a></p>
 
-            <img src="/assets/quak_history/quak_v1.png" className="shadow-purple500 shadow-2xl mt-3 rounded-b-2xl object-cover h-96 mx-auto" alt="" />
+            <img src="/assets/quak_history/quak_2020_1080w.png" className="shadow-purple500 shadow-2xl mt-3 rounded-b-2xl object-cover h-96 mx-auto" alt="" />
         </section>
     );
 }

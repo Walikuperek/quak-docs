@@ -27,7 +27,10 @@ function VantaHero() {
         <div className={styles.vantaheroText}>
           <h1 className="font-bold text-5xl text-white">QUAK</h1>
           <p className="text-xl text-slate-400 mt-3 whitespace-nowrap">
-            Company that <span className="rounded px-1 text-xl font-bold text-fuchsia-500">make & teach</span> IT things
+            Company that <span className="rounded px-1 text-xl font-bold text-fuchsia-500">make & teach</span>
+          </p>
+          <p className="text-xl text-slate-400 mt-1 whitespace-nowrap">
+             IT things Globally
           </p>
           <div className="mt-5 flex items-center justify-center gap-x-6 lg:justify-start">
             <a

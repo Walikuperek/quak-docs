@@ -10,6 +10,38 @@ body {
     width: 100%;
 }
 
+#footer_logo {
+    left: 50%;
+    bottom: -5.4rem;
+    transform: translateX(-50%);
+    outline: 3px solid blueviolet;
+    background: #451672;
+    border-radius: 50vw 50vw;
+    width: min(200px, 100%);
+    display: flex;
+    justify-content: flex-start;
+    overflow: hidden;
+    margin: 1rem auto;
+}
+#footer_logo img {
+    animation: fromLefToRightAndBack 7.77s infinite ease-in-out;
+}
+
+@keyframes fromLefToRightAndBack {
+    0% {
+        transform: translateX(-100%) scaleX(-1);
+    }
+    49% {
+        transform: translateX(min(200px, 100vw)) scaleX(-1);
+    }
+    50% {
+        transform: translateX(min(200px, 100vw)) scaleX(1);
+    }
+    100% {
+        transform: translateX(-100%) scale(1);
+    }
+}
+
 :root {
     font-size: 16px;
     --primary: rgb(147, 99, 219);

@@ -5,3 +5,5 @@ out
 /out
 .github
 .idea
+/scripts/deploy/.env
+/scripts/deploy/node_modules

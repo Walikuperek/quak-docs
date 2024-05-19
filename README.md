@@ -1,31 +1,50 @@
 # QUAK Website
 
-> [!IMPORTANT]
-> This is a QUAK.COM.PL website repository.
-
-This is README.md for [QUAK.COM.PL](https://quak.com.pl) website maintenace.
+This is README.md for [QUAK.COM.PL](https://quak.com.pl) website maintenance.
 
 ## Local Development
 
-First, run `pnpm i` to install the dependencies.
-
-Then, run `pnpm dev` to start the development server and visit localhost:3000.
-
+```bash
+$ pnpm i
+$ pnpm dev  # localhost:3000
 ```
 
-<div className="flex flex-row flex-wrap justify-center gap-2">
-  <a href="/portfolio/tech-app" className="w-96 flex flex-col align-center justify-between rounded-2xl bg-purple-500 bg-opacity-10">
-    <header className="h-24 flex flex-row justify-center items-center gap-3 w-full p-2">
-      <div className="bg-purple-900 bg-opacity-30 h-20 w-10 rounded-lg p-1 text-gray-500 flex items-center justify-center">Mob</div>
-      <div className="bg-purple-900 bg-opacity-30 h-16 w-20 rounded-lg p-1 text-gray-500 flex items-center justify-center">Desktop</div>
-    </header>
-    <section className="shadow-lg flex flex-col gap-3 rounded-b-2xl bg-purple-700 h-60 overflow-hidden">
-      <div className="flex shadow-2xl justify-between rounded-2xl p-2 text-white font-bold">
-          <div className="bg-purple-600 h-20 w-20 rounded-lg p-1 text-white font-bold">Features<br /><small className="font-thin">➡️ use navi<br />➡️ sign doc</small></div>
-          <small className="text-center text-sm font-bold">App</small>
-      </div>
-      <div className="p-2 h-20 w-full rounded-lg p-1 text-purple-100 font-bold">Regular features<br /><small className="font-thin"><span className="text-green-400">+</span> authentication<br /><span className="text-green-400">+</span> user settings<br /><span className="text-green-400">+</span> generating PDF</small></div>
-    </section>
-  </a>
-</div>
+## Deploy
+
+### Install script dependencies
+
+```bash
+$ cd scripts/deploy
+$ pnpm i
+```
+
+### Environment Variables
+
+To run the deploy script to the CPanel, you need to have the following environment variables set:
+
+> Store variables in `quak-docs/sripts/deploy/.env`
+> ```dotenv
+> # Username and password for the CPanel
+> USERNAME=your-username
+> PASSWORD=your-password
+> ```
+
+### Usage
+
+#### Build, export to static HTML and Deploy
+
+Use when you want to deploy the website for the first time or when you want to deploy a new version of the website.
+
+```bash
+$ sh scripts/build-deploy.sh 'Archive_19_05_2024_3.zip'
+```
+
+#### Deploy another version
+
+Use to deploy another version of the website. Useful when the website is already deployed and you want to deploy another version.
+
+> Remember to put `Archive_17_05_2024.zip` in the `quak-docs/out/` directory.
+
+```bash
+$ sh scripts/change-version.sh 'Archive_17_05_2024.zip'
 ```

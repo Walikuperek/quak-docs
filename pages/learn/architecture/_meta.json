@@ -17,8 +17,53 @@
       "sidebar": false
     }
   },
+  "web-architectures": {
+    "title": "Architectures for web applications",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
   "mvc": {
     "title": "MVC Architecture",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "cqrs": {
+    "title": "CQRS",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "crud": {
+    "title": "CRUD",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "hexagonal": {
+    "title": "Hexagonal Architecture",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "microservice": {
+    "title": "Microservice",
     "display": "hidden",
     "theme": {
       "layout": "default",
@@ -37,15 +82,6 @@
   },
   "modular-monolith": {
     "title": "Modular Monolith Architecture",
-    "display": "hidden",
-    "theme": {
-      "layout": "default",
-      "typesetting": "article",
-      "sidebar": false
-    }
-  },
-  "cqrs": {
-    "title": "CQRS",
     "display": "hidden",
     "theme": {
       "layout": "default",

@@ -1,0 +1,10 @@
+{
+  "deploy-to-cpanel": {
+    "title": "Deploy HTML to CPanel",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
+  }
+}

@@ -41,79 +41,91 @@ const config: DocsThemeConfig = {
   // },
   footer: {
     text: (
-      <div id="footer" className="flex flex-col lg:flex-row flex-wrap justify-start w-full gap-5">
-        <div className="flex flex-col gap-3 px-5">
-          <img src="/logos/quak.png" width="44" height="44" alt="QUAK Logo" className="mx-auto" />
-          <strong className="mx-auto">QUAK</strong>
-          <p className="mx-auto">Kacper Walczak</p>
-          <p className="mx-auto">Copyright {new Date().getFullYear()}</p>
-        </div>
-        <div className="flex flex-col">
-          <b className="text-gray-500 font-bold">CONTACT</b>
-          <div className="flex flex-col gap-2 mt-3 p-2">
-            <a target="_blank" href="https://www.linkedin.com/in/kacper-walczak-b4122717a/" className="text-green-500 hover:underline">
-              LinkedIn
-            </a>
-            <a target="_blank" href="https://www.facebook.com/profile.php?id=100014391284754" className="text-green-500 hover:underline">
-              Facebook
-            </a>
-            <a target="_blank" href="https://www.instagram.com/walikuperek/" className="text-green-500 hover:underline">
-              Instagram
-            </a>
-            <a href="mailto:k.walczak@quak.com.pl" className="text-green-500 hover:underline">
-              k.walczak@quak.com.pl
-            </a>
+        <div id="footer" className="flex flex-col lg:flex-row flex-wrap justify-start w-full gap-5 pb-10 mb-10 relative">
+          <div className="flex flex-col gap-3 px-5">
+            <img src="/logos/quak.png" width="44" height="44" alt="QUAK Logo" className="mx-auto"/>
+            <strong className="mx-auto">QUAK</strong>
+            <p className="mx-auto">Kacper Walczak</p>
+            <p className="mx-auto">Copyright {new Date().getFullYear()}</p>
+          </div>
+          <div className="flex flex-col">
+            <b className="text-gray-500 font-bold">CONTACT</b>
+            <div className="flex flex-col gap-2 mt-3 p-2">
+              <a target="_blank" href="https://www.linkedin.com/in/kacper-walczak-b4122717a/"
+                 className="text-green-500 hover:underline">
+                LinkedIn
+              </a>
+              <a target="_blank" href="https://www.facebook.com/profile.php?id=100014391284754"
+                 className="text-green-500 hover:underline">
+                Facebook
+              </a>
+              <a target="_blank" href="https://www.instagram.com/walikuperek/"
+                 className="text-green-500 hover:underline">
+                Instagram
+              </a>
+              <a href="mailto:office@quak.com.pl" className="text-green-500 hover:underline">
+                office@quak.com.pl
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <b className="text-gray-500 font-bold">GAMES</b>
+            <div className="flex flex-col gap-2 mt-3 p-2">
+              <a target="_blank" href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
+                Play Quakky
+              </a>
+              <a target="_blank" href="https://quak.com.pl/labyrinth/" className="text-green-500 hover:underline">
+                Play Labyrinth
+              </a>
+              <a target="_blank" href="https://quak.com.pl/adventurer/" className="text-green-500 hover:underline">
+                Play Adventurer
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <b className="text-gray-500 font-bold">GITHUB</b>
+            <div className="flex flex-col gap-2 mt-3 p-2">
+              <a target="_blank" href="https://github.com/Walikuperek/Quantum-Computer-Simulator"
+                 className="text-green-500 hover:underline">
+                Quantum Computer Simulator
+              </a>
+              <a target="_blank" href="https://github.com/Walikuperek/BabylonJS-Vite_starter"
+                 className="text-green-500 hover:underline">
+                BabylonJS HTML Template
+              </a>
+              <a target="_blank" href="https://github.com/Walikuperek/Qtheme"
+                 className="text-green-500 hover:underline">
+                Qtheme
+              </a>
+              <a target="_blank" href="https://github.com/Walikuperek/Qstore"
+                 className="text-green-500 hover:underline">
+                Qstore
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <b className="text-gray-500 font-bold">PRIVACY</b>
+            <div className="flex flex-col gap-2 mt-3 p-2">
+              <a href="/privacy" className="text-green-500 hover:underline">
+                Privacy policy
+              </a>
+              <a href="/issue-contact" className="text-green-500 hover:underline">
+                Issue contact
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <b className="text-gray-500 font-bold">USEFUL</b>
+            <div className="flex flex-col gap-2 mt-3 p-2">
+              <a href="/useful/valentines" className="text-green-500 hover:underline">Valentine's Day Card</a>
+              <a href="/useful/duck-message" className="text-green-500 hover:underline">Duck Message Card</a>
+            </div>
+          </div>
+
+          <div id="footer_logo" className="absolute">
+            <img src="/logos/quak_anim/1.PNG" width="44" height="44" alt="QUAK Logo" />
           </div>
         </div>
-        <div className="flex flex-col">
-          <b className="text-gray-500 font-bold">GAMES</b>
-          <div className="flex flex-col gap-2 mt-3 p-2">
-            <a target="_blank" href="https://quak.com.pl/quakky/" className="text-green-500 hover:underline">
-              Play Quakky
-            </a>
-            <a target="_blank" href="https://quak.com.pl/labyrinth/" className="text-green-500 hover:underline">
-              Play Labyrinth
-            </a>
-            <a target="_blank" href="https://quak.com.pl/adventurer/" className="text-green-500 hover:underline">
-              Play Adventurer
-            </a>
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <b className="text-gray-500 font-bold">GITHUB</b>
-          <div className="flex flex-col gap-2 mt-3 p-2">
-            <a target="_blank" href="https://github.com/Walikuperek/TS-snippets" className="text-green-500 hover:underline">
-              TS-snippets
-            </a>
-            <a target="_blank" href="https://github.com/Walikuperek/Python-code-smells" className="text-green-500 hover:underline">
-              Python code smells
-            </a>
-            <a target="_blank" href="https://github.com/Walikuperek/Qtheme" className="text-green-500 hover:underline">
-              Qtheme
-            </a>
-            <a target="_blank" href="https://github.com/Walikuperek/Qstore" className="text-green-500 hover:underline">
-              Qstore
-            </a>
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <b className="text-gray-500 font-bold">PRIVACY</b>
-          <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="/privacy" className="text-green-500 hover:underline">
-              Privacy policy
-            </a>
-            <a href="/issue-contact" className="text-green-500 hover:underline">
-              Issue contact
-            </a>
-          </div>
-        </div>
-        <div className="flex flex-col">
-          <b className="text-gray-500 font-bold">USEFUL</b>
-          <div className="flex flex-col gap-2 mt-3 p-2">
-            <a href="/useful/valentines" className="text-green-500 hover:underline">Valentine's Day Card</a>
-          </div>
-        </div>
-      </div>
     ),
   },
 }

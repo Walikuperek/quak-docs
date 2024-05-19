@@ -1,4 +1,5 @@
 import {ArchitectureTag} from "../../components/tags/architecture";
+import {newestUpSorter} from "../sorter";
 
 export const ArchitecturePosts = [
     {
@@ -17,168 +18,6 @@ export const ArchitecturePosts = [
         description: "SPA architecture for frontend applications.",
         descriptionTextLines: ["SPA architecture for frontend applications."]
     },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/mvc",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>MVC</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "19-04-2024",
-    //     title: "MVC Architecture",
-    //     description: "What is and when to use MVC architecture.",
-    //     descriptionTextLines: ["What is and when to use MVC architecture."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/monolith",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>Monolith</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "20-04-2024",
-    //     title: "Monolith Architecture",
-    //     description: "What is and when to use Monolith architecture.",
-    //     descriptionTextLines: ["What is and when to use Monolith architecture."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/modular-monolith",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>Modular Monolith</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "21-04-2024",
-    //     title: "Modular Monolith Architecture",
-    //     description: "What is and when to use Modular Monolith architecture.",
-    //     descriptionTextLines: ["What is and when to use Modular Monolith architecture."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/microservice",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>Microservice</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "22-04-2024",
-    //     title: "Microservice Architecture",
-    //     description: "What is and when to use Microservice architecture.",
-    //     descriptionTextLines: ["What is and when to use Microservice architecture."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/rest-crud",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>REST CRUD</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "23-04-2024",
-    //     title: "REST CRUD Architecture",
-    //     description: "What is and when to use REST CRUD architecture.",
-    //     descriptionTextLines: ["What is and when to use REST CRUD architecture."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/cqrs",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>CQRS</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "24-04-2024",
-    //     title: "CQRS",
-    //     description: "What is and when to use CQRS.",
-    //     descriptionTextLines: ["What is and when to use CQRS."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/hexagonal",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>Hexagonal</p>
-    //             <hr/>
-    //             <p>Arch</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "25-04-2024",
-    //     title: "Hexagonal Architecture",
-    //     description: "What is and when to use Hexagonal architecture.",
-    //     descriptionTextLines: ["What is and when to use Hexagonal architecture."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/ddd",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>DDD</p>
-    //             <hr/>
-    //             <p>Approach</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "26-04-2024",
-    //     title: "DDD way",
-    //     description: "What is and when to use DDD approach.",
-    //     descriptionTextLines: ["What is and when to use DDD approach."]
-    // },
-    // {
-    //     color: "architecture",
-    //     category: "backend",
-    //     link: "/learn/architecture/tdd",
-    //     tag: <ArchitectureTag disabled={true} />,
-    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
-    //         <div className="flex flex-col bg-black h-40 w-40 p-1 mt-20 text-white font-bold">
-    //             <p>TDD</p>
-    //             <hr/>
-    //             <p>Approach</p>
-    //         </div>
-    //     </section>,
-    //     author: "Kacper Walczak",
-    //     createdAt: "27-04-2024",
-    //     title: "TDD in practice",
-    //     description: "What is and when to use TDD approach.",
-    //     descriptionTextLines: ["What is and when to use TDD approach."]
-    // },
     {
         color: "architecture",
         category: "backend",
@@ -197,5 +36,159 @@ export const ArchitecturePosts = [
         title: "Lets build a CPU simulator",
         description: "Lets build a CPU simulator.",
         descriptionTextLines: ["Lets build a CPU simulator."]
-    }
+    },
+    {
+        color: "architecture",
+        category: "backend",
+        link: "/learn/architecture/web-architectures",
+        tag: <ArchitectureTag disabled={true} />,
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="flex flex-col bg-violet-900 h-40 w-40 p-2 mt-20 text-white font-bold rounded">
+                <p>Ways to build</p>
+                <hr/>
+                <ul>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">MVC</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">CQRS</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">Microservice</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">...</span>
+                    </li>
+                </ul>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "04-05-2024",
+        title: "Architectures for web applications",
+        description: "Lets learn how to use different kinds of architecture.",
+        descriptionTextLines: ["Lets learn how to use different kinds of architecture."]
+    },
+    {
+        color: "architecture",
+        category: "backend",
+        link: "/learn/architecture/mvc",
+        tag: <ArchitectureTag disabled={true} />,
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="flex flex-col bg-violet-900 h-40 w-40 p-2 mt-20 text-white font-bold rounded">
+                <p>Architecture</p>
+                <hr/>
+                <ul>
+                    <li className="flex items-center gap-2 p-1 bg-violet-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span>MVC</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">CQRS</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">Microservice</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             className="bi bi-bank" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+                        </svg>
+                        <span className="text-violet-500">...</span>
+                    </li>
+                </ul>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "05-05-2024",
+        title: "MVC Architecture",
+        description: "Lets learn how to use MVC architecture.",
+        descriptionTextLines: ["Lets learn how to use MVC architecture."]
+    },
+    // {
+    //     color: "architecture",
+    //     category: "backend",
+    //     link: "/learn/architecture/cqrs",
+    //     tag: <ArchitectureTag disabled={true} />,
+    //     image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+    //         <div className="flex flex-col bg-violet-900 h-40 w-40 p-2 mt-20 text-white font-bold rounded">
+    //             <p>Architecture</p>
+    //             <hr/>
+    //             <ul>
+    //                 <li className="flex items-center gap-2 p-1 bg-violet-700">
+    //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+    //                          className="bi bi-bank" viewBox="0 0 16 16">
+    //                         <path
+    //                             d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+    //                     </svg>
+    //                     <span>CQRS</span>
+    //                 </li>
+    //                 <li className="flex items-center gap-2">
+    //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+    //                          className="bi bi-bank" viewBox="0 0 16 16">
+    //                         <path
+    //                             d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+    //                     </svg>
+    //                     <span className="text-violet-500">Hexagonal</span>
+    //                 </li>
+    //                 <li className="flex items-center gap-2">
+    //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+    //                          className="bi bi-bank" viewBox="0 0 16 16">
+    //                         <path
+    //                             d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+    //                     </svg>
+    //                     <span className="text-violet-500">Microservice</span>
+    //                 </li>
+    //                 <li className="flex items-center gap-2">
+    //                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+    //                          className="bi bi-bank" viewBox="0 0 16 16">
+    //                         <path
+    //                             d="m8 0 6.61 3h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.38l.5 2a.498.498 0 0 1-.485.62H.5a.498.498 0 0 1-.485-.62l.5-2A.5.5 0 0 1 1 13V6H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 3h.89zM3.777 3h8.447L8 1zM2 6v7h1V6zm2 0v7h2.5V6zm3.5 0v7h1V6zm2 0v7H12V6zM13 6v7h1V6zm2-1V4H1v1zm-.39 9H1.39l-.25 1h13.72z"/>
+    //                     </svg>
+    //                     <span className="text-violet-500">...</span>
+    //                 </li>
+    //             </ul>
+    //         </div>
+    //     </section>,
+    //     author: "Kacper Walczak",
+    //     createdAt: "06-05-2024",
+    //     title: "CQRS",
+    //     description: "Lets learn how to use CQRS in your project and when.",
+    //     descriptionTextLines: ["Lets learn how to use CQRS in your project and when."]
+    // }
 ];
+newestUpSorter(ArchitecturePosts);

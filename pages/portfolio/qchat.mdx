@@ -1,15 +1,54 @@
-import { Callout } from 'nextra/components'
-import { Cards, Card } from 'nextra/components'
-
 <style jsx global>{`
     .text-muted {color: #999;}
     .text-center {text-align: center;}
     .mt-5 {margin-top: 1.5rem;}
+    .border-img {
+        border: 10px solid #333;
+        border-radius: 20px;
+    }
 `}</style>
 
 
 # Qchat
 
-<Callout emoji="🏗️">
-  **QUAK** is working on it.
-</Callout>
+<div className="flex items-center justify-center">
+    <img src="/logos/qchat.png" className="rounded-lg" />
+</div>
+
+## Description
+
+Qchat is a chat application for companies that want to provide a better customer service or as a secret messaging app in organization. Can be used as a chat for a website or as a standalone application.
+
+### Desktop and Mobile
+
+It is a PWA application (can be installed on any Desktop and any iOS/Android).
+
+### Technologies
+
+Frontend is built with `Angular` and `Firebase` as a backend.
+
+### Languages
+
+Language: `only Polish`.
+
+## Screenshots
+
+<h2 className=" mt-10 text-center">Mobile usage</h2>
+
+<img src="/portfolio/qchat/smallQchat.png" className="border-img mt-5 mx-auto shadow-lg" />
+<img src="/portfolio/qchat/iphoneX.png" className="border-img mt-5 mx-auto shadow-lg" />
+<img src="/portfolio/qchat/pink-blueGrey.png" className="border-img mt-5 mx-auto shadow-lg" />
+
+<div className="mt-5 flex flex-col items-end">
+    <p className="text-sm leading-6 text-gray-500">Active</p>
+    <div className="mt-1 flex items-center gap-x-1.5">
+        <div className="flex-none rounded-full bg-orange-500/20 p-1">
+            <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+        </div>
+        <p className="text-xs leading-5 text-gray-500">Offline under moving...</p>
+    </div>
+</div>
+
+## What's next?
+
+[Contact with me](/contact) to get access to the demo version - if your company is interested in using something similar to it.

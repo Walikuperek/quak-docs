@@ -1,15 +1,53 @@
-import { Callout } from 'nextra/components'
-import { Cards, Card } from 'nextra/components'
-
 <style jsx global>{`
     .text-muted {color: #999;}
     .text-center {text-align: center;}
     .mt-5 {margin-top: 1.5rem;}
+    .border-img {
+        border: 10px solid #333;
+        border-radius: 20px;
+    }
 `}</style>
 
 
 # Wielkopolski Rajd Historyczny
 
-<Callout emoji="🏗️">
-  **QUAK** is working on it.
-</Callout>
+<div className="flex items-center justify-center mt-3">
+    <img src="/logos/wrh.png" width="70" className="rounded-lg" alt="Logo" />
+</div>
+
+## Description
+
+Wielkopolski Rajd Historyczny is a website for a rally event that took place in 2018-2020. The website was created to provide information about the event, its history and the route of the rally. The website also contains a gallery with photos from the event and a list of sponsors.
+
+### Technologies
+
+Only basic frontend technologies were used in this project like `HTML`, `JS` and `CSS`.
+
+### Languages
+
+Language: `only Polish`.
+
+## Screenshots
+
+<h2 className=" mt-10 text-center">Desktop usage</h2>
+
+<img src="/portfolio/wrh/hero.png" className="border-img mt-5 mx-auto shadow-lg" />
+<img src="/portfolio/wrh/story.png" className="border-img mt-5 mx-auto shadow-lg" />
+<img src="/portfolio/wrh/map_sponsors.png" className="border-img mt-5 mx-auto shadow-lg" />
+<img src="/portfolio/wrh/gallery.png" className="border-img mt-5 mx-auto shadow-lg" />
+
+<div className="mt-5 flex flex-col items-end">
+    <p className="text-sm leading-6 text-gray-500">Offline</p>
+    <div className="mt-1 flex items-center gap-x-1.5">
+        <div className="flex-none rounded-full bg-orange-500/20 p-1">
+            <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+        </div>
+        <p className="text-xs leading-5 text-gray-500">Offline since 2021</p>
+    </div>
+</div>
+
+## What's next?
+
+[Contact with me](/contact) to get access to the demo version - if your company is interested in using something similar to it.
+
+
