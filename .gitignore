@@ -7,3 +7,4 @@ out
 .idea
 /scripts/deploy/.env
 /scripts/deploy/node_modules
+/scripts/deploy/process-screenshots
