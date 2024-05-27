@@ -134,6 +134,7 @@ We want to click on the CPanel, log in, open file manager, upload the zip file a
     <FileTree.Folder name="scripts" defaultOpen>
       <FileTree.File name="build-deploy.sh" />
       <FileTree.Folder name="deploy" defaultOpen>
+        <FileTree.Folder name="process-screenshots"></FileTree.Folder>
         <FileTree.File name=".env" />
         <FileTree.File name="deploy.js" />
         <FileTree.File name="index.js" />
@@ -483,6 +484,8 @@ pnpm run deploy $1 # deploy the zip file
 ### Run pipeline
 
 To run the pipeline we need to execute the bash script with the zip file name.
+
+*Remember to create* `srcipts/deploy/process-screenshots` *folder* before run if one does not exist.
 
 ```bash copy
 $ sh scripts/build-deploy.sh 'Archive_19_05_2024_3.zip'

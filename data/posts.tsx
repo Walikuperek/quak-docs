@@ -52,3 +52,14 @@ export const latestThreeOffsetTwoReadings = [
     AllPosts[3],
     AllPosts[4]
 ];
+
+export const latestTwoReadingsOffsetOne = [
+    AllPosts[1],
+    AllPosts[2]
+];
+
+export const latestThreeOffsetThreeReadings = [
+    AllPosts[3],
+    AllPosts[4],
+    AllPosts[5]
+];

@@ -16,20 +16,39 @@ import {MainCategoriesBtns} from "../components/ui/buttons/main-categories";
 import {HeroLearnCard} from "../components/ui/generics/hero-learn-card";
 import {AllPosts, latestReading} from "../data/posts";
 import {PostsList} from "../components/lists/posts-list";
+import {Bleed} from "nextra-theme-docs";
 
 # Learn
 
-<HeroLearnCard
-    category={latestReading.color}
-    link={latestReading.link}
-    tag={latestReading.tag}
-    image={latestReading.image}
-    author={latestReading.author}
-    createdAt={latestReading.createdAt}
-    title={latestReading.title}
-    descriptionTextLines={latestReading.descriptionTextLines}
-    label={<>Latest post</>}
-/>
+
+<div className="block md:hidden lg:hidden">
+    <Bleed>
+        <HeroLearnCard
+            category={latestReading.color}
+            link={latestReading.link}
+            tag={latestReading.tag}
+            image={latestReading.image}
+            author={latestReading.author}
+            createdAt={latestReading.createdAt}
+            title={latestReading.title}
+            descriptionTextLines={latestReading.descriptionTextLines}
+            label={<>Latest post</>}
+        />
+    </Bleed>
+</div>
+<div className="hidden md:block">
+    <HeroLearnCard
+        category={latestReading.color}
+        link={latestReading.link}
+        tag={latestReading.tag}
+        image={latestReading.image}
+        author={latestReading.author}
+        createdAt={latestReading.createdAt}
+        title={latestReading.title}
+        descriptionTextLines={latestReading.descriptionTextLines}
+        label={<>Latest post</>}
+    />
+</div>
 
 <h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">CATEGORIES</h3>
 <h2 className="text-4xl mb-3 font-bold">Main categories</h2>

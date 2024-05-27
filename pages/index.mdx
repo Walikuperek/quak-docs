@@ -10,26 +10,9 @@ import {QuakV1Hero} from "../components/ui/sections/quak-v1-hero";
 import {Spacer} from "../components/ui/generics/spacer";
 import {LatestReadingsHome} from "../components/ui/sections/latest-readings-home";
 import {QuakColored} from "../components/ui/quak-colored";
+import {HeroLearnCard} from "../components/ui/generics/hero-learn-card";
 
 <VantaHero />
-
-<HeaderText size="h3" color="gray">LEARN</HeaderText>
-<HeaderText size="h2">
-  Learn with <QuakColored />
-</HeaderText>
-<div className="h-2">&nbsp;</div>
-<Text color="gray" textLines={[
-    "Go for knowledge about programming aspects. QUAK",
-    "created multiple apps, games and websites, take this knowledge",
-    "from QUAK. Click category to learn more."
-]} />
-<Spacer height={20}/>
-
-<HeaderText size="h3" color="gray">CATEGORIES</HeaderText>
-<HeaderText size="h2">Main categories</HeaderText>
-<MainCategoriesBtns />
-
-<section className="bg-lines opacity-30 flex mt-10 mb-20 h-20 w-full"></section>
 
 <LatestReadingsHome />
 

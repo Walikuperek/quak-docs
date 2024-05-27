@@ -84,7 +84,7 @@ export const ArchitecturePosts = [
         </section>,
         author: "Kacper Walczak",
         createdAt: "04-05-2024",
-        title: "Architectures for web applications",
+        title: "Backend Architectures",
         description: "Lets learn how to use different kinds of architecture.",
         descriptionTextLines: ["Lets learn how to use different kinds of architecture."]
     },

@@ -1,7 +1,6 @@
 import {HeaderText} from "../generics/header-text";
 import {Text} from "../generics/text";
-import {latestTwoReadings, latestThreeOffsetTwoReadings} from "../../../data/posts";
-import {latestReading} from "../../../data/posts";
+import {latestTwoReadingsOffsetOne, latestThreeOffsetThreeReadings} from "../../../data/posts";
 import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
 
 export function LatestReadingsHome() {
@@ -46,29 +45,29 @@ export function LatestReadingsHome() {
 
             <div className="flex flex-col lg:flex-row gap-2 mt-10">
                 <HeroLearnCard
-                    category={latestTwoReadings[0].color}
-                    link={latestTwoReadings[0].link}
-                    tag={latestTwoReadings[0].tag}
-                    image={latestTwoReadings[0].image}
-                    author={latestTwoReadings[0].author}
-                    createdAt={latestTwoReadings[0].createdAt}
-                    title={latestTwoReadings[0].title}
-                    descriptionTextLines={latestTwoReadings[0].descriptionTextLines}
+                    category={latestTwoReadingsOffsetOne[0].color}
+                    link={latestTwoReadingsOffsetOne[0].link}
+                    tag={latestTwoReadingsOffsetOne[0].tag}
+                    image={latestTwoReadingsOffsetOne[0].image}
+                    author={latestTwoReadingsOffsetOne[0].author}
+                    createdAt={latestTwoReadingsOffsetOne[0].createdAt}
+                    title={latestTwoReadingsOffsetOne[0].title}
+                    descriptionTextLines={latestTwoReadingsOffsetOne[0].descriptionTextLines}
                 />
                 <HeroLearnCard
-                    category={latestTwoReadings[1].color}
-                    link={latestTwoReadings[1].link}
-                    tag={latestTwoReadings[1].tag}
-                    image={latestTwoReadings[1].image}
-                    author={latestTwoReadings[1].author}
-                    createdAt={latestTwoReadings[1].createdAt}
-                    title={latestTwoReadings[1].title}
-                    descriptionTextLines={latestTwoReadings[1].descriptionTextLines}
+                    category={latestTwoReadingsOffsetOne[1].color}
+                    link={latestTwoReadingsOffsetOne[1].link}
+                    tag={latestTwoReadingsOffsetOne[1].tag}
+                    image={latestTwoReadingsOffsetOne[1].image}
+                    author={latestTwoReadingsOffsetOne[1].author}
+                    createdAt={latestTwoReadingsOffsetOne[1].createdAt}
+                    title={latestTwoReadingsOffsetOne[1].title}
+                    descriptionTextLines={latestTwoReadingsOffsetOne[1].descriptionTextLines}
                 />
             </div>
 
             <section className="mt-4 mb-20 flex flex-col lg:flex-row align-center gap-3 justify-evenly w-full">
-                {latestThreeOffsetTwoReadings.map((reading, index) => {
+                {latestThreeOffsetThreeReadings.map((reading, index) => {
                     return readings[reading.category](reading);
                 })}
             </section>

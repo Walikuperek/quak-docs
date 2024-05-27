@@ -75,7 +75,9 @@ def endpoint(request, data_id):
 
 To test service we should test if:
 - service.`get_data` is called and returns proper data for a given set of arguments
-- notifier is called with proper arguments
+- notifier is called with proper arguments, but we can omit it due to the fact that this will be tested in the integration test like: `test_get_gata_and_notify` and we want to unit test whole flow not side effects
+
+> Make another test for the notifier if you want to test it separately with e.g. `mocks`.
 
 ##### Testing get_data
 
@@ -124,7 +126,6 @@ With this approach we can easily stub the repository and notifier services with 
 ```python copy
 class TestRepository(RepositoryABC):
     data = {
-        "fake_data_id": [],
         "1": [1]
     }
 
@@ -160,12 +161,7 @@ def test_get_data_for_fake_id():
 
 Testing endpoint should be done only if the service is tested and more logic or data manipulation is done in the endpoint.
 
-> Most likely, you will test the endpoint in integration tests.
->
-> Or... you have a lot of abstracted logic in the endpoint or CQRS pattern, etc.
-> then you end up with way easier testing of the endpoint.
-> Due to the ex. `DoSmthBusinessRelatedCommand` or `DoSmthBusinessRelatedQuery`
-> classes or similar and their ABCs can be easily tested as well.
+> Most likely, you will test the endpoint like this in the integration tests.
 
 ## Integration testing
 
@@ -203,7 +199,7 @@ That's it! Now you can use this as a base for your extended testing needs with J
 You can go to the following articles about Flask JSON API series.
 
 > This article is a part of Flask JSON API series.
->   - [Flask JSON API](/learn/python/flask-json-api)
+>   - [Flask JSON API](/learn/python/flask-crud-json-api/)
 >   - [Advanced - Flask JSON API with services](/learn/python/flask-json-api-with-services)
 >   - [Advanced - Flask JSON API unit testing](/learn/python/flask-json-api-unit-testing)  # this article
 

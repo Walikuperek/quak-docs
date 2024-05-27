@@ -95,6 +95,6 @@ export class UploadFilesPage {
     async uploadFile(pathToFile) {
         const elementHandle = await this.page.$(this.uploadFileInputSelector);
         await elementHandle.uploadFile(pathToFile);
-        await time.sleep(10_000);
+        await time.sleep(40_000);
     }
 }
