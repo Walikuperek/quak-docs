@@ -1,3 +1,4 @@
+import {AIPosts} from "./tag-posts/ai";
 import {PythonPosts} from "./tag-posts/python";
 import {JavascriptPosts} from "./tag-posts/javascript";
 import {BunPosts} from "./tag-posts/bun";
@@ -13,6 +14,7 @@ import {TypescriptPosts} from "./tag-posts/typescript";
 import {newestUpSorter} from "./sorter";
 
 export const AllPosts = [
+    ...AIPosts,
     ...AngularPosts,
     ...ArchitecturePosts,
     ...BunPosts,

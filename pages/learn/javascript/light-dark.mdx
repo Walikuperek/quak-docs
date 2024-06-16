@@ -20,7 +20,11 @@ import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
     label={<></>}
 />
 
+<em className="text-gray-500">Edited: 12-06-2024</em>
+
 ## How to light/dark
+
+> If you are looking for an instant solution to light/dark your website or app, check out my [Light/Dark CSS Generator](https://quak.com.pl/instant-light-dark) website.
 
 ### Only CSS
 
@@ -35,27 +39,33 @@ To change theme only with CSS you can use `prefers-color-scheme` media query.
 }
 ```
 
-To set only dark theme for your website you can use `color-scheme` attribute on `root` element.
-
-> Mozilla color-scheme docs: [MDN docs](https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme)
-
-```css
-:root {
-    color-scheme: dark; /* or light */
-}
-```
-
-To set system theme you can use `color-scheme` attribute on `root` element.
-
-It will apply dark when your system has dark theme and light when your system has light theme.
-
-```css
-:root {
-    color-scheme: light dark;
-}
-```
-
 ### CSS variables
+
+This is the simples approach to automatically change theme based on user preferences.
+
+```css
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #0e0e0e;
+        --text-color: #f0f0f0;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background-color: #ffffff;
+        --text-color: #1a1a1a;
+    }
+}
+
+body {
+    color-scheme: light dark;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+```
+
+### Dynamic theme changing with JS
 
 You can also use CSS variables to change theme dynamically.
 

@@ -7,10 +7,11 @@
     "type": "separator",
     "title": "Projects"
   },
-  "creativo-app": "Creativo App",
-  "psy-app": "Psy App",
-  "shop-app": "Shop App",
+  "tabelek": "Tabelek App",
   "tech-app": "Tech App",
+  "shop-app": "Shop App",
+  "psy-app": "Psy App",
+  "creativo-app": "Creativo App",
   "wrh": "WRH Website",
   "---": {
     "type": "separator",
@@ -25,7 +26,7 @@
     "title": "Games"
   },
   "quakky": "Quakky",
-  "labyrinth": "Labyrinth",
   "adventurer": "Adventurer",
+  "labyrinth": "Labyrinth",
   "retro-games": "Retro games"
 }

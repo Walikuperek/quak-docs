@@ -41,7 +41,8 @@ const config: DocsThemeConfig = {
   // },
   footer: {
     text: (
-        <div id="footer" className="flex flex-col lg:flex-row flex-wrap justify-start w-full gap-5 pb-10 mb-10 relative">
+        <div id="footer"
+             className="flex flex-col lg:flex-row flex-wrap justify-start w-full gap-5 pb-10 mb-10 relative">
           <div className="flex flex-col gap-3 px-5">
             <img src="/logos/quak.png" width="44" height="44" alt="QUAK Logo" className="mx-auto"/>
             <strong className="mx-auto">QUAK</strong>
@@ -117,13 +118,23 @@ const config: DocsThemeConfig = {
           <div className="flex flex-col">
             <b className="text-gray-500 font-bold">USEFUL</b>
             <div className="flex flex-col gap-2 mt-3 p-2">
-              <a href="/useful/valentines" className="text-green-500 hover:underline">Valentine's Day Card</a>
+              <a href="https://quak.com.pl/instant-light-dark" className="text-green-500 hover:underline">Light/Dark CSS
+                Generator</a>
               <a href="/useful/duck-message" className="text-green-500 hover:underline">Duck Message Card</a>
+              <a href="/useful/valentines" className="text-green-500 hover:underline">Valentine's Day Card</a>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <b className="text-gray-500 font-bold">COMPANY INFO</b>
+            <div className="flex flex-col gap-2 mt-3 p-2">
+              <p className="text-gray-500">QUAK Kacper Walczak</p>
+              <p className="text-gray-500">NIP: 7773209929</p>
+              <p className="text-gray-500">Location: Poznań, Poland</p>
             </div>
           </div>
 
           <div id="footer_logo" className="absolute">
-            <img src="/logos/quak_anim/1.PNG" width="44" height="44" alt="QUAK Logo" />
+            <img src="/logos/quak_anim/1.PNG" width="44" height="44" alt="QUAK Logo"/>
           </div>
         </div>
     ),

@@ -2,6 +2,7 @@ import {Text} from "./text";
 
 export function HeroLearnCard({category, tag, link, image, author, createdAt, title, descriptionTextLines, label}: { category: string, tag: any, link: string, image: any, author: string, createdAt: string, title: string, descriptionTextLines: string[], label?: JSX.Element }) {
     const colors = {
+        "ai": "emerald",
         "angular": "rose",
         "architecture": "indigo",
         "backend": "violet",

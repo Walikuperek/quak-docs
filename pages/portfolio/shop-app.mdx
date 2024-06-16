@@ -1,15 +1,122 @@
-import { Callout } from 'nextra/components'
-import { Cards, Card } from 'nextra/components'
-
 <style jsx global>{`
-    .text-muted {color: #999;}
-    .text-center {text-align: center;}
-    .mt-5 {margin-top: 1.5rem;}
+  video {
+    max-width: 400px;
+    border: 10px solid #333;
+    border-radius: 20px;
+  }
+  .border-img {
+    border: 10px solid #333;
+    border-radius: 20px;
+  }
+  @media (max-width: 500px) {
+    video {
+      max-width: 100%;
+    }
+  }
 `}</style>
-
 
 # ShopApp
 
-<Callout emoji="🏗️">
-  **QUAK** is working on it.
-</Callout>
+<div className="flex items-center justify-center bg-orange-500/20 p-2 rounded-xl h-40">
+    <img src="/logos/roch-shop.png" className="rounded-xl bg-orange-500 p-2" />
+</div>
+
+## Description
+
+ShopApp ment to be a simple e-commerce app but installable(PWA) on clients phones, so they can use it quicker and easier. It was ment to create with customers greater bond.
+
+ShopApp is also a web application that allows you to manage your store. It is a simple and intuitive tool that allows you to add, edit and delete products and manage orders from customers.
+
+### Desktop and mobile
+
+ShopApp is a web application that can be used on both desktop and mobile devices.
+
+### Technologies
+
+<div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/angular.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">Angular</p>
+        <p className="text-sm text-gray-500">Frontend framework</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/typescript.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">Typescript</p>
+        <p className="text-sm text-gray-500">Frontend language</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/html.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">HTML</p>
+        <p className="text-sm text-gray-500">Frontend template</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/sass.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">SCSS</p>
+        <p className="text-sm text-gray-500">Frontend styling</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/nodejs.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">Node.js</p>
+        <p className="text-sm text-gray-500">Backend runtime</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/typescript.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">Typescript</p>
+        <p className="text-sm text-gray-500">Backend language</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/nestjs.svg" alt=""/>
+        <p className="text-sm font-semibold leading-6">Nest.js</p>
+        <p className="text-sm text-gray-500">Backend</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/mysql.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">MySQL</p>
+        <p className="text-sm text-gray-500">Database</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <p className="h-14 flex justify-center items-center rounded-full bg-gray-50 p-2 text-black">PDFKit</p>
+        <p className="text-sm font-semibold leading-6">PDFKit</p>
+        <p className="text-sm text-gray-500">PDF generation</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <p className="h-14 flex justify-center items-center rounded-full bg-gray-50 p-2 text-black">Nodemailer</p>
+        <p className="text-sm font-semibold leading-6">Nodemailer</p>
+        <p className="text-sm text-gray-500">Email sending</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/pwa.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">PWA</p>
+        <p className="text-sm text-gray-500">Installation</p>
+    </div>
+</div>
+
+### Languages
+
+Language: `only Polish`.
+
+## Screenshots and videos
+
+<h2 className=" mt-10 text-center">Mobile usage</h2>
+
+<video src="/portfolio/shopapp/mobile_vid.MOV" className="mx-auto shadow-lg border-neutral-500 border-opacity-10" autoPlay={true} loop={true} controls={true} />
+
+<img src="/portfolio/shopapp/product.png" className="max-w-lg w-full border-img mt-5 mx-auto shadow-lg border-neutral-500 border-opacity-10" />
+
+<h2 className=" mt-10 text-center">Desktop usage</h2>
+
+<video src="/portfolio/shopapp/desktop_vid.MOV" className="mx-auto shadow-lg border-neutral-500 border-opacity-10" autoPlay={true} loop={true} controls={true} />
+
+<div className="mt-5 flex flex-col items-end">
+    <p className="text-sm leading-6 text-gray-500">Offline</p>
+    <div className="mt-1 flex items-center gap-x-1.5">
+        <div className="flex-none rounded-full bg-orange-500/20 p-1">
+            <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+        </div>
+        <p className="text-xs leading-5 text-gray-500">Active 2021 - 2023</p>
+    </div>
+</div>
+
+## What's next?
+
+[Contact with me](/contact) to get access to the demo version - if your company is interested in using something similar to it.

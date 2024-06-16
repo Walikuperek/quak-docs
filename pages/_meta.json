@@ -35,6 +35,10 @@
     "title": "Portfolio",
     "type": "page"
   },
+  "about-me": {
+    "title": "About",
+    "type": "page"
+  },
   "contact": {
     "title": "Contact",
     "type": "page"

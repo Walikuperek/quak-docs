@@ -1,0 +1,131 @@
+import {AITag} from "../../../components/tags/ai";
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+
+<section className="header__height w-full rounded-2xl bg-emerald-900 bg-opacity-10 border-2 border-emerald-500 mt-2">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <AITag/>
+        </div>
+        <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="flex rounded flex-col justify-evenly items-center bg-green-500 h-40 w-40 p-1 mt-20 text-white font-bold">
+                <p>SCRAPE</p>
+                <div className="flex flex-col justify-center items-center bg-black border-dashed border-emerald-300 border-2 h-20 w-20">
+                    <p>DATA</p>
+                    <p>DATA</p>
+                    <p>DATA</p>
+                </div>
+            </div>
+        </section>
+        <header className="flex flex-col px-4 pb-4 pt-4">
+            <div className="flex flex-row justify-between items-center mb-3 border-b-2 border-b-emerald-300">
+                <h1 className="text-2xl font-bold">Scrap Youtube with AI</h1>
+                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 10-06-2024</p>
+            </div>
+            <p className="mt-2 text-lg">Scrap data from Youtube platform with AI help.</p>
+        </header>
+    </article>
+</section>
+
+This script makes the screenshot of the full page from the youtube channel and stores it in a PNG file. The data includes the following:
+
+- Title
+- Views
+- When added
+
+> Right now due to the fact that Youtube changes id's, classes, etc. dynamically to prevent scraping, we can make a screenshot with data and send it to the AI ;)
+
+## Setup
+
+To run this script, you need to have Node.js installed on your system. Follow these steps to set up and run the script:
+
+1. Install the dependencies:
+    ```bash
+    npm install puppeteer
+    ```
+
+2. Run the script:
+    ```bash
+    node index.js
+    ```
+
+3. The script will generate a PNG file with the full page of the Youtube channel.
+
+4. You can then upload this image to ChatGPT to ask chat to extract the data.
+
+## Prerequisites
+
+- Basic knowledge of JavaScript
+- Node.js installed on your system
+- A stable internet connection
+
+## Script
+
+```javascript
+import puppeteer from 'puppeteer';
+
+const URL = 'https://www.youtube.com/@BuddaTV/videos';
+const OUTPUT_FILE = 'budda.png';
+const WAIT_FOR_PAGE_LOAD = 5000;
+const WAIT_FOR_ACCEPTED_COOKIES = 5000;
+
+(async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.goto(URL);
+  await page.setViewport({width: 1080, height: 1024});
+  await wait(WAIT_FOR_PAGE_LOAD);
+  try {
+    const acceptCookiesBtn = await page.$('[aria-label="Accept all"]');
+    await acceptCookiesBtn.click();
+  }
+  catch (e) {
+    console.error('Error: ', e);
+  }
+  await wait(WAIT_FOR_ACCEPTED_COOKIES);
+  await page.screenshot({path: OUTPUT_FILE, fullPage: true});
+  await browser.close();
+})();
+
+async function wait(ms) {
+  return await new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+```
+
+## Output
+
+The script will generate a PNG file with the full page of the Youtube channel. You can then upload this image to ChatGPT to extract the data.
+
+### Example PNG
+
+Here is an example of the output image:
+
+![BuddaTV](/assets/read/budda_yt_scrapped_full_page.png)
+
+### Extracted Data
+
+Once you successfully run script you should have your PNG of a full page.
+
+Give it to the ChatGPT and ask it to extract the data from it, simply upload an image and ask for title, views, and when added for each video + to JSON compression.
+
+Here is an example of the extracted data from the image:
+
+> You can ask Chat to convert answer to JSON, do it in 1 prompt while asking to extract data from an image, otherwise you can get no answer for that... Maybe at a time you are reading it will be fixed.
+
+```json
+[
+  {"title": "One wins $250 000", "views": "560K views", "when_added": "1 day ago"},
+  // ...
+]
+```
+
+## Conclusion
+
+In this article we have learned how to extract data with help of the AI from the Youtube channel.
+
+This is a simple way to get data from the website without having to deal with complex scraping techniques. You can use this method to extract data from other websites as well.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

@@ -12,7 +12,7 @@ export const JavascriptPosts = [
             <div className="bg-zinc-500 h-20 w-20 p-1 mt-20 text-white font-bold">Dark</div>
         </section>,
         author: "Kacper Walczak",
-        createdAt: "23-10-2023",
+        createdAt: "12-06-2024",
         title: "Light/dark",
         descriptionTextLines: [
             "Check out how to light/dark your website or app."
