@@ -1,26 +1,147 @@
 import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {JSTag} from "../../../components/tags/javascript";
 
-# Date
+<section className="header__height w-full rounded-2xl bg-yellow-900 bg-opacity-10 border-2 border-yellow-500 mt-2">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <JSTag />
+        </div>
+        <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="flex rounded flex-col justify-evenly items-center bg-yellow-500 h-40 w-40 p-1 mt-20 text-black font-bold">
+                <p>Datastructure</p>
+                <div className="flex flex-col justify-center text-white items-center bg-orange-600 border-dashed border-orange-300 border-2 h-20 w-20">
+                    <p>Date</p>
+                </div>
+            </div>
+        </section>
+        <header className="flex flex-col px-4 pb-4 pt-4">
+            <div className="flex flex-row justify-between items-center mb-3 border-b-2 border-b-yellow-300">
+                <h1 className="text-2xl font-bold">Date in Javascript</h1>
+                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 18-06-2024</p>
+            </div>
+            <p className="mt-2 text-lg">Learn how to deal with dates in JS.</p>
+        </header>
+    </article>
+</section>
 
 ## What is date in JS?
 
 Date is a built-in object in JavaScript that stores the date and time. It provides a number of built-in methods for formatting and managing that data.
 
 ```javascript
-const f = new Intl.DateTimeFormat(undefined, {
+const now = new Date()
+console.log(now) // Tue Jun 18 2024 19:18:11 GMT+0200 (Central European Summer Time)
+```
+
+## Creating a Date object
+
+There are four ways to create a new Date object:
+
+1. `new Date()`: Creates a new Date object with the current date and time.
+2. `new Date(milliseconds)`: Creates a new Date object with the specified number of milliseconds since January 1, 1970.
+3. `new Date(dateString)`: Creates a new Date object with the specified date string.
+4. `new Date(year, month, day, hours, minutes, seconds, milliseconds)`: Creates a new Date object with the specified date and time.
+
+```javascript
+const now = new Date() // current date and time
+const epoch = new Date(0) // January 1, 1970
+const dateString = new Date("2022-01-01") // January 1, 2022
+const customDate = new Date(2022, 0, 1, 0, 0, 0, 0) // January 1, 2022
+```
+
+## Getting the current date and time
+
+You can get the current date and time using the `Date` object:
+
+```javascript
+const now = new Date()
+console.log(now) // Tue Jun 18 2024 19:18:11 GMT+0200 (Central European Summer Time)
+```
+
+## Getting date and time components
+
+You can get the individual components of a date and time using the following methods:
+
+```javascript
+const now = new Date()
+console.log(now.getDate()) // 18 (day of the month)
+console.log(now.getDay()) // 2 (day of the week)
+console.log(now.getFullYear()) // 2024 (year)
+console.log(now.getHours()) // 19 (hour)
+console.log(now.getMinutes()) // 18 (minutes)
+console.log(now.getSeconds()) // 11 (seconds)
+console.log(now.getMilliseconds()) // 0 (milliseconds)
+```
+
+## Getting time difference
+
+You can get the difference between two dates by subtracting them:
+
+```javascript
+(async () => {
+    const d1 = new Date()
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    const d2 = new Date()
+    console.log(d2 - d1) // 1002 (in milliseconds)
+})()
+```
+
+## Formatting to readable text
+
+You can use the `Intl.DateTimeFormat` object to format a date to a readable text. Here's an example:
+
+```javascript
+const datetimeToReadable = new Intl.DateTimeFormat("en-us", {
     hour: "numeric",
     dayPeriod: "short"
 })
+
 const today = new Date()
-const yesterday = new Date()
-yesterday.setDate(yesterday.getDate() - 1)
-console.warn(f.format(yesterday))
-console.warn(f.format(today))
-const options = { hour: "numeric", dayPeriod: "short" };
-console.log(new Intl.DateTimeFormat("en-us", options).format(today));
+console.log(datetimeToReadable.format(today)) // "7 in the evening" if it's 7 PM
 ```
 
-That's all. Start using maps with more confidence.
+### Specific time zone formatting
+
+The `Date` object uses the local time zone of the user's computer. If you want to work with a specific time zone, you can use the `Intl.DateTimeFormat` object:
+
+```javascript
+const datetimeToReadable = new Intl.DateTimeFormat("en-us", {
+    hour: "numeric",
+    dayPeriod: "short",
+    timeZone: "Europe/Warsaw"
+})
+
+const today = new Date()
+console.log(datetimeToReadable.format(today)) // "7 in the evening" if it's 7 PM in Warsaw
+```
+
+## UTC time
+
+The `Date` object uses the local time zone of the user's computer.
+
+You can use the `getUTC*` methods to work with UTC time:
+
+```javascript
+const now = new Date()
+console.log(now.getUTCDate()) // 18 (day of the month)
+console.log(now.getUTCDay()) // 2 (day of the week)
+console.log(now.getUTCFullYear()) // 2024 (year)
+console.log(now.getUTCHours()) // 17 (hour)
+console.log(now.getUTCMinutes()) // 18 (minutes)
+console.log(now.getUTCSeconds()) // 11 (seconds)
+console.log(now.getUTCMilliseconds()) // 0 (milliseconds)
+```
+
+## Libraries
+
+There are a number of libraries that can help you work with dates in JavaScript, but there are two to be mentioned:
+
+- [date-fns](https://date-fns.org/): A modern JavaScript date utility library that provides a number of useful functions for working with dates.
+- [moment.js](https://momentjs.com/): An older but still amazing JavaScript date utility library that provides a number of useful functions for working with dates.
+
+## Conclusion
+
+That's all. Start using dates with more confidence.
 
 <section className="rounded-2xl bg-lines-violet flex mt-10 mb-20 h-20 w-full"></section>
 

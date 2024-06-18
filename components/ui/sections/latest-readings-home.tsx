@@ -66,15 +66,27 @@ export function LatestReadingsHome() {
                 />
             </div>
 
-            <section className="mt-4 mb-20 flex flex-col lg:flex-row align-center gap-3 justify-evenly w-full">
+            <section className="mt-4 flex flex-col lg:flex-row align-center gap-3 justify-evenly w-full">
                 {latestThreeOffsetTwoReadings.map((reading, index) => {
                     return readings[reading.category](reading);
                 })}
+            </section>
+
+            <section className="mt-10 mb-20 flex items-center justify-center gap-2 h-50">
+                <a href="/learn/"
+                   className="font-bold rounded-md whitespace-nowrap bg-rose-500 px-3.5 py-2.5 text-white shadow-sm hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                    See all readings
+                </a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red"
+                     className="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                </svg>
             </section>
         </>
     );
 }
 
 export default function MyApp() {
-    return <LatestReadingsHome />
+    return <LatestReadingsHome/>
 }
