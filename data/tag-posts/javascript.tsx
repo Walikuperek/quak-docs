@@ -40,7 +40,7 @@ export const JavascriptPosts = [
     {
         color: "javascript",
         category: "frontend",
-        link: "/learn/javascript/light-dark",
+        link: "/learn/javascript/date",
         tag: <JSTag disabled={true}/>,
         image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
             <div

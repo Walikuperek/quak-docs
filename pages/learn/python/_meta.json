@@ -38,5 +38,13 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "rxjs-subject-in-python": {
+    "title": "RxJS Subject in Python",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }

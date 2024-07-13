@@ -1,0 +1,286 @@
+import { FileTree, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { NodeTag } from "../../../components/tags/node";
+
+
+<section className="w-full rounded-2xl bg-green-900 bg-opacity-10 border-2 border-green-500 mt-2">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <NodeTag/>
+        </div>
+        <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div
+                className="flex rounded flex-col justify-start items-center bg-white h-40 w-40 p-1 mt-20 text-white font-bold">
+                <p className="text-black">PostgreSQL</p>
+                <img src="/logos/testcontainers.png" alt="testcontainers logo" className="h-10"/>
+                <br />
+                <br />
+                <p className="text-black">Integration Testing</p>
+            </div>
+        </section>
+        <header className="flex flex-col px-4 pb-4 pt-4">
+            <div className="flex flex-col lg:flex-row justify-between items-center mb-3 border-b-2 border-b-green-300">
+                <h1 className="text-2xl font-bold">Test PostgreSQL with Testcontainers</h1>
+                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 13-07-2024</p>
+            </div>
+            <p className="mt-2 text-lg">How to PostgreSQL integration tests with Testcontainers.</p>
+        </header>
+    </article>
+</section>
+
+## Introduction
+
+In this article we will learn how to build integration tests with [Testcontainers](https://testcontainers.com/).
+
+> Testcontainers is a library that helps with databases in your tests.
+>
+> Simply spins up a container that is ready to test.
+
+We are going to build Repository that creates any table in PostgreSQL, inserts any data and fetches all rows for a given Table name.
+
+### Results
+
+Integration testing without debug process will look like this:
+
+```bash
+> npm test
+
+> testcontainers@1.0.0 test
+> jest
+
+ PASS  ./integration.test.js (8.499 s)
+  Dynamic Table Repository
+    ✓ should create and return multiple customers (10 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        8.565 s
+Ran all test suites.
+```
+
+## Code
+
+We are going to create dynamic SQL table creation with PostgreSQL and Testcontainers.
+
+Let's build this system based on `Customers` table, each Customer contains `id` and `name` fields, where id is a `primary key`.
+
+It's very simple CRUD but it shows how easy it is to integration tests with Testcontainers.
+
+### Prerequisites
+
+You need to have:
+
+- installed Docker
+- installed Node.js
+
+### Setup
+
+```bash copy
+npm init -y
+npm install pg --save
+npm install jest @testcontainers/postgresql --save-dev
+```
+
+### Run
+
+> Firstly turn on docker.
+
+Regular test:
+
+```bash copy
+npm test
+```
+
+With debug:
+
+```bash copy
+DEBUG=testcontainers* npm test
+```
+
+### Files
+
+Our goal is to test if any Table can be created, any data will be inserted and returned rows properly.
+
+<Tabs items={['integration.test.js', 'dynamic-table.repository.js']}>
+    <Tabs.Tab>
+        ```js copy
+        const { Client } = require("pg");
+        const { PostgreSqlContainer } = require("@testcontainers/postgresql");
+        const { createTable, create, findAll} = require("./dynamic-table.repository");
+
+        describe("Dynamic Table Repository", () => {
+            jest.setTimeout(60000);
+
+            let postgresContainer;
+            let postgresClient;
+            const customersTable = {
+                name: "customers",
+                fields: {
+                    id: {
+                        primary: true,
+                        type: "INT",
+                        notNull: true
+                    },
+                    name: {
+                        type: "VARCHAR",
+                        notNull: true
+                    }
+                }
+            };
+
+            beforeAll(async () => {
+                postgresContainer = await new PostgreSqlContainer().start();
+                postgresClient = new Client({ connectionString: postgresContainer.getConnectionUri() });
+                await postgresClient.connect();
+                await createTable(postgresClient, customersTable);
+            });
+
+            afterAll(async () => {
+                await postgresClient.end();
+                await postgresContainer.stop();
+            });
+
+            it("should create and return multiple customers", async () => {
+                const customer1 = { id: 1, name: "John Doe" };
+                const customer2 = { id: 2, name: "Jane Doe" };
+
+                await create(postgresClient, {table: customersTable.name, fields: customer1});
+                await create(postgresClient, {table: customersTable.name, fields: customer2});
+
+                const customers = await findAll(postgresClient, customersTable.name);
+                expect(customers).toEqual([customer1, customer2]);
+            });
+        });
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```js copy
+        /**
+         * Creates new Table
+         * @param client
+         * @param table
+         * @returns {Promise<void>}
+         * @example table
+         *     const table = {
+         *         name: 'customers',
+         *         fields: {
+         *             id: {
+         *                 primary: true,
+         *                 type: 'INT',
+         *                 notNull: true
+         *             },
+         *             name: {
+         *                 type: 'VARCHAR',
+         *                 notNull: true
+         *             }
+         *         }
+         *     }
+         */
+        async function createTable(client, table) {
+            // 'PRIMARY KEY (id), id INT NOT NULL' | 'name VARCHAR NOT NULL'
+            const fieldFactory = field => `${field.primary ? 'PRIMARY KEY (' + field.name + '), ' : ''}${field.name} ${field.type} ${field.notNull && 'NOT NULL'}`;
+
+            // 'PRIMARY KEY (id), id INT NOT NULL, name VARCHAR NOT NULL'
+            const fieldsStringArray = fields => Object.entries(table.fields).reduce((acc, curr) => {
+                const [fieldKey, fieldValue] = curr;
+                const field = {...fieldValue, name: fieldKey};
+                acc += acc === '' ? fieldFactory(field) : `, ${fieldFactory(field)}`;
+                return acc;
+            }, '');
+
+            // 'CREATE TABLE IF NOT EXISTS customers (PRIMARY KEY (id), id INT NOT NULL, name VARCHAR NOT NULL)'
+            const sql = `CREATE TABLE IF NOT EXISTS ${table.name} (${fieldsStringArray(table.fields)})`;
+            await client.query(sql);
+        }
+
+        /**
+         * Creates new Row in a Table
+         * @param client
+         * @param row
+         * @returns {Promise<void>}
+         * @example
+         *  const row = {
+         *     table: 'customers',
+         *     fields: {
+         *         id: 1,
+         *         name: 'Full Name'
+         *     }
+         *  }
+         */
+        async function create(client, row) {
+            const fieldNames = Object.keys(row.fields);
+            const fieldValues = Object.values(row.fields);
+
+            // '$1,$2'
+            const indexedDollarValues = Array(fieldNames.length).fill('$').map((e, i) => e + (i + 1))
+
+            // 'INSERT INTO customers (id, name) VALUES ($1,$2)'
+            const sql = `INSERT INTO ${row.table} (${fieldNames.join(', ')}) VALUES (${indexedDollarValues})`;
+            await client.query(sql, fieldValues);
+        }
+
+        /**
+         * Finds all rows for a given Table
+         * @param client
+         * @param tableName
+         * @returns {Promise<*>}
+         */
+        async function findAll(client, tableName) {
+            const sql = 'SELECT * FROM ' + tableName;
+            const result = await client.query(sql);
+            return result.rows;
+        }
+
+        module.exports = {createTable, create, findAll}
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Output with debug on
+
+With debug mode turned on:
+
+```bash
+> DEBUG=testcontainers* npm test
+
+> testcontainers@1.0.0 test
+> jest
+
+  testcontainers [DEBUG] Checking container runtime strategy "TestcontainersHostStrategy"... +0ms
+  testcontainers [DEBUG] Container runtime strategy "TestcontainersHostStrategy" is not applicable +1ms
+  testcontainers [DEBUG] Checking container runtime strategy "ConfigurationStrategy"... +1ms
+  testcontainers [DEBUG] Container runtime strategy "ConfigurationStrategy" is not applicable +0ms
+  testcontainers [DEBUG] Checking container runtime strategy "UnixSocketStrategy"... +0ms
+  testcontainers [DEBUG] Container runtime strategy "UnixSocketStrategy" is not applicable +0ms
+  testcontainers [DEBUG] Checking container runtime strategy "RootlessUnixSocketStrategy"... +0ms
+  testcontainers [TRACE] Fetching Docker info... +3ms
+  testcontainers [TRACE] Fetching remote container runtime socket path... +36ms
+  testcontainers [TRACE] Resolving host... +0ms
+  testcontainers [TRACE] Fetching Compose info... +0ms
+  testcontainers [TRACE] Looking up host IPs... +636ms
+  testcontainers [TRACE] Initialising clients... +3ms
+  ...
+  testcontainers [DEBUG] [c1d1a17f4139] Removing container... +0ms
+  testcontainers [DEBUG] [c1d1a17f4139] Removed container +40ms
+  testcontainers [INFO] [c1d1a17f4139] Stopped container +0ms
+  PASS  ./integration.test.js
+   Dynamic Table Repository
+     ✓ should create and return multiple customers (10 ms)
+
+  Test Suites: 1 passed, 1 total
+  Tests:       1 passed, 1 total
+  Snapshots:   0 total
+  Time:        3.931 s, estimated 4 s
+  Ran all test suites.
+```
+
+## Conclusion
+
+In this article we have learned how to write integration tests with Testcontainers help.
+
+Use Testcontainers when you need to use almost any Database in production and you need to test it.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

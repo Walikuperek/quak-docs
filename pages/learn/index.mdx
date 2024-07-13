@@ -13,14 +13,12 @@ import {NextJSTag} from "../../components/tags/nextjs";
 import {NodeTag} from "../../components/tags/node";
 import {PythonTag} from "../../components/tags/python";
 import {ReactTag} from "../../components/tags/react";
-import {MainCategoriesBtns} from "../../components/ui/buttons/main-categories";
 import {HeroLearnCard} from "../../components/ui/generics/hero-learn-card";
 import {AllPosts, latestReading} from "../../data/posts";
 import {PostsList} from "../../components/lists/posts-list";
 import {Bleed} from "nextra-theme-docs";
 
 # Learn
-
 
 <div className="block md:hidden lg:hidden">
     <Bleed>
@@ -51,19 +49,14 @@ import {Bleed} from "nextra-theme-docs";
     />
 </div>
 
-<h3 className="text-lg mt-10 mb-2 text-gray-500 font-bold">CATEGORIES</h3>
-<h2 className="text-4xl mb-3 font-bold">Main categories</h2>
-
-<MainCategoriesBtns />
-
-<article className="bg-neutral-500 bg-opacity-10 mt-20 mb-20 p-2 pb-5 rounded-3xl">
+<article className="bg-neutral-500 bg-opacity-10 mt-10 mb-10 p-2 pb-5 rounded-3xl">
     <h3 className="text-lg mb-2 text-gray-500 font-bold">TAGS</h3>
     <h2 className="text-4xl mb-3 font-bold">All available tags</h2>
     <p className="text-gray-500">Tag purpose is to show what is the topic of given</p>
-    <p className="mb-10 text-gray-500">article. Click one to see all articles with this tag.</p>
+    <p className="mb-5 text-gray-500">article. Click one to see all articles with this tag.</p>
 
     <hr />
-    <Spacer />
+    <Spacer height={5} />
 
     <TagsList>
         <AITag />

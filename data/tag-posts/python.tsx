@@ -106,5 +106,33 @@ export const PythonPosts = [
         ],
         description: "Learn how to Unit test your API"
     },
+    {
+        color: "python",
+        category: "backend",
+        link: "/learn/python/rxjs-subject-in-python",
+        tag: <PythonTag disabled={true}/>,
+        image: <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div
+                className="bg-violet-600 rounded-2xl delay-700 h-20 w-20 p-1 mt-20 text-white font-bold">Events<br/>&nbsp;&nbsp;
+                <span className="font-bold text-violet-300">.sub()</span>
+            </div>
+            <div className="bg-emerald-600 rounded-2xl h-40 w-40 p-1 mt-20 text-white font-bold">
+                CreatedTodoEvent<br/>
+                <pre>
+                    <code>{'{'}
+                        &nbsp;&nbsp;"id": "IAJSIDJAS",
+                        &nbsp;&nbsp;"title": "Resize image with Python"
+                    {'}'}</code>
+                </pre>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "04-07-2024",
+        title: <>RxJS Subject in Python</>,
+        descriptionTextLines: [
+            "Implementing the Subject and Observer pattern in Python.",
+        ],
+        description: "Implementing the Subject and Observer pattern in Python."
+    },
 ];
 newestUpSorter(PythonPosts);

@@ -7,6 +7,10 @@
     "type": "separator",
     "title": "Libraries"
   },
+  "instant-website": {
+    "title": "Instant Light/Dark Mode",
+    "href": "https://quak.com.pl/instant-light-dark"
+  },
   "qtheme": "Qtheme",
   "qstore": "Qstore"
 }

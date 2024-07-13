@@ -1,18 +1,5 @@
 {
-  "index": {
-    "title": "Learn",
-    "display": "hidden",
-    "theme": {
-      "layout": "full"
-    }
-  },
-  "-": {
-    "type": "separator",
-    "title": "Categories"
-  },
-  "backend": "Backend",
-  "frontend": "Frontend",
-  "cloud": "Cloud",
+  "index": "All readings",
   "--": {
     "type": "separator",
     "title": "Tags"

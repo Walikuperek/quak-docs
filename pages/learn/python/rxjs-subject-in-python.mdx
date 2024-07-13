@@ -1,0 +1,285 @@
+import {Callout, Tabs, FileTree} from "nextra/components";
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {PythonTag} from "../../../components/tags/python";
+
+# RxJS Subject in Python
+
+<section className="header__height w-full rounded-2xl bg-blue-900 bg-opacity-10 border-2 border-blue-500">
+  <article className="flex flex-col align-between h-full relative">
+    <div className="absolute top-0 left-0 p-2">
+      <PythonTag />
+    </div>
+    <section className="content flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-violet-600 rounded-2xl delay-700 h-20 w-20 p-1 mt-20 text-white font-bold">Events<br />&nbsp;&nbsp;<span className="font-bold text-violet-300">.sub()</span></div>
+        <div className="bg-emerald-600 rounded-2xl h-40 w-40 p-1 mt-20 text-white font-bold">
+            CreatedTodoEvent<br />
+            <pre>
+                <code>{'{'}
+                &nbsp;&nbsp;"id": "IAJSIDJAS",
+                &nbsp;&nbsp;"title": "Resize image with Python"
+                {'}'}</code>
+            </pre>
+        </div>
+    </section>
+    <header className="px-4 pb-4 pt-4">
+      <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 04-07-2024</p>
+        <h1 className="text-2xl font-bold mb-3 border-b-2 border-b-blue-200">RxJS Subject in Python</h1>
+      <p className="mt-2 text-lg">Implementing the Subject and Observer pattern in Python.</p>
+    </header>
+  </article>
+</section>
+
+## Introduction
+
+In this article, we will implement the `Subject` and `Observer` pattern in Python. The `Subject` is a class that
+maintains a list of observers and notifies them of state changes. The `Observer` is an abstract class that defines the
+interface for the observers.
+
+The `Subject` class has the following methods:
+
+- `subscribe(observer: Observer[T])`: Adds an observer to the list of observers.
+- `unsubscribe(observer: Observer[T])`: Removes an observer from the list of observers.
+- `next(value: T)`: Notifies all observers with the new value.
+
+### Result
+
+```python copy
+# UpdateTodo, DeleteTodo...
+@dataclass
+class CreateTodo:
+    id: int
+    title: str
+
+
+class OnCommand(Observer):
+    def update(self, command: CreateTodo | UpdateTodo | DeleteTodo):
+        print(f"Observer: Received command: {command}")
+        if isinstance(command, CreateTodo):
+            pass
+
+
+commands_bus = Subject([CreateTodo, UpdateTodo, DeleteTodo])
+commands_sub = commands_bus.subscribe(OnCommand())
+
+commands_bus.next(CreateTodo(1, "Learn CQRS"))
+commands_bus.next(UpdateTodo(1, "Learn C4 Model"))
+print(f"APP: Subject last emit snapshot: {commands_bus.data}")  # UpdateTodo(id=1,title="Learn C4 Model")
+commands_bus.next(DeleteTodo(1))
+
+commands_sub.unsubscribe()
+```
+
+## Observer Pattern
+
+**Observer Pattern** is a behavioral design pattern that defines a one-to-many dependency between objects so that
+when one object changes state, all its dependents are notified and updated automatically.
+
+<Callout emoji="👾">
+    *We can `subscribe` multiple observers to a `Subject` and `notify` them when the `Subject` changes.*
+</Callout>
+
+## Implementation
+
+See how to implement the `Subject` and `Observer` pattern in Python.
+
+### File Structure
+
+Build the following file structure:
+
+<FileTree>
+    <FileTree.Folder name="observer_pattern" defaultOpen>
+        <FileTree.File name="observer.py"/>
+        <FileTree.File name="subject.py"/>
+    </FileTree.Folder>
+</FileTree>
+
+### Code
+
+Look at the implementation of the `Subject` and `Observer` classes.
+
+`Subsciption` class is used to unsubscribe an observer from the subject(located in `subject.py`).
+
+<Tabs items={['subject.py', 'observer.py']}>
+    <Tabs.Tab>
+        ```python copy
+        from typing import Generic, List, Set, TypeVar, Type
+
+        from observer import Observer
+
+        T = TypeVar("T")
+
+
+        def readable_name(observer: Observer[T]) -> str:
+            return observer.__repr__().split(sep='.')[1].split(' object')[0]
+
+
+        class Subject(Generic[T]):
+            _payload_types: List[Type[T]]
+            _observers: Set[Observer[T]]
+            _state: T | None = None
+
+            def __init__(self, payload_types: List[Type[T]]):
+                self._payload_types = payload_types
+                self._observers = set()
+
+            @property
+            def data(self) -> T | None:
+                return self._state
+
+            def subscribe(self, observer: Observer[T]):
+                self._observers.add(observer)
+                return Subscription(self, observer)
+
+            def unsubscribe(self, observer: Observer[T]):
+                self._observers.remove(observer)
+
+            def next(self, value: T | None = None):
+                if not any(isinstance(value, data_type) for data_type in self._payload_types):
+                    allowed_types = ', '.join([t.__name__ for t in self._payload_types])
+                    raise TypeError(f"Expected data of type {allowed_types} got {type(value).__name__}")
+                self._state = value
+                for observer in self._observers:
+                    print(f"Subject: Notifying observer: {readable_name(observer)} with value: {value}...")
+                    observer.update(value)
+
+
+        class Subscription:
+            def __init__(self, subject: Subject, observer: Observer[T]):
+                self._subject = subject
+                self._observer = observer
+
+            def unsubscribe(self):
+                self._subject.unsubscribe(self._observer)
+
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```python copy
+        from abc import abstractmethod, ABC
+        from typing import TypeVar, Generic
+
+        T = TypeVar("T")
+
+
+        class Observer(ABC, Generic[T]):
+            @abstractmethod
+            def update(self, value: T):
+                pass
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Usage
+
+Now, let's see how to use the `Subject` and `Observer` classes.
+
+Imagine we have a `Todo` application with the following classes:
+
+- `CreateTodo` is a command to create a new todo.
+- `UpdateTodo` is a command to update an existing todo.
+- `DeleteTodo` is a command to delete a todo.
+- `CreatedTodoEvent` is an event that is emitted when a todo is created.
+
+Command example:
+
+> We can put `execute` method here and execute while OnCommand.update. But for simplicity, we are not implementing it.
+
+```python copy
+@dataclass
+class CreateTodo:
+    id: int
+    title: str
+```
+
+Event example:
+
+```python copy
+@dataclass
+class CreatedTodoEvent:
+    id: int
+    title: str
+```
+
+We need to listen to the commands and events and update the database accordingly, because our business requires to listen to new Todos created and respond accordingly.
+
+```python copy
+commands_bus = Subject([CreateTodo, UpdateTodo, DeleteTodo])
+event_bus = Subject([CreatedTodoEvent])
+
+
+class OnCommand(Observer):
+    def update(self, command: CreateTodo | UpdateTodo | DeleteTodo):
+        print(f"Observer: Received command: {command}")
+        if isinstance(command, CreateTodo):
+            db.create(command)
+            event_bus.next(CreatedTodoEvent(command.id, command.title))
+            print(f"Observer: Created a todo with id: {command.id} and title: {command.title}")
+
+        elif isinstance(command, UpdateTodo):
+            db.update(command)
+            print(f"Observer: Updated a todo with id: {command.id} and title: {command.title}")
+
+        elif isinstance(command, DeleteTodo):
+            db.delete(command)
+            print(f"Observer: Deleted a todo with id: {command.id}")
+
+
+class OnEvent(Observer):
+    def update(self, event: CreatedTodoEvent):
+        print(f"Observer: Received event: {event}")
+
+
+commands_sub = commands_bus.subscribe(OnCommand())
+events_sub = event_bus.subscribe(OnEvent())
+
+commands_bus.next(CreateTodo(1, "Learn CQRS"))
+commands_bus.next(CreateTodo(2, "Learn DDD"))
+commands_bus.next(CreateTodo(3, "Learn Event Sourcing"))
+print(f"APP: Subject last emit snapshot: {commands_bus.data}")
+
+commands_bus.next(UpdateTodo(3, "Learn C4 Model"))
+print(f"APP: Subject last emit snapshot: {commands_bus.data}")
+commands_bus.next(DeleteTodo(3))
+
+# Cleanup
+commands_sub.unsubscribe()
+events_sub.unsubscribe()
+
+# QUERY SIDE
+def get_all_todos():
+    return db.todos
+
+
+print(f"Query get_all_todos: [{get_all_todos()}]")
+```
+
+In case you are searching for `db` implementation, here is a simple one:
+
+```python copy
+class DB:
+    def __init__(self):
+        self.todos = {}
+
+    def create(self, todo: CreateTodo):
+        self.todos[todo.id] = todo.title
+
+    def update(self, todo: UpdateTodo):
+        self.todos[todo.id] = todo.title
+
+    def delete(self, todo: DeleteTodo):
+        del self.todos[todo.id]
+
+
+db = DB()
+```
+
+## Conclusion
+
+In this article, we implemented the `Observer` pattern in Python. The `Subject` class maintains a list of
+observers and notifies them of state changes. The `Observer` class defines the interface for the observers.
+
+You have learned with QUAK new pattern in Python. 🚀
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

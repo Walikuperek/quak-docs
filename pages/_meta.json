@@ -21,6 +21,12 @@
         "title": "Why Qtools",
         "href": "/libraries"
       },
+      "instant-light-dark": {
+        "title": "Instant Light/Dark Mode",
+        "type": "page",
+        "href": "https://quak.com.pl/instant-light-dark",
+        "newWindow": true
+      },
       "qtheme": {
         "title": "Qtheme",
         "href": "/libraries/qtheme"

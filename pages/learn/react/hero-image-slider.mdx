@@ -1,0 +1,272 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+import {ReactTag} from "../../../components/tags/react";
+import {Spacer} from "../../../components/ui/generics/spacer";
+
+<Spacer height={2} />
+
+<HeroLearnCard
+    category="react"
+    tag={<ReactTag/>}
+    image={<section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+        <img src="/assets/quak_history/hero_slider_06_2024_trimm.png" className="mx-auto h-40 object-contain mt-20 p-1" width="100%" />
+    </section>}
+    author="Kacper Walczak"
+    createdAt="20-06-2024"
+    title="QUAK Hero Slider"
+    descriptionTextLines={[
+        "Check out how new QUAK Hero Slider is done with React.",
+    ]}
+    label={<></>}
+/>
+
+## Introduction
+
+In this article, we will learn how to create a hero slider with React.
+
+## Used technologies
+
+<div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/typescript.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">Typescript</p>
+        <p className="text-sm text-gray-500">Language</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/react.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">React</p>
+        <p className="text-sm text-gray-500">Frontend library</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/tailwind.png" alt=""/>
+        <p className="text-sm font-semibold leading-6">TailwindCSS</p>
+        <p className="text-sm text-gray-500">CSS library</p>
+    </div>
+    <div className="flex flex-col items-center gap-3">
+        <img className="h-14 flex-none rounded-full bg-gray-50 p-2" src="/logos/css3.svg" alt=""/>
+        <p className="text-sm font-semibold leading-6">CSS</p>
+        <p className="text-sm text-gray-500">Styling language</p>
+    </div>
+</div>
+
+## How to build
+
+We are going to build `Hero` component with `SliderApps` and `HeroBoxWhatsNew` components inside.
+
+Final usage of our hero slider will look like this:
+
+```tsx
+<Hero />
+```
+
+### Create helpers
+
+Create `activeDot` and `inactiveDot` components. They are used to inform users about the current app in the slider.
+
+Simple components(keys added due to the fact of managing list of them in React):
+
+```tsx
+const inactiveDot = (key: string | number) => <span key={key} className="border-3 border-gray-50 w-3 h-3 bg-gray-100 rounded-full">&nbsp;</span>;
+const activeDot = (key: string | number) => <span key={key} className="border-3 border-violet-900 w-3 h-3 bg-violet-500 rounded-full">&nbsp;</span>;
+```
+
+### Create SliderApps component
+
+Create `SliderApp` for each app. Slider shows the current app with the title and description.
+
+We need to implement the logic for moving to the next and previous app. But there is no reason to do it at a single app level. We will do it at the `SliderApps` level.
+
+```tsx
+interface App {
+    title: string;
+    desc: string;
+    imgSrc: string;
+}
+
+function SliderApp({app}: {app: App}) {
+    return (
+        <div className="h-[400px] w-full lg:w-[600px] relative">
+            <img src={app.imgSrc} alt={app.title} className="transition-all object-left object-cover rounded shadow-2xl h-[400px] w-full lg:w-[600px]"/>
+            <div className="absolute z-10 top-0 left-0 right-0 bg-black/80 h-[4rem] w-full rounded-t p-2 flex items-center">
+                <div className="flex flex-col">
+                    <h3 className="font-bold text-white">{app.title}</h3>
+                    <p className="text-gray-400">{app.desc}</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+```
+
+Create `SliderApps` component with `SliderApp` component inside.
+
+```tsx
+export interface SliderAppsProps {
+    apps: App[];
+    activeIndex: number;
+    setActiveIndex: (index: number) => void;
+    clickedRightArrow: (index: number) => void;
+    clickedLeftArrow: (index: number) => void;
+}
+
+function SliderApps({apps, activeIndex, setActiveIndex, clickedRightArrow, clickedLeftArrow}: SliderAppsProps) {
+    const clickRightArrow = () => {
+        const newIndex = activeIndex + 1 >= apps.length ? 0 : activeIndex + 1;
+        setActiveIndex(newIndex);
+        clickedRightArrow(newIndex);
+    };
+    const clickLeftArrow = () => {
+        const newIndex = activeIndex - 1 < 0 ? apps.length - 1 : activeIndex - 1;
+        setActiveIndex(newIndex);
+        clickedLeftArrow(newIndex);
+    };
+    return (
+        <div className="relative w-[600px] h-[400px]">
+            <SliderApp app={apps[activeIndex]}/>
+            <div className="absolute z-10 top-[5px] right-0 h-[4rem] p-2">
+                <div className="flex items-center gap-2">
+                    {apps.map((app, index) => index === activeIndex ? activeDot("key_dot_" + index) : inactiveDot("key_dot_" + index))}
+                    <button className="text-4xl text-white hover:text-violet-500" onClick={e => clickLeftArrow()}>&larr;</button>
+                    <button className="text-4xl text-white hover:text-violet-500" onClick={e => clickRightArrow()}>&rarr;</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+```
+
+### Create HeroBoxWhatsNew component
+
+Create `HeroBoxWhatsNew` component with most recent information. It will be displayed on the left side of the hero slider.
+
+```tsx
+function HeroBoxWhatsNew() {
+    return (
+        <div className="p-4 h-full relative z-10">
+            <div className="flex gap-3 mb-3">
+                <span className="inline-flex items-center bg-orange-50 px-2.5 py-1 text-xs font-bold text-orange-700 ring-2 ring-inset ring-orange-700/10 rounded-full">
+                    What's new
+                </span>
+                <a href="https://quak.com.pl/instant-light-dark" target="_blank"
+                   className="flex gap-2 items-center hover:underline">
+                    <span className="text-white text-sm">🚀 New light-dark CSS generator</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red"
+                         className="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fillRule="evenodd"
+                              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                </a>
+            </div>
+            <div className="bg-rose-500 bg-opacity-30 p-2 pb-5 w-fit rounded">
+                <h1 className="mt-5 font-bold text-5xl text-white max-w-lg">AI, Scalable Apps, Cloud,
+                    Architecture</h1>
+                <h3 className="mt-3 mb-3 text-xl text-white leading-1 mx-w-lg">
+                    Learn how-to create apps and websites.<br/>
+                    Start creating apps that scale.<br/>
+                    Become <span
+                    className="px-1 font-bold rounded text-rose-500 bg-rose-900">fullstack(🦆)*</span> solution
+                    provider.
+                </h3>
+                <em className="text-rose-200">*simply be like a duck, fullstack (duck can fly, walk and swim
+                    :)</em>
+                <div className="mt-10 flex items-center gap-7">
+                    <a
+                        href="/learn/"
+                        className="font-bold rounded-md whitespace-nowrap bg-white px-3.5 py-2.5 text-sm text-gray-900 dark:hover:bg-gray-200 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    >
+                        Learn programming
+                    </a>
+                    <a
+                        href="/portfolio/"
+                        className="font-bold text-sm whitespace-nowrap leading-6 text-white hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    >
+                        Portfolio <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+}
+```
+
+### Create Hero component
+
+Create `Hero` component with `SliderApps` and `HeroBoxWhatsNew` components inside.
+
+```tsx
+function Hero() {
+    const apps = [
+        { title: "Tabelek", desc: "Multi module app for business data", imgSrc: "/portfolio/tabelek/tabelek_in_progress.png", href: "/portfolio/tabelek" },
+        { title: "TechApp", desc: "RTV/AGD repair tickets and maps integration", imgSrc: "/portfolio/techapp/techapp_office_list.png", href: "/portfolio/tech-app" },
+        { title: "CreativoApp", desc: "Wholesaler parts management with docs gen", imgSrc: "/portfolio/creativoapp/tablica_1.png", href: "/portfolio/creativo-app" }
+    ];
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [imgSrc, setImgSrc] = useState(apps[activeIndex].imgSrc);
+    return (
+        <>
+            <div id="hero_hero" className={styles.heroHero + " h-[850px] lg:h-[600px] overflow-hidden " + `clip-fancy-image-bottom${activeIndex} transition-all`}>
+                <img src={imgSrc} alt="Hero background image" className="opacity-40 transition-all filter brightness-50 blur object-cover absolute top-0 left-0 w-full h-full"/>
+                <div className="relative max-w-[90rem] ml-auto mr-auto flex flex-wrap justify-center items-center gap-5 pt-5">
+                    <HeroBoxWhatsNew />
+                    <SliderApps
+                        apps={apps}
+                        activeIndex={activeIndex}
+                        setActiveIndex={setActiveIndex}
+                        clickedLeftArrow={movedToAppIndex => setImgSrc(apps[movedToAppIndex].imgSrc)}
+                        clickedRightArrow={movedToAppIndex => setImgSrc(apps[movedToAppIndex].imgSrc)}
+                    />
+                </div>
+            </div>
+            {/* Spacer because of the hero absolute position */}
+            <div className="h-[850px] lg:h-[600px]">&nbsp;</div>
+        </>
+    );
+}
+```
+
+### Add styles
+
+Add styles for the hero slider.
+
+```css
+.heroHero {
+    background: linear-gradient(to bottom right, #ffef00, #ff007f, #400080);
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
+
+/* CSS for cutting bottom of the image */
+.clip-fancy-image-bottom0 {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 77% 82%, 56% 78%, 39% 82%, 25% 88%, 11% 87%, 0% 100%);
+}
+.clip-fancy-image-bottom1 {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 82% 82%, 56% 78%, 36% 82%, 25% 92%, 11% 83%, 0% 100%);
+}
+.clip-fancy-image-bottom2 {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 77% 82%, 56% 78%, 39% 78%, 28% 90%, 10% 84%, 0% 100%);
+}
+```
+
+## Result
+
+That's it! We have created a hero slider with React.
+
+Use the `Hero` component in your app like this:
+
+```tsx
+<Hero />
+```
+
+The final result will look like this:
+
+<img src="/assets/quak_history/hero_slider_06_2024.png" className="mx-auto mt-4" width="100%" style={{maxWidth: "600px"}} />
+<div className="mx-auto text-center w-full">
+    <em className="text-gray-500">Finished Hero with Slider example</em>
+</div>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

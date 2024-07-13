@@ -6,5 +6,13 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "hero-image-slider": {
+    "title": "React: Hero with image slider",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }
