@@ -1,5 +1,8 @@
 {
   "index": "All readings",
+  "cloud": "Cloud readings",
+  "backend": "Backend readings",
+  "frontend": "Frontend readings",
   "--": {
     "type": "separator",
     "title": "Tags"

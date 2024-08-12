@@ -14,5 +14,13 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "perfect-timer-for-web": {
+    "title": "Perfect Timer for the Web",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }

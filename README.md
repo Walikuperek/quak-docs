@@ -2,6 +2,10 @@
 
 This is README.md for [QUAK.COM.PL](https://quak.com.pl) website maintenance.
 
+> Please don't complain about this code base, I'm writing it in my free time mostly, still... code contains seniorish flavors.
+>
+> Codebase is focused on MDX -> static HTML export (with Nextra, Next.js, Markdown, React) + CD
+
 ## Local Development
 
 ```bash

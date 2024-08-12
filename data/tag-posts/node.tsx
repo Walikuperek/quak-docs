@@ -41,6 +41,26 @@ export const NodePosts = [
         title: "Test PostgreSQL with Testcontainers",
         description: "How to PostgreSQL integration tests with Testcontainers.",
         descriptionTextLines: ["How to PostgreSQL integration tests with Testcontainers."]
+    },
+    {
+        color: "node",
+        category: "backend",
+        link: "/learn/node/dockerize-express-and-mongo",
+        tag: <NodeTag disabled={true} />,
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div
+                className="flex rounded flex-col justify-start items-center bg-white h-40 w-40 p-1 mt-20 text-white font-bold">
+                <p className="text-black">Docker</p>
+                <img src="/logos/docker.svg" alt="docker logo" className="h-20"/>
+                
+                <p className="text-black">Node + Container</p>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "08-08-2024",
+        title: "ExpressJS & MongoDB with Docker",
+        description: "How to contenerize ExpressJS and MongoDB app.",
+        descriptionTextLines: ["How to contenerize ExpressJS and MongoDB app."]
     }
 ];
 newestUpSorter(NodePosts);

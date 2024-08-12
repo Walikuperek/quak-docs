@@ -52,5 +52,35 @@ export const TypescriptPosts = [
         description: "Learn how to deal with optional properties in typescript.",
         label: <></>
     },
+    {
+        color: "typescript",
+        category: "frontend",
+        link: "/learn/typescript/perfect-timer-for-web",
+        tag: <TSTag disabled={true}/>,
+        image: <section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div className="bg-violet-500 h-40 w-40 p-1 mt-20 text-white font-bold">
+                <span className="text-lg">
+                    ⏰ Thick<br />
+                    <span className="text-violet-300">⌛ now?</span>
+                    <br />
+                    <br />
+                    <br />
+                    ... tik, tok
+                </span>
+            </div>
+            <div className="flex flex-col">
+                <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-20 text-white font-bold animate-bounce">Tik</div>
+                <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-1 text-white font-bold">Tok</div>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "10-08-2024",
+        title: <>Perfect Timer for the Web</>,
+        descriptionTextLines: [
+            "Learn how to create perfect 1s, 10min, etc. timer for your apps in typescript.",
+        ],
+        description: "Learn how to create perfect 1s, 10min, etc. timer for your apps in typescript.",
+        label: <></>
+    },
 ];
 newestUpSorter(TypescriptPosts);

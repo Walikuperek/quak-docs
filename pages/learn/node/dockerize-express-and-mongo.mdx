@@ -1,0 +1,510 @@
+import { FileTree, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { NodeTag } from "../../../components/tags/node";
+
+
+<section className="w-full rounded-2xl bg-green-900 bg-opacity-10 border-2 border-green-500 mt-2">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <NodeTag/>
+        </div>
+        <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div
+                className="flex rounded flex-col justify-start items-center bg-white h-40 w-40 p-1 mt-20 text-white font-bold">
+                <p className="text-black">Docker</p>
+                <img src="/logos/docker.svg" alt="docker logo" className="h-20"/>
+                
+                <p className="text-black">Node + Container</p>
+            </div>
+        </section>
+        <header className="flex flex-col px-4 pb-4 pt-4">
+            <div className="flex flex-col lg:flex-row justify-between items-center mb-3 border-b-2 border-b-green-300">
+                <h1 className="text-2xl font-bold">ExpressJS & MongoDB with Docker</h1>
+                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 08-08-2024</p>
+            </div>
+            <p className="mt-2 text-lg">How to contenerize ExpressJS and MongoDB app.</p>
+        </header>
+    </article>
+</section>
+
+## Introduction
+
+How to create Express app like below one and combine it with MongoDB in addition with Docker images for all of it.
+
+Express app:
+
+```javascript copy showLineNumbers filename="src/app.js"
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const authRoutes = require('./auth/authRoutes');
+const productRoutes = require('./products/productRoutes');
+
+dotenv.config();
+
+const app = express();
+
+app.use(express.json());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('Could not connect to MongoDB', err));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+```
+
+Docker run part:
+
+```bash copy filename="Terminal"
+# enter directory and install dependencies
+cd express-docker-template
+npm install
+
+# build image as express-app
+docker build -t express-app .
+
+# build network for containers
+docker network create express-network
+
+# run MongoDB container in background
+docker run -d --name mongodb --network express-network -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=example mongo
+
+# run express-app container
+docker run --env-file .env --network express-network -p 5000:5000 express-app
+```
+
+
+## Code
+
+Codebase can be found at [GitHub Repo(polish README)](https://github.com/Walikuperek/TEMPLATE-Docker-ExpressJS).
+
+### Dockerfile
+
+Docker setup for ExpressJS App with Node 20 runtime:
+
+```docker copy filename="Dockerfile"
+# Use Node.js 20 as the base image
+FROM node:20
+
+# Create and change to the app directory
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Run the application
+CMD ["node", "src/index.js"]
+```
+
+### Docker run
+
+Check out how super easy it is to create Express with Mongo Database containers with few commands:
+
+```bash copy filename="Terminal"
+# enter directory and install dependencies
+cd express-docker-template
+npm install
+
+# build image as express-app
+docker build -t express-app .
+
+# build network for containers
+docker network create express-network
+
+# run MongoDB container in background
+docker run -d --name mongodb --network express-network -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=example mongo
+
+# run express-app container
+docker run --env-file .env --network express-network -p 5000:5000 express-app
+```
+
+### Container test
+
+What about testing our ExpressJS app? How to check whether our app works and database works?
+
+```bash copy filename="Terminal"
+# TEST: 1. get User JWT
+curl -X POST http://localhost:5000/api/auth/login -H "Content-Type: application/json" -d '{"username": "user", "password": "password"}'
+
+# TEST: 2. get list of products
+curl -X GET http://localhost:5000/api/products -H "Authorization: Bearer <TOKEN>"
+```
+
+> For more CURL commands like: AdminLogin, CreateProduct, etc... simply visit [README for fullcode repo(polish lang;/ but curls are english so... visit here)](https://github.com/Walikuperek/TEMPLATE-Docker-ExpressJS).
+
+### Full code
+
+> Codebase can be found at [GitHub Repo(polish README)](https://github.com/Walikuperek/TEMPLATE-Docker-ExpressJS).
+
+To run Docker Express app with Mongo Database simply:
+
+```bash copy filename="Terminal"
+cd express-mongo-project
+
+# create express docker template (copy code below ;)
+sh create_express_mongo_docker_app.sh
+
+npm install
+
+# build image as express-app
+docker build -t express-app .
+
+# build network for containers
+docker network create express-network
+
+# run MongoDB container in background
+docker run -d --name mongodb --network express-network -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=example mongo
+
+# run express-app container
+docker run --env-file .env --network express-network -p 5000:5000 express-app
+```
+
+<Tabs items={['create_express_mongo_docker_app.sh']}>
+    <Tabs.Tab>
+    ```bash copy
+    #!/bin/bash
+
+    # Create folders
+    mkdir -p /src/{controllers,middleware,models,routes}
+
+    # Create .env file
+    touch .env
+
+    # Create Dockerfile
+    touch Dockerfile
+
+    # Create package.json and package-lock.json (placeholder)
+    touch package.json package-lock.json
+
+    # Create source files
+    touch src/index.js
+    touch src/models/permission.js
+    touch src/models/productModel.js
+    touch src/controllers/authController.js
+    touch src/controllers/productController.js
+    touch src/middleware/authMiddleware.js
+    touch src/middleware/permissionMiddleware.js
+    touch src/routes/authRoutes.js
+    touch src/routes/productRoutes.js
+
+    # Write content to files
+
+    # .env
+    cat <<EOL > .env
+    PORT=5000
+    MONGO_URI=mongodb://root:example@mongodb:27017/your_db_name?authSource=admin
+    JWT_SECRET=your_jwt_secret
+    EOL
+
+    # Dockerfile
+    cat <<EOL > Dockerfile
+    # Use Node.js 20 as the base image
+    FROM node:20
+
+    # Create and change to the app directory
+    WORKDIR /usr/src/app
+
+    # Copy package.json and package-lock.json
+    COPY package*.json ./
+
+    # Install dependencies
+    RUN npm install
+
+    # Copy the rest of the application code
+    COPY . .
+
+    # Expose the port the app runs on
+    EXPOSE 5000
+
+    # Run the application
+    CMD ["node", "src/index.js"]
+    EOL
+
+    # package.json
+    cat <<EOL > package.json
+    {
+    "name": "express-app",
+    "version": "1.0.0",
+    "description": "A simple ExpressJS application with JWT authentication and CRUD operations.",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js"
+    },
+    "dependencies": {
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.10.9"
+    }
+    }
+    EOL
+
+    # src/index.js
+    cat <<EOL > src/index.js
+    const express = require('express');
+    const mongoose = require('mongoose');
+    const dotenv = require('dotenv');
+    const authRoutes = require('./routes/authRoutes');
+    const productRoutes = require('./routes/productRoutes');
+
+    dotenv.config();
+
+    const app = express();
+
+    app.use(express.json());
+
+    app.use('/api/auth', authRoutes);
+    app.use('/api/products', productRoutes);
+
+    mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then(() => console.log('Connected to MongoDB'))
+        .catch(err => console.error('Could not connect to MongoDB', err));
+
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(\`Server running on port \${PORT}\`);
+    });
+    EOL
+
+    # src/models/permission.js
+    cat <<EOL > src/models/permission.js
+    class Permission {
+        constructor(permissions = {}) {
+            this.createProduct = permissions.createProduct || false;
+            this.readProduct = permissions.readProduct || false;
+            this.updateProduct = permissions.updateProduct || false;
+            this.deleteProduct = permissions.deleteProduct || false;
+        }
+    }
+
+    class AdminPermission extends Permission {
+        constructor() {
+            super({
+                createProduct: true,
+                readProduct: true,
+                updateProduct: true,
+                deleteProduct: true
+            });
+        }
+    }
+
+    class UserPermission extends Permission {
+        constructor() {
+            super({
+                readProduct: true
+            });
+        }
+    }
+
+    module.exports = { Permission, AdminPermission, UserPermission };
+    EOL
+
+    # src/models/productModel.js
+    cat <<EOL > src/models/productModel.js
+    const mongoose = require('mongoose');
+
+    const productSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: true
+        },
+        price: {
+            type: Number,
+            required: true
+        },
+        description: String
+    });
+
+    const Product = mongoose.model('Product', productSchema);
+
+    module.exports = Product;
+    EOL
+
+    # src/controllers/authController.js
+    cat <<EOL > src/controllers/authController.js
+    const jwt = require('jsonwebtoken');
+    const { AdminPermission, UserPermission } = require('../models/permission');
+
+    const login = (req, res) => {
+        const { username, password } = req.body;
+
+        // Mock authentication
+        if (username === 'admin' && password === 'password') {
+            const token = jwt.sign({ username, permissions: new AdminPermission() }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            return res.json({ token });
+        } else if (username === 'user' && password === 'password') {
+            const token = jwt.sign({ username, permissions: new UserPermission() }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            return res.json({ token });
+        } else {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+    };
+
+    module.exports = { login };
+    EOL
+
+    # src/controllers/productController.js
+    cat <<EOL > src/controllers/productController.js
+    const Product = require('../models/productModel');
+
+    const createProduct = async (req, res) => {
+        try {
+            const product = new Product(req.body);
+            await product.save();
+            res.status(201).json(product);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    };
+
+    const getProducts = async (req, res) => {
+        try {
+            const products = await Product.find();
+            res.json(products);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    };
+
+    const getProductById = async (req, res) => {
+        try {
+            const product = await Product.findById(req.params.id);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+            res.json(product);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    };
+
+    const updateProduct = async (req, res) => {
+        try {
+            const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+            res.json(product);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    };
+
+    const deleteProduct = async (req, res) => {
+        try {
+            const product = await Product.findByIdAndDelete(req.params.id);
+            if (!product) {
+                return res.status(404).json({ message: 'Product not found' });
+            }
+            res.json({ message: 'Product deleted' });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    };
+
+    module.exports = { createProduct, getProducts, getProductById, updateProduct, deleteProduct };
+    EOL
+
+    # src/middleware/authMiddleware.js
+    cat <<EOL > src/middleware/authMiddleware.js
+    const jwt = require('jsonwebtoken');
+
+    const authenticate = (req, res, next) => {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+
+        if (!token) {
+            return res.status(401).json({ message: 'Access denied' });
+        }
+
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+            next();
+        } catch (error) {
+            res.status(400).json({ message: 'Invalid token' });
+        }
+    };
+
+    module.exports = { authenticate };
+    EOL
+
+    # src/middleware/permissionMiddleware.js
+    cat <<EOL > src/middleware/permissionMiddleware.js
+    const { Permission } = require('../models/permission');
+
+    const authorize = (permission) => {
+        return (req, res, next) => {
+            if (req.user && req.user.permissions[permission]) {
+                next();
+            } else {
+                res.status(403).json({ message: 'Permission denied' });
+            }
+        };
+    };
+
+    module.exports = { authorize };
+    EOL
+
+    # src/routes/authRoutes.js
+    cat <<EOL > src/routes/authRoutes.js
+    const express = require('express');
+    const { login } = require('../controllers/authController');
+
+    const router = express.Router();
+
+    router.post('/login', login);
+
+    module.exports = router;
+    EOL
+
+    # src/routes/productRoutes.js
+    cat <<EOL > src/routes/productRoutes.js
+    const express = require('express');
+    const {
+        createProduct,
+        getProducts,
+        getProductById,
+        updateProduct,
+        deleteProduct
+    } = require('../controllers/productController');
+    const { authenticate } = require('../middleware/authMiddleware');
+    const { authorize } = require('../middleware/permissionMiddleware');
+
+    const router = express.Router();
+
+    router.post('/', authenticate, authorize('createProduct'), createProduct);
+    router.get('/', authenticate, authorize('readProduct'), getProducts);
+    router.get('/:id', authenticate, authorize('readProduct'), getProductById);
+    router.put('/:id', authenticate, authorize('updateProduct'), updateProduct);
+    router.delete('/:id', authenticate, authorize('deleteProduct'), deleteProduct);
+
+    module.exports = router;
+    EOL
+
+    echo "Project structure created successfully."
+    ```
+    </Tabs.Tab>
+</Tabs>
+
+## Conclusion
+
+In this article we have learned how to easily docker our Express apps.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

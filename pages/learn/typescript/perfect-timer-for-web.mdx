@@ -1,0 +1,139 @@
+import {LatestReadings} from "../../../components/ui/sections/latest-readings";
+import {TSTag} from "../../../components/tags/typescript";
+import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
+
+# Perfect Timer for the Web
+
+<HeroLearnCard
+    category="typescript"
+    tag={<TSTag/>}
+    image={<section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-violet-500 h-40 w-40 p-1 mt-20 text-white font-bold">
+            <span className="text-lg">
+                ⏰ Thick<br />
+                <span className="text-violet-300">⌛ now?</span>
+                <br />
+                <br />
+                <br />
+                ... tik, tok
+            </span>
+        </div>
+        <div className="flex flex-col">
+            <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-20 text-white font-bold animate-bounce">Tik</div>
+            <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-1 text-white font-bold">Tok</div>
+        </div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="10-08-2024"
+    title="Perfect Timer for the Web"
+    descriptionTextLines={[
+        "Learn how to create perfect 1s, 10min, etc. timer for your apps in typescript.",
+    ]}
+    label={<></>}
+/>
+
+## Introduction
+
+Why do we need Perfect Timer?
+
+There is one answer -> `setTimeout(() => {...}, 1000)` can be activated after 1002ms or 1008ms on another computer instead of 1000ms ;)
+
+That's why we need to check whether 1sec is completed or not by iterating few times and proper checking e.g. 4 times a sec.
+
+## Timer code
+
+I have used this code to ensure better time management for PsyApp(there were tests when players needed to press appropriate keys in realtime and exact 10min -> reason why I needed to check time).
+
+### `startTimer` function
+
+```typescript copy filename="lib/timer.ts"
+interface TimerObj {
+    resume(): void;
+    pause(): void;
+    step(): number;
+}
+
+const startTimer = (seconds: number, container?: string, oncomplete?: any, timerNumbers?: any): TimerObj  => {
+    let startTime: number;
+    let timer: any;
+    let ms = seconds * 1000;
+    const display = container ? document.getElementById(container) : null; // if we pass container = 'your_element_id' it will allow us to print: '0:02' there
+
+    const timerObj: TimerObj = {
+        resume() {
+            startTime = new Date().getTime();
+            timer = setInterval(this.step, 250); // adjust this number to affect granularity
+            // lower numbers are more accurate, but more CPU-expensive
+        },
+        pause() {
+            ms = this.step();
+            clearInterval(timer);
+        },
+        step() {
+            const now = Math.max(0, ms - (new Date().getTime() - startTime));
+            const m = Math.floor(now / 60000);
+            let s = Math.floor(now / 1000) % 60 as number | string;
+            s = ((s as number) < 10 ? '0' : '') + s;
+
+            // log what's actual, like: [LOG]: 0:02
+            console.log('[LOG]: ' +  m + ':' + s);
+    
+            if (display) {
+                display.innerHTML = m + ':' + s;
+            }
+    
+            if (now === 0) {
+                clearInterval(timer);
+                this.resume = () => { };
+                if (timerNumbers) { clearInterval(timerNumbers); }
+                if (oncomplete) { oncomplete(); }
+            }
+            return now;
+        }
+    };
+
+    timerObj.resume(); // initial run
+    return timerObj;
+};
+```
+
+### Usage
+
+```typescript copy filename="lib/timer.ts"
+// simplest usage
+const t1 = startTimer(3);
+
+// when we want to listen when counting has ended;
+const htmlTimerTextDisplayContainer = undefined; // we don't want to show any 0:01, etc.
+const t2 = startTimer(3, htmlTimerTextDisplayContainer, () => console.log('on:completed'));
+
+// when we want to show '0:02' on the screen within HTML code
+const t3 = startTimer(3, 'your_element_id'); // element will be updated with appropriate time like 0:02, 0:01, 0:00
+const t4 = startTimer(3, 'your_element_id', () => // on completed here...); // hide clock once completed
+```
+
+### Output
+
+```bash copy
+[LOG]: "0:02" 
+[LOG]: "0:02" 
+[LOG]: "0:02" 
+[LOG]: "0:01" 
+[LOG]: "0:01" 
+[LOG]: "0:01" 
+[LOG]: "0:01" 
+[LOG]: "0:00" 
+[LOG]: "0:00" 
+[LOG]: "0:00" 
+[LOG]: "0:00" 
+[LOG]: "0:00" 
+[LOG]: "on:completed"
+```
+
+## Conclusion
+
+This way we can properly manage time in Javascript.
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

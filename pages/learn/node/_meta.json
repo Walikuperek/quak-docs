@@ -14,5 +14,13 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "dockerize-express-and-mongo": {
+    "title": "ExpressJS & MongoDB with Docker",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }
