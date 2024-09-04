@@ -1,0 +1,331 @@
+import { FileTree, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { NodeTag } from "../../../components/tags/node";
+
+<section className="w-full rounded-2xl bg-green-900 bg-opacity-10 border-2 border-green-500 mt-2">
+    <article className="flex flex-col align-between h-full relative">
+        <div className="absolute top-0 left-0 p-2">
+            <NodeTag/>
+        </div>
+        <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div
+                className="flex rounded flex-col justify-start items-center bg-yellow-200 h-40 w-40 p-1 mt-20 text-black font-bold">
+                <b className="text-2xl border-b-4 border-yellow-900 text-yellow-700">Scrape data</b>
+                <code>
+                &lt;ul&gt;
+                &nbsp;&nbsp;&lt;li&gt;Data1&lt;/li&gt;
+                &nbsp;&nbsp;&lt;li&gt;Data2&lt;/li&gt;
+                &lt;/ul&gt;
+                </code>
+            </div>
+        </section>
+        <header className="flex flex-col px-4 pb-4 pt-4">
+            <div className="flex flex-col lg:flex-row justify-between items-center mb-3 border-b-2 border-b-green-300">
+                <h1 className="text-2xl font-bold">Scrape Pharmacies list</h1>
+                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 17-08-2024</p>
+            </div>
+            <p className="mt-2 text-lg">How to scrape list of Pharmacies from browser and save to CSV file with Node, Puppeteer and Cheerio.</p>
+        </header>
+    </article>
+</section>
+
+## Introduction
+
+In this article we will learn how to generate CSV file with pharmacies list data - it comes from polish pharmacies search website.
+
+<div className="flex flex-col items-center justify-center my-2">
+    <em>Polish Pharmacies search website</em>
+    <img src="/assets/read/pharmacies_list.png" className="rounded-2xl" alt="Polish Pharmacies Search Website" />
+</div>
+
+Example file output with list of scraped Polish Pharmacies:
+
+```CSV copy filename="pharmacies.csv"
+ID Apteki,Nazwa,Adres,Status,Rodzaj Apteki,Właściciel
+1081555,CEF@RM 36,6,Aleja Jana Pawła II 66  00-170 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,Przedsiębiorstwo Zaopatrzenia Farmaceutycznego CEFARM-WARSZAWA S.A.
+1115567,Apteka,Fryderyka Chopina 9A  05-085 Kampinos,aktywna,APTEKA OGÓLNODOSTĘPNA,GREFKOWICZ-DUDEK MARTA
+1083992,CEF@RM 36,6,Ostrzycka 2/4  04-035 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1084102,CEF@RM 36,6,Plac gen. Józefa Hallera 9  03-464 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1231902,Apteka "Przedwiośnie",Płochocińska 199A / C4-U  03-044 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,MARIA KIECZKA APTEKA
+1085339,CEF@RM 36,6,Widok 19  00-326 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1089506,CEF@RM 36,6,Adama Mickiewicza 18  05-220 Zielonka,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1059113,Apteka Cef@rm 36,6,Stolarzowicka 106  41-908 Bytom,aktywna,APTEKA OGÓLNODOSTĘPNA,Firma Zdrowie Spółka z ograniczoną odpowiedzialnością
+1185270,APTEKA SŁONECZNA,Aleja Henryka 21  32-500 Chrzanów,aktywna,APTEKA OGÓLNODOSTĘPNA,GRZEGORZ KWIECIEŃ FIRMA HANDLOWA
+1117560,APTEKA PIGUŁKA,Słoneczna 8 / 2  08-330 Kosów Lacki,aktywna,APTEKA OGÓLNODOSTĘPNA,PIGUŁKA WASZCZAK KUKLA SPÓŁKA JAWNA
+```
+
+## Prerequisites
+
+- A `node.js` installed on your computer.
+- MacOS is used in this article, but you can use any OS
+
+## Code
+
+Below code shows how to simply:
+- open a browser and get HTML content with `Puppeteer`
+- get pharmacies list content with `Cheerio` as a content text
+- extract pharmacies data from raw content text entries
+- save list of pharmacies to CSV
+
+> Remember that if you want to run it you may need to change a bit selectors, you can check them by visiting website and using `DevTools` inside `Chrome/Safari/Mozilla/etc`.
+
+### Create project
+
+You can use below commands to create folder and files:
+
+```bash copy filename="Terminal"
+mkdir new-scrape-project
+cd new-scrape-project
+
+# init package.json
+npm init -y
+
+# install deps
+npm i cheerio && npm i puppeteer
+
+touch index.js
+```
+
+### Script
+
+#### Imports
+
+Import required dependencies:
+
+```javascript copy filename="index.js"
+const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+```
+
+#### Delay and CSV save helper
+
+Create helper to `await wait(2000)`:
+
+```javascript copy filename="index.js"
+/** @param {number} time - milliseconds */
+const wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
+```
+
+Create helper to `await saveToCSV(dataList, 'file.csv', headers)`:
+
+```javascript copy filename="index.js"
+/**
+ * @param {string[][]} data
+ * @param {string} filePath
+ * @param {string[]} headers
+ */
+async function saveToCSV(data, filePath, headers) {
+    const csvContent = [
+        headers.join(','),
+        ...data.map(row => row.join(','))
+    ].join('\n');
+
+    try {
+        await fs.writeFile(filePath, csvContent, {}, () => {});
+    } catch (error) {
+        console.error('saveToCSV error:', error);
+    }
+}
+```
+
+#### Page Object Model
+
+This simple POM(Page Object Model) defines our List Search page.
+
+It allows us to manage page internals in one place, and makes operating with pages a lot easier.
+
+Simply with POM you can then:
+
+```javascript copy
+let [page] = await browser.pages(); // from puppeteer
+page = new PharmacyRegistrySearchPage(page);
+await page.open();
+await page.acceptCookies();
+await page.closeNewsletter();
+```
+
+Our final Pharmacies List Page class:
+
+```javascript copy filename="index.js"
+class PharmacyRegistrySearchPage {
+    constructor(page) {
+        this.page = page;
+        this.url = 'https://rejestry.ezdrowie.gov.pl/ra/search/public';
+        // you will probably need to adjust selectors for your needs
+        this.acceptCookiesSelector = 'button.cm-btn.cm-btn-success';
+        this.closeNewsletterSelector = 'button.cez-reset-button.ng-tns-c1129006240-0';
+        this.resultsPerPageSelector = 'span.cez-dropdown-label.cez-inputtext.cez-placeholder.ng-star-inserted';
+        this.resultsPerPage100Selector = 'li[role="option"][aria-label="100"]';
+    }
+
+    async open() {
+        await this.page.goto(this.url, { waitUntil: 'networkidle2' });
+    }
+
+    async acceptCookies() {
+        await this.page.waitForSelector(this.acceptCookiesSelector, { visible: true, timeout: 60000 })
+        const btn = await this.page.$(this.acceptCookiesSelector)
+        if (btn) {
+            await btn.click();
+            await wait(2000);
+        }
+    }
+
+    async closeNewsletter() {
+        await this.page.waitForSelector(this.closeNewsletterSelector, { visible: true, timeout: 60000 })
+        const btn = await this.page.$(this.closeNewsletterSelector)
+        if (btn) {
+            await btn.click();
+            await wait(2000);
+        }
+    }
+
+    async content() {
+        return this.page.content();
+    }
+}
+```
+
+#### Extract list data
+
+> We will use `Cheerio.js` to give it HTML and let it parse it -> it allows us to simple list nodes HTML extraction.
+
+We want to get every list of element contents as a text, we will extract it later with simple JS.
+
+Below we can see the final text for 1 row from a list:
+
+```text copy
+CEF@RM 36,6, id apteki: 1081555ID Apteki1081555NazwaCEF@RM 36,6Adres aptekiAleja Jana Pawła II 66  00-170 WarszawaStatus aktywna Rodzaj aptekiAPTEKA OGÓLNODOSTĘPNAWłaścicielPrzedsiębiorstwo Zaopatrzenia Farmaceutycznego CEFARM-WARSZAWA S.A.szczegóły o aptece: CEF@RM 36,6, identyfikator 1081555Więcej o: CEF@RM 36,6 - 1081555
+```
+
+Class that extracts text contents from list elements:
+
+```javascript copy filename="index.js"
+class HTMLListExtractor {
+    constructor(html, listSelector = null) {
+        this.html = html;
+        this.listSelector = listSelector ?? '#cez-list-0 > div > div.cez-datatable-wrapper > div > cez-scrollbar > div.content > div > cez-list-body';
+    }
+
+    toChildrenContentTextArray() {
+        const $ = cheerio.load(this.html);
+        const listElements = [];
+        $(this.listSelector).children().each((index, element) => {
+            listElements.push($(element).text());
+        });
+        return listElements;
+    }
+}
+```
+
+#### Split raw text to variables
+
+We have extracted list to array of element contents, we need to `split` text before and after variable.
+
+Once we have removed text before and after variable, we got it.
+
+> Like if we have
+> ```text copy
+> ID apteki: 1081555ID Apteki1081555NazwaCEF@RM 36,<rest of the blablabla...>
+> ```
+>
+> To get ID simply remove *ID apteki: * with `text = text.split('ID Apteki')[1] // 1081555NazwaCE...`
+> and then remove text after ID with `id = text.split('Nazwa')[0] // 1081555`
+
+```javascript copy filename="index.js"
+class PharmacyRowTemplateSplitter {
+    static headers = ['ID Apteki', 'Nazwa', 'Adres', 'Status', 'Rodzaj Apteki', 'Właściciel'];
+
+    /**
+     * @param {string} text - list row content text
+     * @returns {string[]}
+     */
+    static split(text) {
+        const id = text.split('ID Apteki')[1].split('Nazwa')[0].trim();
+        const name = text.split('Nazwa')[1].split('Adres apteki')[0].trim();
+        const address = text.split('Adres apteki')[1].split('Status')[0].trim();
+        const status = text.split('Status')[1].split('Rodzaj apteki')[0].trim();
+        const type = text.split('Rodzaj apteki')[1].split('Właściciel')[0].trim();
+        const owner = text.split('Właściciel')[1].split('szczegóły o aptece')[0].trim();
+
+        return [id, name, address, status, type, owner];
+    }
+}
+```
+
+#### Run script
+
+We will deal with asynchronous operations, so we need to wrap our main procedure into an anonymous async function or simple async main. 
+
+```javascript copy filename="index.js"
+async function main() {
+    // basic setup of your browser client
+    const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+        args: [
+            '--start-maximized',
+            '--disable-infobars',
+            '--no-sandbox',
+            '--disable-dev-shm-usage'
+        ]
+    });
+    
+    // visit page with list of items
+    let [page] = await browser.pages();
+    page = new PharmacyRegistrySearchPage(page);
+    await page.open();
+    await page.acceptCookies();
+    await page.closeNewsletter();
+    const html = await page.content();
+    
+    // extract items data from HTML
+    const listChildrenContentTexts = new HTMLListExtractor(html).toChildrenContentTextArray();
+    const extractedCSVData =
+        listChildrenContentTexts.map(text => PharmacyRowTemplateSplitter.split(text));
+    
+    // save results to file
+    await saveToCSV(extractedCSVData, 'pharmacies.csv', PharmacyRowTemplateSplitter.headers);
+    
+    // cleanup
+    await browser.close();
+}
+
+// run script
+main();
+```
+
+To run you need to simply use node runtime:
+
+```bash copy
+node index.js
+```
+
+Check output inside of the file `pharmacies.csv`:
+
+```CSV copy filename="pharmacies.csv"
+ID Apteki,Nazwa,Adres,Status,Rodzaj Apteki,Właściciel
+1081555,CEF@RM 36,6,Aleja Jana Pawła II 66  00-170 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,Przedsiębiorstwo Zaopatrzenia Farmaceutycznego CEFARM-WARSZAWA S.A.
+1115567,Apteka,Fryderyka Chopina 9A  05-085 Kampinos,aktywna,APTEKA OGÓLNODOSTĘPNA,GREFKOWICZ-DUDEK MARTA
+1083992,CEF@RM 36,6,Ostrzycka 2/4  04-035 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1084102,CEF@RM 36,6,Plac gen. Józefa Hallera 9  03-464 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1231902,Apteka "Przedwiośnie",Płochocińska 199A / C4-U  03-044 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,MARIA KIECZKA APTEKA
+1085339,CEF@RM 36,6,Widok 19  00-326 Warszawa,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1089506,CEF@RM 36,6,Adama Mickiewicza 18  05-220 Zielonka,aktywna,APTEKA OGÓLNODOSTĘPNA,PZF CEFARM-WARSZAWA S.A.
+1059113,Apteka Cef@rm 36,6,Stolarzowicka 106  41-908 Bytom,aktywna,APTEKA OGÓLNODOSTĘPNA,Firma Zdrowie Spółka z ograniczoną odpowiedzialnością
+1185270,APTEKA SŁONECZNA,Aleja Henryka 21  32-500 Chrzanów,aktywna,APTEKA OGÓLNODOSTĘPNA,GRZEGORZ KWIECIEŃ FIRMA HANDLOWA
+1117560,APTEKA PIGUŁKA,Słoneczna 8 / 2  08-330 Kosów Lacki,aktywna,APTEKA OGÓLNODOSTĘPNA,PIGUŁKA WASZCZAK KUKLA SPÓŁKA JAWNA
+```
+
+## Conclusion
+
+In this article we have learned how to scrape list of data from a website with Puppeteer, parse HTML with Cheerio and save to CSV file with simple fs node module.
+
+## Next
+
+In case you are searching how to scrape any data on any website from screenshot with AI help [go to my article](/learn/ai/scrap-youtube/).
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

@@ -27,10 +27,12 @@ import {HeroLearnCard} from "../../../components/ui/generics/hero-learn-card";
     createdAt="10-08-2024"
     title="Perfect Timer for the Web"
     descriptionTextLines={[
-        "Learn how to create perfect 1s, 10min, etc. timer for your apps in typescript.",
+        "Learn how to create perfect 10min, etc. timer for your apps in typescript.",
     ]}
     label={<></>}
 />
+
+<em className="text-gray-500">Last edit: 18-08-2024, Kacper Walczak</em>
 
 ## Introduction
 
@@ -47,23 +49,25 @@ I have used this code to ensure better time management for PsyApp(there were tes
 ### `startTimer` function
 
 ```typescript copy filename="lib/timer.ts"
+type IntervalID = number;
+
 interface TimerObj {
     resume(): void;
     pause(): void;
     step(): number;
 }
-
-const startTimer = (seconds: number, container?: string, oncomplete?: any, timerNumbers?: any): TimerObj  => {
+ 
+const startTimer = (seconds: number, oncomplete?: () => void, container?: string): TimerObj  => {
     let startTime: number;
-    let timer: any;
+    let timer: IntervalID;
     let ms = seconds * 1000;
     const display = container ? document.getElementById(container) : null; // if we pass container = 'your_element_id' it will allow us to print: '0:02' there
-
+ 
     const timerObj: TimerObj = {
         resume() {
             startTime = new Date().getTime();
-            timer = setInterval(this.step, 250); // adjust this number to affect granularity
             // lower numbers are more accurate, but more CPU-expensive
+            timer = setInterval(this.step, 250); // adjust this number to affect granularity
         },
         pause() {
             ms = this.step();
@@ -71,27 +75,23 @@ const startTimer = (seconds: number, container?: string, oncomplete?: any, timer
         },
         step() {
             const now = Math.max(0, ms - (new Date().getTime() - startTime));
-            const m = Math.floor(now / 60000);
-            let s = Math.floor(now / 1000) % 60 as number | string;
-            s = ((s as number) < 10 ? '0' : '') + s;
-
-            // log what's actual, like: [LOG]: 0:02
-            console.log('[LOG]: ' +  m + ':' + s);
     
             if (display) {
+                const m = Math.floor(now / 60000);
+                let s = Math.floor(now / 1000) % 60 as number | string;
+                s = ((s as number) < 10 ? '0' : '') + s;
                 display.innerHTML = m + ':' + s;
             }
     
             if (now === 0) {
                 clearInterval(timer);
                 this.resume = () => { };
-                if (timerNumbers) { clearInterval(timerNumbers); }
                 if (oncomplete) { oncomplete(); }
             }
             return now;
         }
     };
-
+ 
     timerObj.resume(); // initial run
     return timerObj;
 };
@@ -100,34 +100,38 @@ const startTimer = (seconds: number, container?: string, oncomplete?: any, timer
 ### Usage
 
 ```typescript copy filename="lib/timer.ts"
-// simplest usage
-const t1 = startTimer(3);
+// when we want to listen when counting has ended
+const tenSeconds = 10;
+const timer = startTimer(tenSeconds, () => console.log('on:completed'));
 
-// when we want to listen when counting has ended;
-const htmlTimerTextDisplayContainer = undefined; // we don't want to show any 0:01, etc.
-const t2 = startTimer(3, htmlTimerTextDisplayContainer, () => console.log('on:completed'));
+// when we want to provide HTML element to paste in timer like '0:10'
+const tenMinutes = 60 * 10;
+const timerShownOnScreen = startTimer(tenMinutes, () => console.log('on:completed'), 'tag_element_id_here');
 
-// when we want to show '0:02' on the screen within HTML code
-const t3 = startTimer(3, 'your_element_id'); // element will be updated with appropriate time like 0:02, 0:01, 0:00
-const t4 = startTimer(3, 'your_element_id', () => // on completed here...); // hide clock once completed
+// you can even pause on specific scenarios, here simple delay just for showcase
+setTimeout(() => timerShownOnScreen.pause(), 2000);
+
+// after resuming we will start from place where you have paused
+setTimeout(() => timerShownOnScreen.resume(), 4000);
 ```
 
 ### Output
 
-```bash copy
-[LOG]: "0:02" 
-[LOG]: "0:02" 
-[LOG]: "0:02" 
-[LOG]: "0:01" 
-[LOG]: "0:01" 
-[LOG]: "0:01" 
-[LOG]: "0:01" 
-[LOG]: "0:00" 
-[LOG]: "0:00" 
-[LOG]: "0:00" 
-[LOG]: "0:00" 
-[LOG]: "0:00" 
-[LOG]: "on:completed"
+```bash copy /step()/
+# example output with console.log inside step() function...
+0:02
+0:02
+0:02
+0:01
+0:01
+0:01
+0:01
+0:00
+0:00
+0:00
+0:00
+0:00
+on:completed
 ```
 
 ## Conclusion

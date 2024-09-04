@@ -22,5 +22,13 @@
       "layout": "default",
       "sidebar": false
     }
+  },
+  "scrap-polish-pharmacies-from-pharma-search-page": {
+    "title": "Scrape Pharmacies in Poland from pharma search page",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "sidebar": false
+    }
   }
 }

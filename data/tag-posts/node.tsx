@@ -61,6 +61,29 @@ export const NodePosts = [
         title: "ExpressJS & MongoDB with Docker",
         description: "How to contenerize ExpressJS and MongoDB app.",
         descriptionTextLines: ["How to contenerize ExpressJS and MongoDB app."]
+    },
+    {
+        color: "node",
+        category: "backend",
+        link: "/learn/node/scrap-polish-pharmacies-from-pharma-search-page",
+        tag: <NodeTag disabled={true} />,
+        image: <section className="shadow-lg flex align-center justify-center gap-3 h-full overflow-hidden">
+            <div
+                className="flex rounded flex-col justify-start items-center bg-yellow-200 h-40 w-40 p-1 mt-20 text-black font-bold">
+                <b className="text-2xl border-b-4 border-yellow-900 text-yellow-700">Scrape data</b>
+                <code>
+                &lt;ul&gt;
+                &nbsp;&nbsp;&lt;li&gt;Data1&lt;/li&gt;
+                &nbsp;&nbsp;&lt;li&gt;Data2&lt;/li&gt;
+                &lt;/ul&gt;
+                </code>
+            </div>
+        </section>,
+        author: "Kacper Walczak",
+        createdAt: "17-08-2024",
+        title: "Scrape Pharmacies list",
+        description: "How to scrape list of Pharmacies from browser and save to CSV file with Node, Puppeteer and Cheerio.",
+        descriptionTextLines: ["How to scrape list of Pharmacies from browser and save to CSV file with Node, Puppeteer and Cheerio."]
     }
 ];
 newestUpSorter(NodePosts);

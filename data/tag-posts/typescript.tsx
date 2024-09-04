@@ -77,9 +77,9 @@ export const TypescriptPosts = [
         createdAt: "10-08-2024",
         title: <>Perfect Timer for the Web</>,
         descriptionTextLines: [
-            "Learn how to create perfect 1s, 10min, etc. timer for your apps in typescript.",
+            "Learn how to create perfect 10min, etc. timer for your apps in typescript.",
         ],
-        description: "Learn how to create perfect 1s, 10min, etc. timer for your apps in typescript.",
+        description: "Learn how to create perfect 10min, etc. timer for your apps in typescript.",
         label: <></>
     },
 ];
