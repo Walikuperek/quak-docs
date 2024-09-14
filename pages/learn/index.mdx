@@ -14,8 +14,9 @@ import {NodeTag} from "../../components/tags/node";
 import {PythonTag} from "../../components/tags/python";
 import {ReactTag} from "../../components/tags/react";
 import {HeroLearnCard} from "../../components/ui/generics/hero-learn-card";
-import {AllPosts, latestReading} from "../../data/posts";
+import {AllPosts, latestReading, pinnedPosts} from "../../data/posts";
 import {PostsList} from "../../components/lists/posts-list";
+import {PinnedPosts} from "../../components/ui/sections/pinned-posts";
 import {Bleed} from "nextra-theme-docs";
 
 # Learn
@@ -48,6 +49,8 @@ import {Bleed} from "nextra-theme-docs";
         label={<>Latest post</>}
     />
 </div>
+
+<PinnedPosts  posts={pinnedPosts} />
 
 <article className="bg-neutral-500 bg-opacity-10 mt-10 mb-10 p-2 pb-5 rounded-3xl">
     <h3 className="text-lg mb-2 text-gray-500 font-bold">TAGS</h3>

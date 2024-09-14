@@ -2,6 +2,7 @@
 title: Home
 ---
 
+import {pinnedPosts} from "../data/posts";
 import VantaHero from "components/ui/sections/vanta-hero";
 import HeroHero from "components/ui/sections/hero-hero";
 import {HeaderText} from "../components/ui/generics/header-text";
@@ -10,11 +11,16 @@ import {MainCategoriesBtns} from "../components/ui/buttons/main-categories";
 import {QuakV1Hero} from "../components/ui/sections/quak-v1-hero";
 import {Spacer} from "../components/ui/generics/spacer";
 import {LatestReadingsHome} from "../components/ui/sections/latest-readings-home";
+import {PinnedPosts} from "../components/ui/sections/pinned-posts";
 import {QuakColored} from "../components/ui/quak-colored";
 import {HeroLearnCard} from "../components/ui/generics/hero-learn-card";
 
 [//]: # (<VantaHero />)
 <HeroHero />
+
+<PinnedPosts posts={pinnedPosts} fullWidth={true} />
+
+<Spacer />
 
 <LatestReadingsHome />
 

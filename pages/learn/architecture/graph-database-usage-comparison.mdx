@@ -1,0 +1,270 @@
+import { Callout, Cards, Card, FileTree, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# Graph DB usage comparison
+
+<section className="w-full rounded-2xl bg-indigo-900 bg-opacity-10 border-2 border-indigo-500">
+  <article className="flex flex-col align-between h-full relative">
+    <div className="absolute top-0 left-0 p-2">
+      <ArchitectureTag />
+    </div>
+    <section className="content flex items-center justify-center gap-3 h-full overflow-hidden">
+        <div className="flex items-center h-40 gap-3">
+            <div className="w-20 h-20 bg-blue-400 border-3 border-blue-900 rounded-full flex items-center justify-center">Neo4j</div>
+            <span className="text-rose-500 font-bold font-2xl">VS</span>
+            <div className="w-20 h-20 bg-orange-400 border-3 border-orange-900 text-black rounded-full flex items-center justify-center">TigerGraph</div>
+        </div>
+    </section>
+    <header className="px-4 pb-4 pt-4">
+      <p className="text-right mt-2 text-lg text-gray-500">Kacper Walczak &middot; 05-09-2024</p>
+      <p className="mt-2 text-lg">Compare Neo4j and Tigergraph databases, which is easier to work with, etc.</p>
+    </header>
+  </article>
+</section>
+
+## Introduction
+
+We will take a look what is like to use Neo4j and TigerGraph solutions.
+
+I need to say this here at the beginning, I've used both of them, I prefer Neo4j with Cypher lang to query, it's way easier to learn and use in most cases.
+
+> If you don't worry about speed that much (still... neo4j is relevant even it's slower a bit) go for **Neo4j**, if speed matters choose **TigerGraph** and voilà.
+
+## Speed Comaprison
+In a nutshell: **TG** > **Neo**
+
+**Neo4j** is written in Java which runs on JVM (Java Virtual Machine), it results in ~~ 1x - 20x slower than TigerGraph (TG even says it could go 1_000%-20_000% faster than Neo in some cases).
+
+**TigerGraph** on the other hand is written in C++ (Core).
+
+Info from TG member about internals.
+> Our core system was developed from scratch using C++ and system programming concepts to provide an integrated data technology stack. A native graph storage engine (GSE) was developed to co-locate with the graph processing engine (GPE) for fast and efficient processing of data and algorithms.The GPE is designed to provide built-in parallelism for a MapReduce-based computing model available via APIs. The DB graph is optimally stored both on disk and in-memory, allowing the system to take advantage of the data locality on disk, in-memory and CPU cache.
+
+## Query languages
+
+> **Neo4j** uses `Cipher` which is incredibly easy to understand and learn because of their [documentation](https://neo4j.com/docs/getting-started/appendix/tutorials/guide-cypher-basics/).
+
+### Neo4j (Cypher)
+
+1. **Add User:**
+
+```cypher
+CREATE (u:User {id: 'user_id', name: 'user_name'});
+```
+
+2. **Add relation `HaveBeenNear` between users:**
+
+```cypher
+MATCH (u1:User {id: 'user1_id'}), (u2:User {id: 'user2_id'})
+CREATE (u1)-[:HaveBeenNear]->(u2);
+```
+
+3. **Add relation `IsFriend` between users:**
+
+```cypher
+MATCH (u1:User {id: 'user1_id'}), (u2:User {id: 'user2_id'})
+CREATE (u1)-[:IsFriend]->(u2);
+```
+
+4. **Delete User with relations:**
+
+```cypher
+MATCH (u:User {id: 'user_id'})
+DETACH DELETE u;
+```
+
+5. **Delete ralation `HaveBeenNear` or `IsFriend` between users:**
+
+```cypher
+MATCH (u1:User {id: 'user1_id'})-[r:HaveBeenNear|IsFriend]->(u2:User {id: 'user2_id'})
+DELETE r;
+```
+
+6. **DFS example to fetch all parent/children nodes, etc**
+
+```cypher
+MATCH (u:User {id: 'user1_id'})
+CALL apoc.path.spanningTree(u, {
+	relationshipFilter: "IsFriend",
+    minLevel: 1,
+    maxLevel: 2
+})
+YIELD path
+RETURN path;
+```
+
+### TigerGraph (GSQL)
+
+1. **Add User:**
+
+```gsql
+INSERT INTO User (primary_id, name) VALUES ("user_id", "user_name");
+```
+
+2. **Add relation `HaveBeenNear` between users:**
+
+```gsql
+INSERT INTO HaveBeenNear (FROM, TO) VALUES ("user1_id", "user2_id");
+```
+
+3. **Add relation `IsFriend` between users:**
+
+```gsql
+INSERT INTO IsFriend (FROM, TO) VALUES ("user1_id", "user2_id");
+```
+
+4. **Delete User and relations:**
+
+To remove user and user relations in TigerGraph, you need to remove all connection by hand, and then remove Vertex Edge:
+
+```gsql
+DELETE EDGE HaveBeenNear FROM "user_id" TO *;
+DELETE EDGE IsFriend FROM "user_id" TO *;
+DELETE VERTEX User WHERE primary_id = "user_id";
+```
+
+5. **Delete ralation `HaveBeenNear` or `IsFriend` between users:**
+
+```gsql
+DELETE EDGE HaveBeenNear FROM "user1_id" TO "user2_id";
+DELETE EDGE IsFriend FROM "user1_id" TO "user2_id";
+```
+
+6. **BFS example to fetch all parent/children nodes, etc**
+
+> Queries can be later used as your endpoints 😊.
+
+```gsql
+CREATE QUERY tg_bfs(SET<STRING> v_type_set, SET<STRING> e_type_set,INT max_hops=10, VERTEX v_start,
+BOOL print_results = True, STRING result_attribute = "",STRING file_path = "", BOOL display_edges = TRUE) SYNTAX V1 { 
+
+    /*
+    TigerGraph Documentation:
+        https://docs.tigergraph.com/graph-ml/current/pathfinding-algorithms/bfs
+
+    Parameters:
+        v_type_set:
+            vertex types to traverse
+        v_start:
+            source vertex for traverse
+        e_type_set:
+            edge types to traverse
+        print_results:
+            If True, print JSON output
+        max_hops:
+            look only this far from each vertex
+        result_attribute:
+            INT attribute to store results to
+        file_path:
+            file to write CSV output to
+        display_edges:
+            If True, output edges for visualization
+    */
+
+    SumAccum<INT> @@sum_cur_step;  # current step
+    SumAccum<INT> @sum_step;  # step from source
+    OrAccum @or_visited;
+    SetAccum<EDGE> @@edge_set;
+    FILE f (file_path);
+    Start = {v_start};
+
+    # initialize the step
+    @@sum_cur_step = 0;
+
+    # start from the source node
+    Start = SELECT s 
+            FROM Start:s
+            POST-ACCUM s.@or_visited += TRUE;
+
+    # breadth-first search from source
+    WHILE Start.size() > 0 LIMIT max_hops DO
+        @@sum_cur_step += 1;
+        Start = SELECT t 
+                FROM Start:s-(e_type_set:e)- :t
+                WHERE t.@or_visited == FALSE
+                ACCUM 
+                    IF display_edges THEN 
+                        @@edge_set += e 
+                    END
+                POST-ACCUM 
+                    t.@or_visited += TRUE,
+                    t.@sum_step = @@sum_cur_step;
+    END;
+    
+    Start = {v_type_set};
+    Start = SELECT s 
+            FROM Start:s
+            WHERE s.@or_visited == TRUE
+            POST-ACCUM 
+                IF result_attribute != "" THEN 
+                    s.setAttr(result_attribute, s.@sum_step) 
+                END,
+                IF file_path != "" THEN 
+                    f.println(s, s.@sum_step) 
+                END; 
+    # output
+    IF print_results THEN
+        PRINT Start[Start.@sum_step];
+        IF display_edges THEN
+            PRINT @@edge_set;
+        END;
+    END;
+}
+```
+
+## Deployment/Hosting
+
+With **Neo4j** and **TigerGraph** on Google Cloud Platform you can create fully managed by them Cloud solutions, you can deploy them to Kubernetes or simple VM:
+
+- Managed Services (AuraDB or TigerGraph Cloud): Best for quick deployment and minimal management effort.
+- Kubernetes (GKE): Best for users who want a balance between control and scalability.
+- Compute Engine (VMs): Best for full control over the environment but requires manual management.
+
+## Pricing
+
+### Comparison Table
+
+| **Deployment Option**             | **Neo4j AuraDB**                                      | **TigerGraph Cloud**                                  | **Kubernetes (GKE)**                                 | **Compute Engine (VMs)**                           |
+|-----------------------------------|-------------------------------------------------------|-------------------------------------------------------|------------------------------------------------------|----------------------------------------------------|
+| **Managed Services**              |                                                       |                                                       |                                                      |                                                    |
+| **Entry-Level Cost**              | Starts at $65/month for AuraDB Free Plan              | Starts at $0.50/hour (~$360/month) for 4vCPU, 16GB RAM| N/A                                                  | N/A                                                |
+| **Standard Plan Cost**            | Starts at $450/month for AuraDB Professional (2 CPUs) | $0.75/hour (~$540/month) for 8vCPU, 32GB RAM          | N/A                                                  | N/A                                                |
+| **Additional Costs**              | $7 per GB/month for extra storage                     | $10 per TB/month for storage                          | N/A                                                  | N/A                                                |
+| **Kubernetes (GKE)**              |                                                       |                                                       |                                                      |                                                    |
+| **Node Costs**                    | N/A                                                   | N/A                                                   | $0.0406 per vCPU/hour + $0.0045 per GB RAM/hour      | N/A                                                |
+| **Cluster Management Fee**        | N/A                                                   | N/A                                                   | $0.10 per cluster/hour (first cluster free)          | N/A                                                |
+| **Persistent Disk (Storage)**     | N/A                                                   | N/A                                                   | $0.04 per GB/month                                   | N/A                                                |
+| **Compute Engine (VMs)**          |                                                       |                                                       |                                                      |                                                    |
+| **Standard VM Instance Cost**     | N/A                                                   | N/A                                                   | N/A                                                  | $24.67/month (1vCPU, 3.75GB RAM, e2-micro)         |
+| **High-Memory Instance Cost**     | N/A                                                   | N/A                                                   | N/A                                                  | $108.16/month (2vCPU, 16GB RAM, e2-standard-2)     |
+| **Storage Cost**                  | N/A                                                   | N/A                                                   | N/A                                                  | $0.04 per GB/month                                 |
+
+### Notes
+
+- **Managed Services (AuraDB or TigerGraph Cloud):** Pricing varies significantly by region and plan. Managed services are generally more expensive due to included support, automatic scaling, backups, and updates. Entry-level plans are cheaper but may have limited storage or performance.
+  
+- **Kubernetes (GKE):** GKE clusters charge a management fee ($0.10 per cluster/hour after the first free cluster), in addition to the cost of nodes. Pricing for nodes depends on the machine type and region. Extra costs include persistent disks, networking, and load balancing.
+
+- **Compute Engine (VMs):** VM pricing varies by instance type, region, and usage. For standard VM instances, costs start at about $24.67/month for a minimal e2-micro instance. Storage costs are additional ($0.04 per GB/month), and you also need to account for networking costs (e.g., egress traffic).
+
+### Key Considerations
+
+- **Managed Services** are best suited for those who need a quick, hassle-free deployment with managed backups, updates, and scaling but may be more expensive.
+- **Kubernetes (GKE)** is ideal for those who need flexible scaling and can handle managing Kubernetes infrastructure. It offers better control over costs and configurations.
+- **Compute Engine (VMs)** provides the most control and potentially the lowest cost for simple deployments but requires manual management of the server and database instances.
+
+## Next
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+  </svg>} title="NoSQL service migration" href="/learn/architecture/nosql-migration-of-millions-of-documents/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

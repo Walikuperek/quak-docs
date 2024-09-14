@@ -50,7 +50,7 @@ import { ArchitectureTag } from "../../../components/tags/architecture";
         <header className="flex flex-col px-4 pb-4 pt-4">
             <div className="flex flex-row justify-between items-center mb-3 border-b-2 border-b-indigo-300">
                 <h1 className="text-2xl font-bold">CQRS</h1>
-                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 05-05-2024</p>
+                <p className="mt-2 text-lg text-gray-500">Kacper Walczak &middot; 06-05-2024</p>
             </div>
             <p className="mt-2 text-lg">Lets learn how to use CQRS in your project.</p>
         </header>
@@ -63,30 +63,99 @@ CQRS stands for `Command Query Responsibility Segregation`.
 
 It is a design pattern that separates the read and write operations of a data source.
 
-> This separation allows for the optimization of read and write operations independently.
->
 > Additionally, it allows to use separate Database for reading and writing(what can improve scaling by a lot).
 
-```mermaid
-flowchart TD
-    C(Command)
-    Q(Query)
-    UI(User Interface)
-    B(Business Logic)
-    DB(Database/Anything else)
+<img src="/assets/read/cqrs_ex.png" className="rounded-2xl border-2 border-gray-800 max-h-[350px] mx-auto mt-4" alt="CQRS schema with events and database for writing and reading" />
 
-    UI --> C
-    UI --> Q
-    C -->|Makes an action| B
-    Q -->|Queries data| B
-    B --> DB
-```
+## When to use?
+- Your business logic is going to evolve/change often
+- Your model requires to be read with multiple data projections
+- It is required to optimize reads over writes and vice-versa
 
-<hr />
+## When to avoid?
+- You are building CRUD, don't use there CQRS
+- You are starting new project and you are lacking domain experts
+- You don't want to introduce any reactive patterns(events/commands/queries needs to be handled and emited by some bus)
 
-<Callout emoji="🏗️">
-  This site isn't complete yet. **QUAK** is working on it.
-</Callout>
+## Examples
+
+### COMMAND
+- ApplySalaryIncrease:
+    ```typescript copy
+    class ApplySalaryIncreaseAt extends Command {
+        data: {employeeID: string, increasedSalaryValue: number}
+        validAt: Date
+        timestamp = new Date()
+        version = 1
+
+        constructor(employeeID: string, increasedSalaryValue: number, validAt: Date) {
+            super({employeeID, increasedSalaryValue})
+            this.validAt = validAt
+        }
+    }
+    ```
+    And handler for this command:
+    ```typescript copy
+    @CommandHandler(ApplySalaryIncreaseAt)
+    class ApplySalaryIncreaseAtHandler implements ICommandHandler<ApplySalaryIncreaseAt> {
+        constructor(private repository: SalariesRepository, private politic: SalariesPolitic) {}
+
+        async execute(command: ApplySalaryIncreaseAt): Promise<void> {
+            await this.politic.isValidSalaryIncreaseOrThrow({...command.data, validAt: command.validAt})
+            const accountant = this.repository.getEmployeeAccountant(command.data.employeeID)
+            await accountant.increaseSalaryAt({
+                newValue: command.data.increasedSalaryValue,
+                validSince: command.validAt
+            })
+        }
+    }
+    ```
+### QUERY
+- GetLastEmployeeSalaryIncrease:
+    ```typescript copy
+    class GetLastEmployeeSalaryIncrease extends Query {
+        data: {employeeID: string}
+
+        constructor(employeeID: string) {
+            super({ employeeID })
+        }
+    }
+    ```
+    And handler for this query:
+    ```typescript copy
+    @CommandHandler(GetLastEmployeeSalaryIncrease)
+    class GetLastEmployeeSalaryIncreaseHandler implements IQueryHandler<GetLastEmployeeSalaryIncrease> {
+        constructor(private repository: SalariesRepository) {}
+
+        async execute(query: GetLastEmployeeSalaryIncrease): Promise<any[]> {
+            return this.repository.getEmployeeLastSalaryIncrease(query.data.employeeID)
+        }
+    }
+    ```
+### EVENT
+- SalaryIncreased:
+    ```typescript copy
+    class SalaryIncreasedEvent {
+        constructor(public readonly employeeID: string) {}
+    }
+    ```
+    Call this event after some logic with:
+    ```typescript copy
+    this.eventBus.publish(new SalaryIncreasedEvent(employeeID));
+    ```
+    And handler for this event:
+    ```typescript copy
+    @EventsHandler(SalaryIncreasedEvent)
+    class SalaryIncreasedEventHandler implements IEventHandler<SalaryIncreasedEvent> {
+        constructor(private repository: SalariesRepository, private email: EmailSender) {}
+
+        async handle(event: SalaryIncreasedEvent): Promise<void> {
+            // do job here, like: 
+            //   const {employee, accountant, changes} = await repository.fetchLastEmployeeChanges(event.employeeID)
+            //   await email.notify(accountant, {employee, changes})
+        }
+    }
+    ```
 
 ## Next
 
@@ -101,11 +170,6 @@ In this article we have learned how to and when utilize CQRS architecture.
     <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
     <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
   </svg>} title="Web Architectures" href="/learn/architecture/web-architectures/" />
-
-  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-  <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
-  <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
-</svg>} title="DRD Frontend" href="/learn/architecture/drd-frontend/" />
 </Cards>
 
 <section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>

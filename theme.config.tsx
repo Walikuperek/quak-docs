@@ -90,17 +90,9 @@ const config: DocsThemeConfig = {
                  className="text-green-500 hover:underline">
                 Quantum Computer Simulator
               </a>
-              <a target="_blank" href="https://github.com/Walikuperek/BabylonJS-Vite_starter"
-                 className="text-green-500 hover:underline">
-                BabylonJS HTML Template
-              </a>
               <a target="_blank" href="https://github.com/Walikuperek/Qtheme"
                  className="text-green-500 hover:underline">
                 Qtheme
-              </a>
-              <a target="_blank" href="https://github.com/Walikuperek/Qstore"
-                 className="text-green-500 hover:underline">
-                Qstore
               </a>
             </div>
           </div>

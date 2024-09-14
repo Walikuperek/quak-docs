@@ -1,0 +1,168 @@
+import { Cards, Card, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# DDD Repositories
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/ddd_repositories.png" />
+
+## Repository
+
+In **Domain-Driven Design (DDD)**, a **Repository** is a design pattern used to abstract the retrieval and persistence of **aggregates** and **entities** from a data source, such as a database, in a way that aligns with the domain model. Repositories act as a mediator between the domain layer and the data layer, providing a collection-like interface for accessing aggregates while hiding the underlying complexity of data access.
+
+Repositories are typically used for **aggregate roots**. In DDD, aggregates encapsulate clusters of entities, and only aggregate roots should be retrieved or persisted directly via repositories.
+
+### Key Characteristics
+1. **Abstraction**: Repositories abstract away the details of data storage, whether it's a relational database, NoSQL store, or any other persistence mechanism. The domain model is decoupled from how and where data is stored.
+   
+2. **Collection-like Interface**: Repositories provide methods to add, remove, and retrieve entities as if working with an in-memory collection of objects.
+
+3. **Aggregate Persistence**: Repositories are typically responsible for loading and saving entire aggregates, ensuring that all related entities are persisted together, maintaining the integrity of the aggregate.
+
+4. **Repository Interface**: In DDD, repositories often expose a standard set of methods such as:
+   - `add()`: To add a new entity.
+   - `getById()`: To retrieve an entity by its ID.
+   - `remove()`: To delete an entity.
+   - Other query methods to retrieve entities based on specific criteria.
+
+### Example
+Let’s extend our e-commerce example to include a repository for the `Order` aggregate.
+
+#### 1. Defining a Repository Interface
+
+We’ll start by defining an `OrderRepository` interface, which provides the operations for retrieving and saving `Order` aggregates.
+
+```typescript
+interface OrderRepository {
+  add(order: Order): Promise<void>;
+  getById(orderId: string): Promise<Order | null>;
+  remove(order: Order): Promise<void>;
+}
+```
+
+This is a typical repository interface:
+- `add()` saves a new `Order` to the persistence layer.
+- `getById()` retrieves an `Order` by its ID.
+- `remove()` deletes an existing `Order`.
+
+#### 2. In-Memory Implementation of the Repository
+
+Let’s implement this repository interface using an in-memory data store. In a real-world application, this could be connected to a database such as PostgreSQL or MongoDB, but for simplicity, we’ll use an in-memory array.
+
+```typescript
+class InMemoryOrderRepository implements OrderRepository {
+  private orders: Map<string, Order> = new Map();
+
+  async add(order: Order): Promise<void> {
+    this.orders.set(order.orderId, order);
+  }
+
+  async getById(orderId: string): Promise<Order | null> {
+    return this.orders.get(orderId) || null;
+  }
+
+  async remove(order: Order): Promise<void> {
+    this.orders.delete(order.orderId);
+  }
+}
+```
+
+Here, we use a `Map` to store orders by their `orderId`. This is a simple in-memory storage mechanism, but the concept would be the same if this were backed by a database.
+
+#### 3. Using the Repository
+
+Let’s see how we might use the repository in our domain logic. We’ll use the `OrderRepository` to add and retrieve `Order` objects.
+
+```typescript
+async function placeNewOrder(orderRepository: OrderRepository, customer: Customer, products: Product[], quantities: number[]) {
+  // Create a new order using the factory (which handles order creation logic)
+  const orderFactory = new OrderFactory();
+  const order = orderFactory.createOrder(customer, products, quantities);
+
+  await orderRepository.add(order);
+
+  console.log(`Order ${order.orderId} has been placed for customer ${customer.customerId}`);
+}
+
+async function getOrderDetails(orderRepository: OrderRepository, orderId: string) {
+  const order = await orderRepository.getById(orderId);
+  
+  if (!order) {
+    console.log(`Order ${orderId} not found.`);
+    return;
+  }
+
+  console.log(`Order ${orderId} found with total amount: $${order.getTotalAmount()}`);
+}
+
+// Example usage:
+const orderRepository = new InMemoryOrderRepository();
+const customer = new Customer('customer123', 'Alice');
+const product1 = new Product('product1', 50, 10);  // Product with 10 units in stock
+const product2 = new Product('product2', 100, 5);  // Product with 5 units in stock
+
+await placeNewOrder(orderRepository, customer, [product1, product2], [2, 1]);
+
+await getOrderDetails(orderRepository, 'order123');
+```
+
+#### 4. Querying the Repository
+
+Repositories typically also provide methods for querying based on business rules. For example, you could add a method to retrieve all orders for a given customer:
+
+```typescript
+interface OrderRepository {
+  add(order: Order): Promise<void>;
+  getById(orderId: string): Promise<Order | null>;
+  remove(order: Order): Promise<void>;
+
+  // New query method
+  getOrdersByCustomerId(customerId: string): Promise<Order[]>;
+}
+
+// In-memory implementation of the new query method
+class InMemoryOrderRepository implements OrderRepository {
+  // ...
+
+  async getOrdersByCustomerId(customerId: string): Promise<Order[]> {
+    return Array.from(this.orders.values()).filter(order => order.customerId === customerId);
+  }
+}
+```
+
+This method, `getOrdersByCustomerId`, allows you to retrieve all orders placed by a specific customer, which could be useful for generating customer reports or order history.
+
+### Benefits of Using Repositories
+
+1. **Separation of Concerns**: The domain layer focuses on business logic, while the repository layer handles persistence. This decoupling makes the domain layer cleaner and easier to test.
+   
+2. **Testability**: By using repositories, you can easily mock or replace the repository in tests, allowing for testing of domain logic without needing access to a database.
+
+3. **Flexibility**: The repository provides an abstraction over data access. If you decide to switch from one database to another (e.g., from MongoDB to PostgreSQL), you can do so without affecting the domain model.
+
+4. **Consistency and Integrity**: Repositories enforce consistency by ensuring that aggregates are loaded, saved, and removed as whole units. This maintains the integrity of the data.
+
+### Conclusion
+
+In **Domain-Driven Design**, **repositories** provide an abstraction for accessing and persisting domain aggregates and entities, separating the domain logic from the details of data storage. They simplify the domain model by abstracting away persistence concerns and offer a collection-like interface for retrieving and manipulating aggregates.
+
+## Next
+
+Visit Services to dive deeper into Domain Driven Design.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="DDD(main menu)" href="/learn/architecture/ddd/" />
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="Services" href="/learn/architecture/ddd-services/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

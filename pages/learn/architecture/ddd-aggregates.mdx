@@ -1,0 +1,180 @@
+import { Callout, Cards, Card } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+
+# Understanding Aggregates in DDD
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/aggregateDDD.png" />
+
+In this article, we'll dive into the concept of aggregates in DDD, using a real-world example: **Product Reservation**. We’ll also look at implemention of this example using TypeScript.
+
+---
+
+## Aggregate
+
+*Haha... simple, graph of relations -- No.*
+
+Aggregates help maintain a consistent state by controlling all modifications to the data within their boundaries. When designing an aggregate, we aim to protect the integrity of the domain model, enforce business rules, and maintain transactional boundaries.
+
+#### Example Scenario: Product Reservation
+
+Let's consider a scenario where we have a **Product Reservation** system. When a customer wants to reserve a product, we need to ensure that:
+
+1. The product is available in stock.
+2. No other reservation can exceed the available quantity.
+3. The reservation rules (or policies) are applied consistently.
+
+#### Defining the Aggregate
+
+To implement this in DDD, we define an aggregate with the following entities:
+
+- **Product**: The aggregate root that manages the stock.
+- **Reservation**: Represents a request to reserve a product.
+
+Additionally, we will define a **ReservationPolicy** that encapsulates the rules for making a reservation.
+
+#### Implementing Aggregates
+
+Let's implement this in TypeScript step-by-step.
+
+##### Step 1: Define the Entities
+
+First, let's define the `Product` and `Reservation` entities.
+
+```typescript
+export class Product {
+  private readonly id: string;
+  private availableQuantity: number;
+  private reservations: Reservation[] = [];
+
+  constructor(id: string, availableQuantity: number) {
+    this.id = id;
+    this.availableQuantity = availableQuantity;
+  }
+
+  public getId(): string {
+    return this.id;
+  }
+
+  public getAvailableQuantity(): number {
+    return this.availableQuantity;
+  }
+
+  public getReservations(): Reservation[] {
+    return this.reservations;
+  }
+
+  public reserve(quantity: number, policy: ReservationPolicy): void {
+    policy.validate(this, quantity);
+
+    const newReservation = new Reservation(this, quantity);
+    this.reservations.push(newReservation);
+    this.availableQuantity -= quantity;
+  }
+}
+
+export class Reservation {
+  private readonly product: Product;
+  private readonly quantity: number;
+  private readonly reservedAt: Date;
+
+  constructor(product: Product, quantity: number) {
+    this.product = product;
+    this.quantity = quantity;
+    this.reservedAt = new Date();
+  }
+
+  public getQuantity(): number {
+    return this.quantity;
+  }
+
+  public getReservedAt(): Date {
+    return this.reservedAt;
+  }
+}
+```
+
+##### Step 2: Define the Reservation Policy
+
+The `ReservationPolicy` class will encapsulate the rules to validate a reservation.
+
+```typescript
+import { Product } from './Product';
+
+export class ReservationPolicy {
+  validate(product: Product, quantity: number): void {
+    if (quantity <= 0) {
+      throw new Error("Reservation quantity must be greater than zero.");
+    }
+
+    if (quantity > product.getAvailableQuantity()) {
+      throw new Error("Not enough stock available for this reservation.");
+    }
+  }
+}
+```
+
+##### Step 3: Example Usage
+
+Let's see how to use these classes to make a reservation.
+
+```typescript
+import { Product } from './Product';
+import { ReservationPolicy } from './ReservationPolicy';
+
+const product = new Product('123', 10);
+const reservationPolicy = new ReservationPolicy();
+
+try {
+  // Attempt to reserve 5 items
+  product.reserve(5, reservationPolicy);
+  console.log(`Reserved 5 items. Remaining stock: ${product.getAvailableQuantity()}`);
+
+  // Attempt to reserve more items than available
+  product.reserve(6, reservationPolicy);
+} catch (error) {
+  console.error(error.message);
+}
+```
+
+**Output:**
+```
+Reserved 5 items. Remaining stock: 5
+Not enough stock available for this reservation.
+```
+
+#### Explanation
+
+- **Product**: This class acts as the aggregate root. It encapsulates the logic for managing reservations and stock quantity.
+- **Reservation**: This entity represents an individual reservation of a product.
+- **ReservationPolicy**: This class contains the business rules required to validate whether a reservation can be made.
+
+By using aggregates, we ensure that all the operations modifying the state of our product are performed consistently, and our domain rules are respected.
+
+#### Why Use Aggregates?
+
+Aggregates provide several benefits in Domain-Driven Design:
+
+1. **Consistency**: Ensures that all operations on the domain model maintain a consistent state.
+2. **Clarity**: By encapsulating related entities and rules within an aggregate, we keep the domain model organized and clear.
+3. **Transactional Boundaries**: Aggregates provide a natural boundary for transactions, ensuring all changes within an aggregate are committed or rolled back together.
+
+### Conclusion
+
+In this article, we've explored the concept of aggregates in Domain-Driven Design using a TypeScript example of a Product Reservation system. Aggregates play a vital role in maintaining the integrity and consistency of the domain model, especially in complex systems where multiple entities interact.
+
+## Next
+
+Visit Factories to learn more.
+
+*Check next:*
+
+<Cards>  
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+  </svg>} title="Factories" href="/learn/architecture/ddd-factories/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

@@ -1,0 +1,59 @@
+import { Cards, Card, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# DDD Modules
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/ddd_modules.png" />
+
+## Module
+
+Domain-Driven Design (DDD) `modules` are used to organize domain elements like entities, value objects, etc. and business logic.
+
+**Modules:**
+- are responsible for communication between teams and any externaly connected companies, it should follow direction of `Ubiquitous Language` creation.
+
+- helps with easier understanding of the domain model. Each module is focused on a specific part of the domain, it allows effective cooperation and easy to understand messaging.
+
+- splits responsibilities, each team can work independently, so system is not going to be toxicated by any suprising line, added by someone because of any shi*.
+  
+Below is an example folder structure for modules such as `payments`, `shipment`, `factory`, and `availability`:
+
+> Module can be a separate App, you can introduce CQRS to split reads, etc. sky is the limit
+```text copy
+/app
+    /availability
+    /factory
+    /payments
+    /shipment
+```
+
+### Examples
+
+- **Payments**: The module responsible for managing payments. It contains entities, services, repositories, and controllers related to payment processing.
+- **Shipment**: The module handling shipments and logistics. It includes business logic, entities, and services related to managing the delivery process.
+- **Factory**: The module representing the management of a factory, production, or a manufacturing facility. It includes entities and services associated with the factory.
+- **Availability**: The module focused on checking the availability of products or resources. It contains logic for checking stock levels and availability.
+
+Each module is separate and independent, which simplifies managing business logic, testing, and extending the system.
+
+## Next
+
+Visit Events to dive deeper into Domain Driven Design.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+  <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+</svg>} title="DDD(main menu)" href="/learn/architecture/ddd/" />
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+  <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+  <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+</svg>} title="Events" href="/learn/architecture/ddd-events/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

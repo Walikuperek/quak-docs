@@ -1,0 +1,127 @@
+import { Callout, Cards, Card, FileTree, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { TSTag } from "../../../components/tags/typescript";
+import { HeroLearnCard } from "../../../components/ui/generics/hero-learn-card";
+
+# MockClock Unit Testing
+
+<HeroLearnCard
+    category="typescript"
+    tag={<TSTag/>}
+    image={<section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <img src="/assets/read/clock.png" className="object-fit rounded-2xl mt-5" />
+    </section>}
+    author="Kacper Walczak"
+    createdAt="20-08-2024"
+    title="MockClock Unit Testing"
+    descriptionTextLines={[
+        "Mock time to check wheter product can be returned in tests within 30 days threshold.",
+    ]}
+    label={<></>}
+/>
+
+## Introduction
+
+**Context**:
+Let's assume, that we have function isReturnEligible, which check, whether given product can be returned/claimed (eg. 30 days since buy). Function bases on current date, to determine, wheter client can return product.
+
+Function to test:
+At the beginning, let's create function `isReturnEligible`:
+
+```typescript copy
+type Order = {
+  purchaseDate: Date;
+};
+
+function isReturnEligible(order: Order, currentDate: Date): boolean {
+  const returnPeriod = 30; // max 30 days to 
+  const purchaseTime = order.purchaseDate.getTime();
+  const currentTime = currentDate.getTime();
+  
+  const diffInDays = (currentTime - purchaseTime) / (1000 * 60 * 60 * 24);
+  
+  return diffInDays <= returnPeriod;
+}
+```
+
+## Unit test that uses MockClock
+
+We will write unit test that utilizes MockClock to simulate time that pass.
+
+We used Jest, to showcase unit test below:
+
+```typescript copy
+class MockClock {
+  private currentTime: Date;
+
+  constructor(initialTime?: Date) {
+    this.currentTime = initialTime ? new Date(initialTime) : new Date();
+  }
+
+  now(): Date {
+    return new Date(this.currentTime);
+  }
+
+  setTime(newTime: Date): void {
+    this.currentTime = new Date(newTime);
+  }
+
+  advanceTimeBy(milliseconds: number): void {
+    this.currentTime = new Date(this.currentTime.getTime() + milliseconds);
+  }
+
+  advanceTimeByDays(days: number): void {
+    this.advanceTimeBy(days * 24 * 60 * 60 * 1000);
+  }
+}
+
+describe('isReturnEligible', () => {
+  let mockClock: MockClock;
+  const purchaseDate = new Date('2024-01-01T00:00:00Z');
+
+  beforeEach(() => {
+    mockClock = new MockClock(purchaseDate);
+  });
+
+  test('Product is qualified to be returned within 30 days threshold', () => {
+    const order: Order = { purchaseDate };
+
+    // Set clock to 15 days after purchase
+    mockClock.advanceTimeByDays(15);
+    expect(isReturnEligible(order, mockClock.now())).toBe(true); // Return is possible
+  });
+
+  test('Product is not qualified to be returned within 30 days threshold', () => {
+    const order: Order = { purchaseDate };
+
+    // Set clock to 31 days after purchase
+    mockClock.advanceTimeByDays(31);
+    expect(isReturnEligible(order, mockClock.now())).toBe(false); // Return is not possible
+  });
+
+  test('Product is qualified to be returned within exactly 30 days threshold', () => {
+    const order: Order = { purchaseDate };
+
+    // Set clock to be specific 30 days after purchase
+    mockClock.advanceTimeByDays(30);
+    expect(isReturnEligible(order, mockClock.now())).toBe(true); // Return is possible
+  });
+});
+```
+
+## Next
+
+In this article we have learned how to and why use MockClock in you Unit tests.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+  </svg>} title="Flask JSON API Unit Testing" href="/learn/python/flask-json-api-unit-testing/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

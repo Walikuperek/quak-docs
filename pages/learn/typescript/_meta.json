@@ -4,6 +4,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
@@ -12,6 +13,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
@@ -20,6 +22,25 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "event-store": {
+    "title": "EventStore for Event Sourcing",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "unit-testing-with-mockclock": {
+    "title": "MockClock Unit Testing",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   }

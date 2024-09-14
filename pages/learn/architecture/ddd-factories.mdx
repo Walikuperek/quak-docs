@@ -1,0 +1,162 @@
+import { Cards, Card, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# DDD Factories
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/ddd_factories.png" />
+
+## Factory
+
+In **Domain-Driven Design (DDD)**, a **Factory** is a design pattern used to create complex objects. Factories are useful when object creation involves significant complexity or when building the object requires ensuring that certain invariants are upheld. Factories allow for the encapsulation of this creation logic, keeping the responsibility for object creation separate from other parts of the system.
+
+Factories are particularly useful when:
+- The object creation process is complex (e.g., constructing aggregates with multiple entities).
+- The object has invariants or validation logic that must be satisfied during creation.
+- You want to hide the details of how an object is created from the rest of the application.
+
+### Key Characteristics
+1. **Encapsulation of Creation Logic**: Factories centralize the logic required to create objects, especially when it involves multiple steps or dependencies.
+   
+2. **Simplification of Client Code**: By using a factory, client code can focus on higher-level tasks, avoiding the complexities involved in creating objects.
+
+3. **Aggregate Creation**: In DDD, factories are often used to create aggregates (root entities along with their related entities), ensuring that all the invariants for the aggregate are enforced when it is constructed.
+
+### Example
+Let’s continue with our example from e-commerce, where we have an `Order` entity. Creating an `Order` might involve a series of steps such as validating the customer, checking inventory for products, and adding items to the order. A factory can encapsulate all this logic.
+
+#### 1. Defining a Factory for Creating Orders
+
+We’ll define a factory class that is responsible for creating an `Order` aggregate. The factory will ensure that:
+- The `Order` is created with a valid customer.
+- The items added to the order are in stock.
+
+```typescript
+class OrderItem {
+  constructor(public productId: string, public quantity: number, public price: number) {}
+}
+
+class Order {
+  private items: OrderItem[] = [];
+  private status: 'Pending' | 'Shipped' | 'Delivered' = 'Pending';
+
+  constructor(public orderId: string, public customerId: string, public orderDate: Date) {}
+
+  addItem(item: OrderItem) {
+    this.items.push(item);
+  }
+
+  getTotalAmount(): number {
+    return this.items.reduce((total, item) => total + item.quantity * item.price, 0);
+  }
+}
+
+class Customer {
+  constructor(public customerId: string, public name: string) {}
+}
+
+class Product {
+  constructor(public productId: string, public price: number, public stock: number) {}
+
+  decreaseStock(quantity: number) {
+    if (this.stock < quantity) {
+      throw new Error('Not enough stock for product ' + this.productId);
+    }
+    this.stock -= quantity;
+  }
+}
+
+class OrderFactory {
+  createOrder(customer: Customer, products: Product[], quantities: number[]): Order {
+    if (products.length !== quantities.length) {
+      throw new Error('Products and quantities must match');
+    }
+
+    const order = new Order(this.generateOrderId(), customer.customerId, new Date());
+
+    products.forEach((product, index) => {
+      const quantity = quantities[index];
+      product.decreaseStock(quantity);
+      order.addItem(new OrderItem(product.productId, quantity, product.price));
+    });
+
+    return order;
+  }
+
+  private generateOrderId(): string {
+    return 'order_' + Math.random().toString(36).substr(2, 9);
+  }
+}
+```
+
+#### Explanation
+- The **OrderFactory** encapsulates the process of creating an `Order` with `OrderItem`s. It ensures that each product has enough stock before adding it to the order.
+- The **createOrder** method accepts a `Customer`, a list of `Product`s, and their corresponding quantities.
+- The factory handles all the logic for creating the `Order` and ensures that the `Order` is correctly initialized with valid data.
+
+#### 2. Usage of the Factory
+
+Let’s see how the factory can be used to create an order:
+
+```typescript
+const customer = new Customer('customer123', 'Alice');
+
+const product1 = new Product('product1', 50, 10);  // 10 units in stock
+const product2 = new Product('product2', 100, 5);  // 5 units in stock
+
+const orderFactory = new OrderFactory();
+const order = orderFactory.createOrder(customer, [product1, product2], [2, 3]);  // 2 units of product1, 3 units of product2
+
+console.log(`Total order amount: $${order.getTotalAmount()}`);  // Total order amount: $350
+```
+
+In this example:
+- The `OrderFactory` ensures that the customer is valid and that the products have enough stock.
+- It creates a valid `Order` with the necessary `OrderItem`s and their quantities.
+- If any of the products are out of stock, the factory throws an error, preventing the creation of the `Order`.
+
+#### 3. Enforcing Invariants in the Factory
+
+Factories can also be responsible for enforcing certain **invariants** during the creation process. For example, the factory ensures that the stock for each product is sufficient before adding it to the order. This protects the integrity of the system by preventing orders from being placed with out-of-stock products.
+
+#### 4. Abstracting the Creation of Complex Aggregates
+
+In DDD, aggregates are clusters of domain objects that are treated as a unit. The aggregate is represented by a root entity, and other entities within the aggregate are bound to the root.
+
+A factory can be responsible for creating the entire aggregate. In our example, the `Order` is the aggregate root, and it contains multiple `OrderItem`s. The factory ensures that the entire aggregate is created correctly.
+
+For example, the `OrderFactory` creates the `Order` (aggregate root) and ensures that all `OrderItem`s (part of the aggregate) are properly initialized and validated.
+
+### Factory Method vs. Constructor
+
+Factories are used when creating an object involves more than just a simple constructor. For example, in our `Order` example, simply using the `Order` constructor wouldn't be enough:
+- We would have to ensure that the products have enough stock.
+- We would need to create the `OrderItem`s separately and add them to the `Order`.
+- The `Order` itself might require some initialization logic (e.g., generating the `orderId`).
+
+By encapsulating all this complexity within a factory, we simplify the client code and ensure that the object is created in a valid state.
+
+### Conclusion
+
+In Domain-Driven Design, **factories** are used to encapsulate complex creation logic, ensuring that objects (especially aggregates) are created in a valid state. By using factories, we simplify client code and enforce business rules during object creation.
+
+## Next
+
+Visit Repositories to dive deeper into Domain Driven Design.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="DDD(main menu)" href="/learn/architecture/ddd/" />
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="Repositories" href="/learn/architecture/ddd-repositories/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

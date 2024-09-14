@@ -1,0 +1,240 @@
+import { Cards, Card, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# DDD Politics
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/ddd_politics.png" />
+
+## Policy
+
+In **Domain-Driven Design (DDD)**, a **Policy** is a design pattern used to represent a rule or constraint within the domain model. It encapsulates business rules, decisions, or strategies that guide how a certain operation or behavior should be executed. Policies are a way to separate complex business logic, ensuring that rules are both reusable and testable, while keeping the domain model clean and focused.
+
+### Key Characteristics of a Policy:
+1. **Encapsulation of Business Rules**: Policies encapsulate specific domain rules that might change over time or vary based on context (e.g., different business units or customer types).
+   
+2. **Decision-Making Logic**: Policies often represent decision-making logic, answering questions like “Can this action be taken?” or “What is the appropriate behavior in this scenario?”
+
+3. **Separation of Concerns**: Policies separate the concern of enforcing or applying rules from entities or services. This keeps entities focused on representing domain concepts and services on orchestrating workflows.
+
+4. **Composability**: Policies can often be composed to form more complex rules, allowing for flexibility in how business logic is applied.
+
+### Examples of Policies in Domain-Driven Design (TypeScript)
+
+Let’s extend our e-commerce example to include a policy that checks if an order can be placed based on business rules, such as whether the customer has enough credit or the items are in stock.
+
+#### 1. Defining a Simple Policy
+
+We’ll define a **policy** that checks whether a customer can place an order based on their credit limit.
+
+```typescript
+class CanPlaceOrderPolicy {
+  canPlaceOrder(order: Order, customer: Customer): boolean {
+    const totalAmount = order.getTotalAmount();
+
+    // Business rule: The order total cannot exceed the customer's credit limit
+    if (totalAmount > customer.getCreditLimit()) {
+      return false;
+    }
+
+    // Business rule: All items in the order must be in stock
+    for (const item of order.getItems()) {
+      if (item.getQuantity() > item.getProduct().getStock()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}
+```
+
+In this example:
+- The `CanPlaceOrderPolicy` encapsulates the logic for determining whether a customer can place an order.
+- The policy checks two business rules:
+  1. The total order amount must not exceed the customer’s credit limit.
+  2. All items must be in stock.
+
+#### 2. Using the Policy
+
+Now, let’s use the policy in the order placement workflow. The policy will be used to decide whether or not the order can be placed.
+
+```typescript
+async function placeOrderWithPolicy(
+  orderRepository: OrderRepository,
+  customer: Customer,
+  products: Product[],
+  quantities: number[]
+): Promise<void> {
+  const orderFactory = new OrderFactory();
+  const order = orderFactory.createOrder(customer, products, quantities);
+
+  const canPlaceOrderPolicy = new CanPlaceOrderPolicy();
+
+  if (!canPlaceOrderPolicy.canPlaceOrder(order, customer)) {
+    console.log(`Order cannot be placed for customer ${customer.customerId}.`);
+    return;
+  }
+
+  console.log(`Order ${order.orderId} has been successfully placed.`);
+  await orderRepository.add(order);
+}
+
+// Example usage:
+await placeOrderWithPolicy(orderRepository, customer, [product1, product2], [2, 1]);
+```
+
+Here:
+- The `CanPlaceOrderPolicy` is used to decide if the order can be placed.
+- If the policy returns `false`, the workflow is interrupted, preventing the order from being placed.
+
+#### 3. More Complex Policy (Composing Rules)
+
+You can also compose multiple policies to form more complex decision-making logic. Let’s assume we want to add a new rule that checks if the customer has a valid loyalty membership before they can place an order.
+
+We can extend our `CanPlaceOrderPolicy` to include this new rule:
+
+```typescript
+class CanPlaceOrderPolicy {
+  canPlaceOrder(order: Order, customer: Customer): boolean {
+    const totalAmount = order.getTotalAmount();
+
+    // Business rule: The order total cannot exceed the customer's credit limit
+    if (totalAmount > customer.getCreditLimit()) {
+      return false;
+    }
+
+    // Business rule: All items in the order must be in stock
+    for (const item of order.getItems()) {
+      if (item.getQuantity() > item.getProduct().getStock()) {
+        return false;
+      }
+    }
+
+    // Business rule: Customer must have a valid loyalty membership
+    if (!customer.hasValidLoyaltyMembership()) {
+      return false;
+    }
+
+    return true;
+  }
+}
+```
+
+In this case, the `CanPlaceOrderPolicy` now checks three business rules:
+1. The total amount must not exceed the customer’s credit limit.
+2. All items must be in stock.
+3. The customer must have a valid loyalty membership.
+
+#### 4. Testing Policies
+
+Since policies encapsulate business rules, they are easy to test in isolation. Here’s an example of how you might test the `CanPlaceOrderPolicy`:
+
+```typescript
+describe('CanPlaceOrderPolicy', () => {
+  it('should not allow placing order if total exceeds credit limit', () => {
+    const customer = new Customer('customer123', 'Alice');
+    customer.setCreditLimit(100);  // Set credit limit to $100
+
+    const order = new Order('order123', 'customer123', new Date());
+    order.addItem(new OrderItem('product1', 2, 60));  // Total amount: $120
+
+    const canPlaceOrderPolicy = new CanPlaceOrderPolicy();
+    const canPlaceOrder = canPlaceOrderPolicy.canPlaceOrder(order, customer);
+
+    expect(canPlaceOrder).toBe(false);  // Credit limit exceeded
+  });
+
+  it('should allow placing order if all rules are satisfied', () => {
+    const customer = new Customer('customer123', 'Bob');
+    customer.setCreditLimit(500);  // Set credit limit to $500
+
+    const order = new Order('order456', 'customer123', new Date());
+    order.addItem(new OrderItem('product1', 3, 100));  // Total amount: $300
+
+    const canPlaceOrderPolicy = new CanPlaceOrderPolicy();
+    const canPlaceOrder = canPlaceOrderPolicy.canPlaceOrder(order, customer);
+
+    expect(canPlaceOrder).toBe(true);  // All rules satisfied
+  });
+});
+```
+
+### Policy Composition
+
+In more complex systems, you might want to compose multiple policies to represent different aspects of the decision-making process. In TypeScript, this could be achieved by chaining or combining policies.
+
+```typescript
+class AndPolicy<T> {
+  private policies: Policy<T>[];
+
+  constructor(...policies: Policy<T>[]) {
+    this.policies = policies;
+  }
+
+  isSatisfiedBy(candidate: T): boolean {
+    return this.policies.every(policy => policy.isSatisfiedBy(candidate));
+  }
+}
+
+class CustomerHasEnoughCreditPolicy implements Policy<Order> {
+  isSatisfiedBy(order: Order, customer: Customer): boolean {
+    return order.getTotalAmount() <= customer.getCreditLimit();
+  }
+}
+
+class ItemsInStockPolicy implements Policy<Order> {
+  isSatisfiedBy(order: Order): boolean {
+    return order.getItems().every(item => item.getQuantity() <= item.getProduct().getStock());
+  }
+}
+
+// Composing multiple policies
+const policy = new AndPolicy(
+  new CustomerHasEnoughCreditPolicy(),
+  new ItemsInStockPolicy()
+);
+
+const canPlaceOrder = policy.isSatisfiedBy(order, customer);
+```
+
+This allows for a flexible and modular way to define and apply business rules.
+
+### Benefits of Policies in DDD
+
+1. **Flexibility**: Policies can easily be swapped, updated, or composed to meet evolving business rules.
+   
+2. **Separation of Concerns**: Policies separate rule-based logic from entities and services, ensuring that domain models stay focused on representing data and behavior.
+
+3. **Testability**: Since policies encapsulate specific business rules, they are easy to unit test in isolation.
+
+4. **Reusability**: Policies are reusable components that can be applied across multiple services or domain models, promoting consistency in rule enforcement.
+
+5. **Consistency**: Using policies ensures that business rules are applied consistently throughout the application, reducing the risk of inconsistent rule enforcement.
+
+### Conclusion
+
+In **Domain-Driven Design**, a **Policy** is a way to encapsulate business rules and decision-making logic, keeping domain entities clean and focused on core behaviors. Policies handle logic that spans multiple entities or aggregates, or that involves business rules that may change over time.
+
+## Next
+
+YOU HAVE GONE THROUGH!!! CONGRATZ IN LEARNING DDD!!!
+
+Go back to main menu for DDD or visit DRD (my frontend architecture based on knoledge from DDD).
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="DDD(main menu)" href="/learn/architecture/ddd/" />
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="DRD Frontend" href="/learn/architecture/drd-frontend/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

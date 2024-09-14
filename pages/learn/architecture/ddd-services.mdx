@@ -1,0 +1,220 @@
+import { Cards, Card, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# DDD Services
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/ddd_services.png" />
+
+## Service
+
+In **Domain-Driven Design (DDD)**, a **Service** is a design pattern used to encapsulate domain logic that doesn’t naturally fit into a specific entity or value object. Services help maintain the **Single Responsibility Principle** by keeping domain entities focused on modeling the core domain, while services handle cross-cutting or domain-specific operations that involve multiple entities.
+
+### Characteristics of a Service in DDD:
+1. **Operation-Focused**: Services encapsulate behavior, not data. They typically perform actions or operations within the domain model.
+   
+2. **Stateless**: Services are often stateless, meaning they don’t maintain state between calls. They receive data, perform operations, and return results, without holding onto internal state.
+   
+3. **Domain Logic Outside Entities**: If a domain operation spans multiple aggregates, entities, or external systems, it may be best represented as a service rather than embedded within individual entities.
+
+4. **Three Types of Services**:
+   - **Domain Services**: Implement business logic that doesn’t belong in a specific entity or aggregate.
+   - **Application Services**: Coordinate between domain services and repositories, often representing use cases or application workflows.
+   - **Infrastructure Services**: Handle technical or cross-cutting concerns like sending emails, logging, or interacting with external APIs.
+
+### Example of Services in Domain-Driven Design (TypeScript)
+
+Let’s extend our e-commerce example to include services that perform certain operations. We’ll use a **domain service** to calculate a discount for an order.
+
+#### 1. Defining a Domain Service
+
+Suppose we need to calculate a discount for an order based on some business rules. This logic doesn’t naturally belong in the `Order` entity itself, since discounts might involve external systems (e.g., checking customer loyalty status). So, we’ll encapsulate this logic in a domain service.
+
+```typescript
+class DiscountService {
+  calculateDiscount(order: Order, customer: Customer): number {
+    let discount = 0;
+
+    // Business rule: loyal customers get a 10% discount
+    if (customer.isLoyal()) {
+      discount += order.getTotalAmount() * 0.1;
+    }
+
+    // Business rule: orders above $500 get a 5% discount
+    if (order.getTotalAmount() > 500) {
+      discount += order.getTotalAmount() * 0.05;
+    }
+
+    return discount;
+  }
+}
+```
+
+Here:
+- `DiscountService` is a **domain service** that encapsulates business logic around calculating discounts for an order.
+- The service does not belong to any particular entity like `Order` or `Customer`, because the logic spans both.
+
+#### 2. Using the Domain Service
+
+Let’s see how the `DiscountService` can be used in the application logic:
+
+```typescript
+async function placeOrderWithDiscount(
+  orderRepository: OrderRepository,
+  customer: Customer,
+  products: Product[],
+  quantities: number[]
+) {
+  const orderFactory = new OrderFactory();
+  const order = orderFactory.createOrder(customer, products, quantities);
+
+  const discountService = new DiscountService();
+  const discount = discountService.calculateDiscount(order, customer);
+
+  const totalAmount = order.getTotalAmount() - discount;
+
+  console.log(`Total order amount after discount: $${totalAmount}`);
+
+  await orderRepository.add(order);
+}
+
+// Example usage:
+await placeOrderWithDiscount(orderRepository, customer, [product1, product2], [2, 1]);
+```
+
+In this example:
+- The `DiscountService` is used to calculate any applicable discount based on business rules.
+- The domain service is called during the order placement process, ensuring that the discount logic is encapsulated outside the `Order` entity, promoting separation of concerns.
+
+#### 3. Application Services
+
+In DDD, **application services** are responsible for coordinating use cases or workflows within the application. They interact with domain services, repositories, and other components but typically don’t contain business logic themselves.
+
+An **application service** might look like this:
+
+```typescript
+class OrderApplicationService {
+  constructor(
+    private readonly orderRepository: OrderRepository,
+    private readonly discountService: DiscountService
+  ) {}
+
+  async placeOrder(customer: Customer, products: Product[], quantities: number[]): Promise<void> {
+    const orderFactory = new OrderFactory();
+    const order = orderFactory.createOrder(customer, products, quantities);
+
+    // Calculate the discount using the domain service
+    const discount = this.discountService.calculateDiscount(order, customer);
+
+    // Final amount after discount
+    const totalAmount = order.getTotalAmount() - discount;
+
+    console.log(`Placing order with total amount: $${totalAmount}`);
+
+    // Save the order using the repository
+    await this.orderRepository.add(order);
+  }
+}
+```
+
+Here:
+- `OrderApplicationService` coordinates the high-level task of placing an order. It uses the `OrderRepository` to persist the order and the `DiscountService` to calculate the discount.
+- The business logic (e.g., discount calculation) is delegated to a **domain service** (`DiscountService`), while the **application service** focuses on orchestrating the workflow.
+
+#### 4. Infrastructure Services
+
+**Infrastructure services** handle concerns like sending notifications, logging, interacting with external APIs, etc. These services are often technical and are not directly related to business logic.
+
+For example, let’s define an `EmailService` to send order confirmation emails:
+
+```typescript
+class EmailService {
+  sendOrderConfirmation(customer: Customer, order: Order): void {
+    console.log(`Sending order confirmation to ${customer.name} for order ${order.orderId}`);
+    // Implementation for sending email...
+  }
+}
+```
+
+In this case:
+- `EmailService` is an **infrastructure service** that handles the technical concern of sending an email.
+- It can be called from within the application service or another layer to notify customers of a successful order placement.
+
+### Why Use Services in DDD?
+
+1. **Encapsulation of Logic**: Services provide a way to encapsulate logic that spans multiple entities or aggregates, keeping entities clean and focused on modeling the core domain.
+
+2. **Separation of Concerns**: By using services, you ensure that domain objects (entities and value objects) focus on representing data and behavior specific to the object, while services encapsulate cross-cutting logic or external interactions.
+
+3. **Reuse of Logic**: Services promote reusability. For example, a `DiscountService` can be reused in multiple parts of the system, ensuring consistent business logic for discounts.
+
+4. **Simplified Entities**: Keeping complex logic in services rather than in domain entities reduces the complexity of entities, making them easier to maintain and test.
+
+5. **Testing**: Services are easy to test because they usually contain isolated logic. They don’t hold internal state, and you can mock their dependencies (e.g., repositories or other services) in tests.
+
+### Guidelines for Identifying Services
+
+- **Logic that crosses multiple aggregates**: If a business operation spans multiple entities or aggregates (e.g., transferring money between bank accounts), consider using a service.
+  
+- **Logic that doesn’t fit a single entity**: When a piece of logic doesn’t naturally belong to a single entity, move it to a service.
+  
+- **Technical concerns**: Tasks like sending emails, logging, or interacting with external systems are handled by infrastructure services.
+
+### Example of Testing a Service in TypeScript
+
+Since services are stateless and don’t maintain internal state, they are easy to unit test. Here’s an example of testing the `DiscountService`:
+
+```typescript
+describe('DiscountService', () => {
+  it('should apply a 10% discount for loyal customers', () => {
+    const customer = new Customer('customer123', 'Alice');
+    customer.setLoyal(true);  // Assume the customer is loyal
+    const order = new Order('order123', 'customer123', new Date());
+    order.addItem(new OrderItem('product1', 2, 50));  // Total amount: $100
+
+    const discountService = new DiscountService();
+    const discount = discountService.calculateDiscount(order, customer);
+
+    expect(discount).toBe(10);  // 10% of $100
+  });
+
+  it('should apply a 5% discount for orders over $500', () => {
+    const customer = new Customer('customer123', 'Bob');
+    const order = new Order('order456', 'customer123', new Date());
+    order.addItem(new OrderItem('product1', 10, 60));  // Total amount: $600
+
+    const discountService = new DiscountService();
+    const discount = discountService.calculateDiscount(order, customer);
+
+    expect(discount).toBe(30);  // 5% of $600
+  });
+});
+```
+
+### Conclusion
+
+In **Domain-Driven Design**, **services** are used to encapsulate domain logic or operations that don’t fit naturally within entities or value objects. They are crucial for:
+- Handling cross-cutting logic.
+- Ensuring clean separation between domain logic and technical concerns.
+- Promoting reusability and maintainability.
+
+## Next
+
+Visit Politics to dive deeper into Domain Driven Design.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="DDD(main menu)" href="/learn/architecture/ddd/" />
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="Politics" href="/learn/architecture/ddd-politics/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

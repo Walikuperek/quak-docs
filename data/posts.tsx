@@ -30,6 +30,8 @@ export const AllPosts = [
 ];
 newestUpSorter(AllPosts);
 
+export const pinnedPosts = AllPosts.filter(p => !!p.pinned && p.pinned);
+
 export const latestReading = AllPosts[0];
 
 export const latestBackendReading = AllPosts.find(post => post.category === "backend");

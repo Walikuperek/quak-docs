@@ -88,5 +88,113 @@
       "typesetting": "article",
       "sidebar": false
     }
+  },
+  "ddd-aggregates": {
+    "title": "DDD Aggregates",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-entities": {
+    "title": "DDD Entieties",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-events": {
+    "title": "DDD Events",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-factories": {
+    "title": "DDD Factories",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-modules": {
+    "title": "DDD Modules",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-politics": {
+    "title": "DDD Politics",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-repositories": {
+    "title": "DDD Repositories",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd-services": {
+    "title": "DDD Services",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "ddd": {
+    "title": "Domain Driven Design(DDD)",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "bitemporal-events": {
+    "title": "Bi-Temporal Events",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "nosql-migration-of-millions-of-documents": {
+    "title": "NoSQL migration of millions of documents",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
+  },
+  "graph-database-usage-comparison": {
+    "title": "NoSQL migration of millions of documents",
+    "display": "hidden",
+    "theme": {
+      "layout": "default",
+      "typesetting": "article",
+      "sidebar": false
+    }
   }
 }

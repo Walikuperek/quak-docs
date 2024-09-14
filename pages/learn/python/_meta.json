@@ -4,6 +4,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
@@ -12,6 +13,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
@@ -20,14 +22,16 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
   "flask-json-api-with-services": {
-    "title": "Flask CRUD JSON API with services",
+    "title": "Flask JSON API services",
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
@@ -36,6 +40,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   },
@@ -44,6 +49,7 @@
     "display": "hidden",
     "theme": {
       "layout": "default",
+      "typesetting": "article",
       "sidebar": false
     }
   }

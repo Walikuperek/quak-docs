@@ -1,0 +1,183 @@
+import { Callout, Cards, Card, FileTree, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { TSTag } from "../../../components/tags/typescript";
+import { HeroLearnCard } from "../../../components/ui/generics/hero-learn-card";
+
+# EventStore for Event Sourcing
+
+<HeroLearnCard
+    category="typescript"
+    tag={<TSTag/>}
+    image={<section className="flex align-center justify-center gap-3 h-full overflow-hidden">
+        <div className="bg-violet-500 h-40 w-40 p-1 mt-20 text-white font-bold">
+            <span className="text-lg">
+                Event<br />
+                <span className="text-violet-300">⌛ timestamp</span><br />
+                <span className="text-violet-300">📊 data</span>
+            </span>
+        </div>
+        <div className="flex flex-col">
+            <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-20 text-white font-bold animate-bounce">Event</div>
+            <div className="bg-fuchsia-600 h-10 w-20 p-1 mt-1 text-white font-bold">Events,</div>
+        </div>
+    </section>}
+    author="Kacper Walczak"
+    createdAt="20-08-2024"
+    title="EventStore for Event Sourcing"
+    descriptionTextLines={[
+        "Dive into Event Sourcing internals, learn how to build Event Store.",
+    ]}
+    label={<></>}
+/>
+
+## Introduction
+
+**Event Store** is required with `Event Sourcing` approach. It means to store each events with `aggregateID` wich will allow us to fetch all Events in a single batch.
+
+> AggregateID can be ID of the Aggregate or just an Entity ID to retrieve history of this aggregate/entity.
+
+## Store elements
+
+Store is a simple concept, it's just an abstraction over 1 collection/table with Events, mostly **append-only**.
+
+### Interface Event
+
+```typescript copy
+interface IEvent<T extends Record<string, unknown>> {
+  aggregateID: string;
+  type: string;
+  data: T;
+  timestamp: Date;
+}
+```
+
+### Interface EventStore
+```typescript copy
+interface EventHandler<T extends Record<string, unknown>> {
+  (event: IEvent<T>): void;
+}
+
+interface IEventStore<T extends Record<string, unknown>> {
+  dispatch(event: IEvent<T>): Promise<void>;
+  getEventsForAggregate(aggregateID: string): Promise<IEvent<T>[]>;
+  subscribe(eventType: string, handler: EventHandler<T>): void;
+  unsubscribe(eventType: string, handler: EventHandler<T>): void;
+}
+```
+
+### MongoDB Timeseries EventStore
+```typescript copy
+import { MongoClient, Collection } from 'mongodb';
+
+class MongoTimeseriesEventStore<T extends Record<string, unknown>> implements IEventStore<T> {
+  private client: MongoClient;
+  private collection: Collection<IEvent<T>>;
+  private eventHandlers: Map<string, Set<EventHandler<T>>>;
+
+  constructor(mongoUri: string, dbName: string, collectionName: string) {
+    this.client = new MongoClient(mongoUri);
+    this.collection = this.client.db(dbName).collection<IEvent<T>>(collectionName);
+    this.eventHandlers = new Map();
+  }
+
+  public async connect(): Promise<void> {
+    await this.client.connect();
+    // Configure collection for timeseries if necessary
+  }
+
+  public async dispatch(event: IEvent<T>): Promise<void> {
+    await this.collection.insertOne(event);
+    
+    const handlers = this.eventHandlers.get(event.type);
+    if (handlers) {
+      handlers.forEach(handler => handler(event));
+    }
+  }
+
+  public async getEventsForAggregate(aggregateID: string): Promise<IEvent<T>[]> {
+    return this.collection
+      .find({ aggregateID })
+      .sort({ timestamp: 1 })
+      .toArray();
+  }
+
+  public subscribe(eventType: string, handler: EventHandler<T>): void {
+    if (!this.eventHandlers.has(eventType)) {
+      this.eventHandlers.set(eventType, new Set());
+    }
+    this.eventHandlers.get(eventType)?.add(handler);
+  }
+
+  public unsubscribe(eventType: string, handler: EventHandler<T>): void {
+    this.eventHandlers.get(eventType)?.delete(handler);
+  }
+}
+```
+
+## Usage
+
+```typescript copy
+interface UserCreatedEvent {
+  userId: string;
+  userName: string;
+}
+
+const eventStore = new MongoTimeseriesEventStore<UserCreatedEvent>(
+  'mongodb://localhost:27017',
+  'myDatabase',
+  'eventsCollection'
+);
+
+async function main() {
+  await eventStore.connect();
+
+  const event: IEvent<UserCreatedEvent> = {
+    aggregateID: 'user-123',
+    type: 'UserCreated',
+    data: {
+      userId: 'user-123',
+      userName: 'Alice Bob'
+    },
+    timestamp: new Date()
+  };
+
+  await eventStore.dispatch(event);
+
+  const events = await eventStore.getEventsForAggregate('user-123');
+  console.log(events);
+
+  eventStore.subscribe('UserCreated', (event) => {
+    console.log('UserCreated event received:', event);
+  });
+}
+
+main();
+```
+
+## What should I use in production?
+
+This is just a simplest approach to showcase what is an EventStore for you. If you would like to use something prod-ready go for this DB [eventstore.com](https://www.eventstore.com/). For your .NET app you can use [Marten DB](https://martendb.io/).
+
+## Next
+
+In this article we have learned how to and when to use Event Store.
+
+> Check `Web Architectures` to learn more about different architectures.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+  </svg>} title="Bi-Temporal Events" href="/learn/architecture/bitemporal-events/" />
+  
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+  </svg>} title="CQRS" href="/learn/architecture/cqrs/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />

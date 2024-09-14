@@ -133,6 +133,6 @@ export const PythonPosts = [
             "Implementing the Subject and Observer pattern in Python.",
         ],
         description: "Implementing the Subject and Observer pattern in Python."
-    },
+    }
 ];
 newestUpSorter(PythonPosts);

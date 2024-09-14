@@ -1,0 +1,177 @@
+import { Cards, Card, Steps, Tabs } from "nextra/components";
+import { LatestReadings } from "../../../components/ui/sections/latest-readings";
+import { ArchitectureTag } from "../../../components/tags/architecture";
+
+# DDD Entities
+
+<img className="rounded-2xl border-2 border-gray-800" src="/assets/read/ddd_entities.png" />
+
+## Entity
+
+In **Domain-Driven Design (DDD)**, an **Entity** is a fundamental building block of the domain model. Entities are objects that have a distinct identity that runs through time and different states. The identity distinguishes one instance of an entity from another, even if they have the same attribute values.
+
+Entities are crucial because they represent something in the domain that changes over time but must be recognized as the same thing (e.g., a user, an order, or a product).
+
+### Key Characteristics
+1. **Identity**: Every entity has a unique identifier (ID). This ID is constant through the life of the entity and is used to differentiate between instances.
+   
+2. **Mutable State**: Entities can change over time. Their attributes can evolve, but they must always be identifiable by their ID.
+
+3. **Behavior**: Entities typically contain both state and behavior. They encapsulate business logic related to the state they hold.
+
+### Example
+
+Let’s take an example from an e-commerce system where we have an `Order` entity. The `Order` entity has an ID, customer, and a list of items.
+
+#### 1. Defining an Entity
+
+In TypeScript, we can define an `Order` entity that encapsulates the state and behavior of an order.
+
+```typescript
+class OrderItem {
+  constructor(public productId: string, public quantity: number, public price: number) {}
+}
+
+class Order {
+  private items: OrderItem[] = [];
+  private status: 'Pending' | 'Shipped' | 'Delivered' = 'Pending';
+
+  constructor(public orderId: string, public customerId: string, public orderDate: Date) {}
+
+  addItem(productId: string, quantity: number, price: number) {
+    this.items.push(new OrderItem(productId, quantity, price));
+  }
+
+  getTotalAmount(): number {
+    return this.items.reduce((total, item) => total + item.quantity * item.price, 0);
+  }
+
+  markAsShipped() {
+    if (this.status !== 'Pending') {
+      throw new Error("Order can't be shipped. Current status is " + this.status);
+    }
+    this.status = 'Shipped';
+  }
+
+  getStatus(): string {
+    return this.status;
+  }
+}
+```
+
+#### Explanation
+- **Identity**: The `Order` entity is identified by its `orderId`. This is how we uniquely identify each order in the system.
+- **State**: The `Order` entity contains attributes such as `items`, `status`, and `orderDate`, which can change over time.
+- **Behavior**: The `Order` entity contains methods like `addItem()`, `getTotalAmount()`, and `markAsShipped()`, which define its behavior.
+
+#### 2. Usage of the Entity
+
+Here’s how we can use the `Order` entity:
+
+```typescript
+const order = new Order('order123', 'customer456', new Date());
+
+order.addItem('product789', 2, 50); // 2 items, price 50 each
+order.addItem('product654', 1, 100); // 1 item, price 100
+
+console.log(`Total amount: $${order.getTotalAmount()}`); // Total amount: $200
+
+order.markAsShipped();
+console.log(`Order status: ${order.getStatus()}`); // Order status: Shipped
+```
+
+#### 3. Validation and Invariants in Entities
+
+Entities often enforce business rules or **invarians**. For example, an order cannot be marked as shipped if it is already in a different status:
+
+```typescript
+// marking an order as shipped multiple times will throw an error
+try {
+  order.markAsShipped(); // Error: Order can't be shipped. Current status is Shipped
+} catch (error) {
+  console.error(error.message);
+}
+```
+
+#### 4. Comparing Entities by Identity
+
+Entities are typically compared by their identity, not by the values of their attributes. Two entities are considered equal if they have the same ID, even if their state is different.
+
+```typescript
+const order1 = new Order('order123', 'customer456', new Date());
+const order2 = new Order('order123', 'customer789', new Date());
+
+// since both orders have the same ID, they are considered the same entity
+console.log(order1.orderId === order2.orderId); // true
+```
+
+#### 5. Entity and Behavior Encapsulation
+
+Entities are not just data containers; they encapsulate business logic. For example, the `Order` entity controls how items are added and how the status changes. This ensures that business rules (such as "an order can only be marked as shipped if it is pending") are enforced within the entity itself.
+
+In DDD, we avoid exposing internal data directly (such as the items array). Instead, we expose only what is necessary via methods, like `addItem()`, `getTotalAmount()`, and `markAsShipped()`.
+
+### When to Use Entities in DDD
+
+Entities are used when:
+- The object represents something that has a distinct identity.
+- The state of the object can change over time, but it must always be recognizable by its identity.
+- The object contains behavior and encapsulates business rules.
+
+Examples of entities in various domains:
+- **E-commerce**: `Order`, `Customer`, `Product`
+- **Banking**: `Account`, `Transaction`
+- **Logistics**: `Shipment`, `Warehouse`
+
+### Example of a Different Entity: Customer
+
+Let’s define another entity, `Customer`, with its own identity and behavior:
+
+```typescript
+class Customer {
+  private loyaltyPoints = 0;
+
+  constructor(public customerId: string, public name: string) {}
+
+  addLoyaltyPoints(points: number) {
+    if (points < 0) {
+      throw new Error('Points cannot be negative');
+    }
+    this.loyaltyPoints += points;
+  }
+
+  getLoyaltyPoints(): number {
+    return this.loyaltyPoints;
+  }
+}
+
+// Example usage
+const customer = new Customer('customer456', 'Alice');
+customer.addLoyaltyPoints(100);
+console.log(`Customer loyalty points: ${customer.getLoyaltyPoints()}`); // Customer loyalty points: 100
+```
+
+### Conclusion
+
+In Domain-Driven Design, **entities** represent core business objects that have a unique identity and encapsulate both state and behavior. They are not just data holders but include business logic to ensure the integrity of the system. By managing state and enforcing business rules within the entity, DDD helps create a more maintainable and robust system.
+
+## Next
+
+Visit Aggregates to dive deeper into Domain Driven Design.
+
+*Check next:*
+
+<Cards>
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="DDD(main menu)" href="/learn/architecture/ddd/" />
+  <Card icon={<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+    <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+    </svg>} title="Aggregates" href="/learn/architecture/ddd-aggregates/" />
+</Cards>
+
+<section className="rounded-2xl bg-lines flex mt-10 mb-20 h-20 w-full"></section>
+
+<LatestReadings />
