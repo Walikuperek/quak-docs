@@ -304,3 +304,58 @@ video {
         );
     }
 }
+
+/* technologiesBubbles */
+.bubble-container {
+  border: 5px dashed #2f2f2f;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.bubble {
+  border: 3px #2f2f2f groove;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0);
+  animation: pop-in 0.5s forwards;
+}
+
+.bubble a {
+  font-family: "Comic Sans MS";
+  color: white;
+  text-decoration: none;
+  transition: 0.3s ease-in-out;
+}
+
+.bubble a:hover {
+  transform: scale(1.2);
+}
+
+.font-comicsans {
+  font-family: "Comic Sans MS";
+}
+
+.section-wrapper-col {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@keyframes pop-in {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* /technologiesBubbles */
